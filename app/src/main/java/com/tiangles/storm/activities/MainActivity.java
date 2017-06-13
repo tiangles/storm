@@ -14,12 +14,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.main_scan_qrcode).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, QRCodeActivity.class);
-                startActivity(intent);
-            }
-        });
+    }
+
+    public void showQRCodeActivity(View v){
+        Intent intent = new Intent(MainActivity.this, QRCodeActivity.class);
+        startActivity(intent);
+    }
+
+    public void showChartActivity(View v){
+        Intent intent = new Intent(MainActivity.this, ChartActivity.class);
+        startActivity(intent);
     }
 }
