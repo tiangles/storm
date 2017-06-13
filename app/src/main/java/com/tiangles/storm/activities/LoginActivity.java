@@ -3,45 +3,32 @@ package com.tiangles.storm.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.CursorLoader;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.tiangles.storm.R;
+import com.tiangles.storm.user.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
 
 /**
  * A login screen that offers login via username/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity{
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -61,121 +48,75 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mUserNameView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    @BindView(R.id.login_progress) View mProgressView;
+    @BindView(R.id.login_form) View mLoginFormView;
+
+    @BindView(R.id.login_user_name) EditText mUserNameEditor;
+    @BindView(R.id.login_password) EditText mPasswordEditor;
+    @BindView(R.id.login_remember_password) CheckBox mRememberPasswordBox;
+    @BindView(R.id.login_auto_login) CheckBox mAutoLoginBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
-        mUserNameView = (AutoCompleteTextView) findViewById(R.id.user_name);
-        populateAutoComplete();
+        ButterKnife.bind(this);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Button signInButton = (Button) findViewById(R.id.email_sign_in_button);
-        signInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        User user = User.loadUserInfo();
+        mUserNameEditor.setText(user.mUserName);
+        mPasswordEditor.setText(user.mPassword);
+        mRememberPasswordBox.setChecked(user.mRememberPassowrd);
+        mAutoLoginBox.setChecked(user.mAutoLogin);
+        if(user.mAutoLogin){
+            attemptLogin();
+        }
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
+    @OnClick(R.id.login_sign_in_button)
+    public void onSignIn(){
+        attemptLogin();
     }
 
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+    @OnEditorAction(R.id.login_password)
+    public boolean onEditorAction(int id){
+        if (id == R.id.login_password_action || id == EditorInfo.IME_NULL) {
+            attemptLogin();
             return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mUserNameView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
         return false;
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
-
-
-    /**
-     * Attempts to sign in,
-     */
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
 
         // Reset errors.
-        mUserNameView.setError(null);
-        mPasswordView.setError(null);
+        mUserNameEditor.setError(null);
+        mPasswordEditor.setError(null);
 
         // Store values at the time of the login attempt.
-        String signInUserName = mUserNameView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String signInUserName = mUserNameEditor.getText().toString();
+        String password = mPasswordEditor.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            mPasswordEditor.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordEditor;
             cancel = true;
         }
 
         // Check for a valid user name.
         if (TextUtils.isEmpty(signInUserName)) {
-            mUserNameView.setError(getString(R.string.error_field_required));
-            focusView = mUserNameView;
+            mUserNameEditor.setError(getString(R.string.error_field_required));
+            focusView = mUserNameEditor;
             cancel = true;
         } else if (!isUserNameValid(signInUserName)) {
-            mUserNameView.setError(getString(R.string.error_invalid_user_name));
-            focusView = mUserNameView;
+            mUserNameEditor.setError(getString(R.string.error_invalid_user_name));
+            focusView = mUserNameEditor;
             cancel = true;
         }
 
@@ -186,6 +127,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            User.saveUserInfo(signInUserName,
+                    password,
+                    mRememberPasswordBox.isChecked(),
+                    mAutoLoginBox.isChecked());
+
             showProgress(true);
             mAuthTask = new UserLoginTask(signInUserName, password);
             mAuthTask.execute((Void) null);
@@ -236,60 +182,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> userNames = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            userNames.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addUserNamesToAutoComplete(userNames);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addUserNamesToAutoComplete(List<String> userNameCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, userNameCollection);
-
-        mUserNameView.setAdapter(adapter);
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -325,8 +217,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 switchToMain();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mPasswordEditor.setError(getString(R.string.error_incorrect_password));
+                mPasswordEditor.requestFocus();
             }
         }
 
@@ -341,6 +233,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
