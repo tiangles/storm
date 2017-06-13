@@ -1,10 +1,9 @@
 package com.tiangles.storm.activities;
 
-
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -16,22 +15,23 @@ import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.uuzuche.lib_zxing.encoding.EncodingHandler;
 
-public class QRCodeActivity extends Activity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class QRCodeActivity extends AppCompatActivity {
     private final static int SCANNIN_GREQUEST_CODE = 1;
     private final static String PROTOCAL_HEADER = "storm://";
-    private EditText mResultTextView;
-    private EditText mInputMessageTextView;
-    private ImageView mQRImage;
+
+    @BindView(R.id.scan_result) EditText mResultTextView;
+    @BindView(R.id.input_message)  EditText mInputMessageTextView;
+    @BindView(R.id.iv_qr_image) ImageView mQRImage;
+
     private String mScanResult;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode);
-
-        mResultTextView = (EditText) this.findViewById(R.id.scan_result);
-        mInputMessageTextView= (EditText) this.findViewById(R.id.input_message);
-
-        mQRImage = (ImageView) this.findViewById(R.id.iv_qr_image);
+        ButterKnife.bind(this);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
