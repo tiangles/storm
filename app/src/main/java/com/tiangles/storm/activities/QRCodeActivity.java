@@ -20,6 +20,7 @@ public class QRCodeActivity extends Activity {
     private final static int SCANNIN_GREQUEST_CODE = 1;
     private final static String PROTOCAL_HEADER = "storm://";
     private EditText mResultTextView;
+    private EditText mInputMessageTextView;
     private ImageView mQRImage;
     private String mScanResult;
     @Override
@@ -28,6 +29,8 @@ public class QRCodeActivity extends Activity {
         setContentView(R.layout.activity_qrcode);
 
         mResultTextView = (EditText) this.findViewById(R.id.scan_result);
+        mInputMessageTextView= (EditText) this.findViewById(R.id.input_message);
+
         mQRImage = (ImageView) this.findViewById(R.id.iv_qr_image);
     }
     @Override
@@ -37,9 +40,20 @@ public class QRCodeActivity extends Activity {
             case SCANNIN_GREQUEST_CODE:
                 if(resultCode == RESULT_OK){
                     Bundle bundle = data.getExtras();
-                    mScanResult = bundle.getString(CodeUtils.RESULT_STRING);
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    Log.e("ScanResult", result);
+                    if(result.startsWith(PROTOCAL_HEADER)){
+                        mScanResult = DES3Utils.decryptMode(result.substring(PROTOCAL_HEADER.length()));
+                    } else {
+                        mScanResult = result;
+                    }
+                    if(mScanResult == null){
+                        mScanResult = "";
+                    }
+                    Log.e("DecryptResult", mScanResult);
                     mResultTextView.setText(mScanResult);
-                    showQRCode();
+                    mInputMessageTextView.setText(mScanResult);
+                    showQRCode(mScanResult);
                 }
                 break;
             default:
@@ -54,20 +68,16 @@ public class QRCodeActivity extends Activity {
     }
 
     public void createQRCode(View v){
-        mScanResult = mResultTextView.getText().toString();
-        showQRCode();
+        String message = mInputMessageTextView.getText().toString();
+        String encoded = DES3Utils.encryptMode(message);
+        showQRCode(PROTOCAL_HEADER + encoded);
     }
 
-    private void showQRCode() {
-        if(!mScanResult.isEmpty()){
+    private void showQRCode(String message) {
+        if(message!= null && !message.isEmpty()){
             try {
-                String encoded = DES3Utils.encryptMode(PROTOCAL_HEADER + mScanResult);
-                Bitmap bmp = EncodingHandler.createQRCode(encoded, 512);
+                Bitmap bmp = EncodingHandler.createQRCode(message, 512);
                 mQRImage.setImageBitmap(bmp);
-                Log.e("Scan", mScanResult);
-                Log.e("Encoded", encoded);
-                String decoded = DES3Utils.decryptMode(encoded);
-                Log.e("Decoded", decoded);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -14,7 +14,7 @@
             android:id="@+id/main_scan_qrcode"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="扫描二维码" />
+            android:text="二维码" />
         <Button
             android:id="@+id/main_scan_bluetooth"
             android:layout_width="fill_parent"
