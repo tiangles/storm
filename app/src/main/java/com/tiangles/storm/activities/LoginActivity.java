@@ -18,7 +18,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.tiangles.storm.R;
+import com.tiangles.storm.analytics.Engine;
+import com.tiangles.storm.analytics.event.LoginEvent;
 import com.tiangles.storm.user.User;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,14 +62,15 @@ public class LoginActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);;
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        User user = User.loadUserInfo();
+        User user = User.getInstance();
+        user.loadUserInfo();
         mUserNameEditor.setText(user.mUserName);
         mPasswordEditor.setText(user.mPassword);
-        mRememberPasswordBox.setChecked(user.mRememberPassowrd);
+        mRememberPasswordBox.setChecked(user.mRememberPassword);
         mAutoLoginBox.setChecked(user.mAutoLogin);
         if(user.mAutoLogin){
             attemptLogin();
@@ -214,6 +219,8 @@ public class LoginActivity extends AppCompatActivity{
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
+            User.getInstance().mAuthSucceeded = success;
+            Engine.getInstance().addEvent(new LoginEvent(new Date()));
             if (success) {
                 switchToMain();
             } else {

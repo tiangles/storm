@@ -1,21 +1,34 @@
 package com.tiangles.storm.user;
 
-import com.tiangles.storm.App;
 import com.tiangles.storm.preference.PreferenceEngine;
 
 public class User {
+    private static User mInstance;
+
     public String mUserName;
     public String mPassword;
-    public boolean mRememberPassowrd;
+    public boolean mRememberPassword;
     public boolean mAutoLogin;
+    public boolean mAuthSucceeded;
 
-    private User(String userName,
+    public static User getInstance(){
+        if(mInstance == null){
+            mInstance = new User();
+        }
+        return mInstance;
+    }
+
+    private User(){
+
+    }
+
+    private void set(String userName,
                  String password,
                  boolean rememberPassword,
                  boolean autoLogin){
         mUserName = userName;
         mPassword = password;
-        mRememberPassowrd = rememberPassword;
+        mRememberPassword = rememberPassword;
         mAutoLogin = autoLogin;
     }
 
@@ -34,13 +47,11 @@ public class User {
         engine.setUserName(userName);
     }
 
-    public static User loadUserInfo(){
+    public void loadUserInfo(){
         PreferenceEngine engine = PreferenceEngine.getInstance();
-        return new User(engine.getUserName(),
+        mInstance.set(engine.getUserName(),
                 engine.getUserPassword(),
                 engine.getRememberPassword(),
                 engine.getAutoLogin());
     }
-
-
 }

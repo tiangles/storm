@@ -1,14 +1,13 @@
 package com.tiangles.storm;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
 import com.uuzuche.lib_zxing.ZApplication;
 
-public class App extends ZApplication {
+public class StormApp extends ZApplication {
 
-    private static App instance;
+    private static StormApp instance;
     private static Handler handler = new Handler();
 
     @Override
@@ -17,7 +16,7 @@ public class App extends ZApplication {
         instance = this;
     }
 
-    public static App getInstance() {
+    public static StormApp getInstance() {
         return instance;
     }
 
@@ -28,5 +27,4 @@ public class App extends ZApplication {
     public static void runOnUiThread(Runnable runnable) {
         handler.post(runnable);
     }
-
 }

@@ -3,7 +3,7 @@ package com.tiangles.storm.preference;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.tiangles.storm.App;
+import com.tiangles.storm.StormApp;
 
 public class PreferenceEngine {
     private final String KEY_CURRENT_USER_NAME = "key_current_user_name";
@@ -26,7 +26,7 @@ public class PreferenceEngine {
 
     private SharedPreferences getDefaultPreference() {
         if(mDefaultSharedPreference == null) {
-            mDefaultSharedPreference = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+            mDefaultSharedPreference = PreferenceManager.getDefaultSharedPreferences(StormApp.getContext());
         }
         return mDefaultSharedPreference;
     }
