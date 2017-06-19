@@ -1,6 +1,10 @@
 package com.tiangles.storm.user;
 
-import com.tiangles.storm.preference.PreferenceEngine;
+import com.tiangles.storm.StormApp;
+import com.tiangles.storm.network.Request;
+import com.tiangles.storm.network.Response;
+
+import java.io.DataOutputStream;
 
 public class User {
     private static User mInstance;
@@ -11,18 +15,16 @@ public class User {
     public boolean mAutoLogin;
     public boolean mAuthSucceeded;
 
-    public static User getInstance(){
-        if(mInstance == null){
-            mInstance = new User();
-        }
-        return mInstance;
+    public interface LoginListener {
+        public void onBeginLogin();
+        public void onLoginDone();
     }
 
-    private User(){
+    public User(){
 
     }
 
-    private void set(String userName,
+    public void set(String userName,
                  String password,
                  boolean rememberPassword,
                  boolean autoLogin){
@@ -32,26 +34,7 @@ public class User {
         mAutoLogin = autoLogin;
     }
 
-    public static void saveUserInfo(String userName,
-                                    String password,
-                                    boolean rememberPassword,
-                                    boolean autoLogin){
-        PreferenceEngine engine = PreferenceEngine.getInstance();
-        engine.setAutoLogin(autoLogin);
-        engine.setRememberPassword(rememberPassword);
-        if(rememberPassword){
-            engine.setUserPassword(password);
-        } else {
-            engine.setUserPassword("");
-        }
-        engine.setUserName(userName);
-    }
-
-    public void loadUserInfo(){
-        PreferenceEngine engine = PreferenceEngine.getInstance();
-        mInstance.set(engine.getUserName(),
-                engine.getUserPassword(),
-                engine.getRememberPassword(),
-                engine.getAutoLogin());
+    public void login(LoginListener listener) {
+        StormApp.getNetwork().sendRequest(new LoginRequest(this, listener));
     }
 }

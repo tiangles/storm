@@ -18,8 +18,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.tiangles.storm.R;
+import com.tiangles.storm.StormApp;
 import com.tiangles.storm.analytics.Engine;
 import com.tiangles.storm.analytics.event.LoginEvent;
+import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.user.User;
 
 import java.util.Date;
@@ -33,24 +35,6 @@ import butterknife.OnEditorAction;
  * A login screen that offers login via username/password.
  */
 public class LoginActivity extends AppCompatActivity{
-
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@:foo",
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
-
     // UI references.
     @BindView(R.id.login_progress) View mProgressView;
     @BindView(R.id.login_form) View mLoginFormView;
@@ -66,8 +50,9 @@ public class LoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        User user = User.getInstance();
-        user.loadUserInfo();
+        User user = StormApp.getCurrentUser();
+        PreferenceEngine.getInstance().loadUserInfo(user);
+
         mUserNameEditor.setText(user.mUserName);
         mPasswordEditor.setText(user.mPassword);
         mRememberPasswordBox.setChecked(user.mRememberPassword);
@@ -92,13 +77,10 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
         // Reset errors.
         mUserNameEditor.setError(null);
         mPasswordEditor.setError(null);
+
 
         // Store values at the time of the login attempt.
         String signInUserName = mUserNameEditor.getText().toString();
@@ -132,23 +114,39 @@ public class LoginActivity extends AppCompatActivity{
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            User.saveUserInfo(signInUserName,
+            final User user = new User();
+            user.set(signInUserName,
                     password,
                     mRememberPasswordBox.isChecked(),
-                    mAutoLoginBox.isChecked());
-
-            showProgress(true);
-            mAuthTask = new UserLoginTask(signInUserName, password);
-            mAuthTask.execute((Void) null);
+                    mAutoLoginBox.isChecked()
+            );
+            user.login(new User.LoginListener() {
+                @Override
+                public void onBeginLogin() {
+                    showProgress(true);
+                }
+                @Override
+                public void onLoginDone() {
+                    Engine.getInstance().addEvent(new LoginEvent(user, new Date()));
+                    showProgress(false);
+                    if(user.mAuthSucceeded){
+                        switchToMain();
+                        PreferenceEngine.getInstance().saveUserInfo(user);
+                    } else {
+                        mPasswordEditor.setError(getString(R.string.error_incorrect_password));
+                        mPasswordEditor.requestFocus();
+                    }
+                }
+            });
         }
     }
 
     private boolean isUserNameValid(String userName) {
-        return true;
+        return !userName.isEmpty();
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 0;
+        return !password.isEmpty();
     }
 
     /**
@@ -187,68 +185,9 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mUserName;
-        private final String mPassword;
-
-        UserLoginTask(String userName, String password) {
-            mUserName = userName;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUserName)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-            User.getInstance().mAuthSucceeded = success;
-            Engine.getInstance().addEvent(new LoginEvent(new Date()));
-            if (success) {
-                switchToMain();
-            } else {
-                mPasswordEditor.setError(getString(R.string.error_incorrect_password));
-                mPasswordEditor.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
-
     private void switchToMain(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            Bundle bundle = data.getExtras();
-            String scanResult = bundle.getString("result");
-            Log.e("scanResult", scanResult);
-        }
     }
 }
 

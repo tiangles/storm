@@ -1,13 +1,15 @@
 package com.tiangles.storm.analytics.event;
 
+import com.tiangles.storm.StormApp;
 import com.tiangles.storm.user.User;
 
 import java.util.Date;
 
 public class LoginEvent implements Event{
     Date mDate;
-
-    public LoginEvent(Date date){
+    User user;
+    public LoginEvent(User user, Date date){
+        this.user = user;
         mDate = date;
     }
 
@@ -19,7 +21,6 @@ public class LoginEvent implements Event{
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        User user = User.getInstance();
         sb.append(user.mUserName)
                 .append(",")
                 .append(mDate.getTime())

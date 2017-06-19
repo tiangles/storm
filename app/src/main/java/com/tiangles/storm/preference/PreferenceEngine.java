@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.user.User;
 
 public class PreferenceEngine {
     private final String KEY_CURRENT_USER_NAME = "key_current_user_name";
@@ -65,5 +66,25 @@ public class PreferenceEngine {
 
     public boolean getRememberPassword() {
         return getDefaultPreference().getBoolean(KEY_REMEMBER_PASSWORD, false);
+    }
+
+    public User loadUserInfo(User user) {
+        user.set(getUserName(),
+                getUserPassword(),
+                getRememberPassword(),
+                getAutoLogin());
+
+        return user;
+    }
+
+    public void saveUserInfo(User user) {
+        setAutoLogin(user.mAutoLogin);
+        setRememberPassword(user.mRememberPassword);
+        if(user.mRememberPassword){
+            setUserPassword(user.mPassword);
+        } else {
+            setUserPassword("");
+        }
+        setUserName(user.mUserName);
     }
 }
