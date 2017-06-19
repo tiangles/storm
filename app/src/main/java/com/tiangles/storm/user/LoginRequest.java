@@ -1,5 +1,6 @@
 package com.tiangles.storm.user;
 
+import com.tiangles.storm.StormResponse;
 import com.tiangles.storm.debug.Logger;
 import com.tiangles.storm.network.Request;
 import com.tiangles.storm.network.Response;
@@ -17,7 +18,6 @@ public class LoginRequest implements Request {
 
     @Override
     public void write(DataOutputStream output) {
-//        listener.onBeginLogin();
         StringBuilder sb = new StringBuilder();
         sb.append("A55AAA55{")
                 .append("\"user_name\":").append(user.mUserName).append(",")
@@ -34,8 +34,13 @@ public class LoginRequest implements Request {
     }
 
     @Override
+    public Response createResponse() {
+        return new StormResponse();
+    }
+
+    @Override
     public boolean handleResponse(Response response) {
-        String str = response.data();
+        String str = new String(response.data());
         Logger.log(str);
         if(str.length()>0) {
             user.mAuthSucceeded = true;
@@ -44,5 +49,22 @@ public class LoginRequest implements Request {
         }
 
         return false;
+    }
+
+    @Override
+    public void onStartTransfer() {
+        listener.onBeginLogin();
+    }
+
+    @Override
+    public void onError(IOException e) {
+
+    }
+
+    private void handleLoginResult(String str) {
+        if(str.length()>0) {
+            user.mAuthSucceeded = true;
+        }
+        listener.onLoginDone();
     }
 }

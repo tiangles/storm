@@ -78,8 +78,8 @@ public class StormApp extends ZApplication {
             public ResponseFactory responseFactory() {
                 return new ResponseFactory() {
                     @Override
-                    public Response createResponse(byte[] data){
-                        return new StormResponse(data);
+                    public Response createResponse(){
+                        return new StormResponse();
                     }
                 } ;
             }

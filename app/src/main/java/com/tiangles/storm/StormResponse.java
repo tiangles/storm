@@ -7,46 +7,42 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 public class StormResponse implements Response {
-    private String data;
-//
-//    public void read(DataInputStream input) {
-//        try {
-//            while(true) {
-//                if(!readHeader(input)){
-//                    break;
-//                }
-//                int len = readBodyLen(input);
-//                if(len <= 0) {
-//                    break;
-//                }
-//                data = readBody(input, len);
-//            }
-//        } catch (IOException e) {
-//            Logger.log(e.toString());
-//        }
-//    }
-//
-//    private boolean readHeader(DataInputStream input) throws IOException{
-//        int h = input.readInt();
-//        return h == 0XA55AAA55;
-//    }
-//
-//    private int readBodyLen(DataInputStream input) throws IOException {
-//        int len = input.readInt();
-//        return len;
-//    }
-//
-//    private String readBody(DataInputStream input, int len) throws IOException {
-//        byte[] b = new byte[len];
-//        input.readFully(b);
-//        return b.toString();
-//    }
+    private byte[] data;
 
-    public StormResponse(byte[] data) {
-        this.data = new String(data);
+    public StormResponse() {
     }
+
     @Override
-    public String data() {
+    public void read(DataInputStream input)  throws IOException{
+        if(readHeader(input)){
+           readBody(input, readBodyLen(input));
+        }
+    }
+
+    @Override
+    public boolean finished() {
+        return true;
+    }
+
+    @Override
+    public byte[] data() {
         return data;
+    }
+
+    private boolean readHeader(DataInputStream input) throws IOException{
+        int h = input.readInt();
+        return h == 0XA55AAA55;
+    }
+
+    private int readBodyLen(DataInputStream input) throws IOException {
+        int len = input.readInt();
+        return len;
+    }
+
+    private void readBody(DataInputStream input, int len) throws IOException {
+        if(len>0) {
+            data = new byte[len];
+            input.readFully(data);
+        }
     }
 }

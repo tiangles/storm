@@ -1,5 +1,5 @@
 package com.tiangles.storm.network;
 
 public interface ResponseFactory {
-    public Response createResponse(byte[] data);
+    public Response createResponse();
 }

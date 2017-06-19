@@ -1,12 +1,11 @@
 package com.tiangles.storm.network.connection;
 
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 
 import com.tiangles.storm.debug.Logger;
 import com.tiangles.storm.network.Request;
+import com.tiangles.storm.network.Response;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,30 +13,26 @@ import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 public abstract class Connection {
-    public interface Listener {
-        void onError(IOException e);
-        void onData(byte[] data);
-    }
-
     protected abstract void connect() throws IOException;
     protected abstract void close();
     protected abstract DataInputStream getInputStream() throws IOException;
     protected abstract DataOutputStream getOutputStream() throws IOException;
 
-    private Listener listener;
     private SendThread sendThread;
     private ReceiveThread receiveThread;
     private Request currentRequest;
+    private Response currentResponse;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private Handler handler;
-    Semaphore semaphore = new Semaphore(1);
+    Semaphore writeSemaphore = new Semaphore(1);
+    Semaphore readSemaphore = new Semaphore(1);
 
-    public Connection(Handler handler, Listener listener){
+    public Connection(Handler handler){
         this.handler = handler;
-        this.listener = listener;
         try {
-            semaphore.acquire();
+            writeSemaphore.acquire();
+            readSemaphore.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -53,25 +48,42 @@ public abstract class Connection {
         } else {
             Logger.log("Busy!");
         }
-        semaphore.release();
+        writeSemaphore.release();
         Log.e("Network", "Main: Report request to read thread");
     }
 
-    private void reportListener(final byte[] data, final IOException e) {
-        if(data != null) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    listener.onData(data);
-                }
-            });
-        } else {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    listener.onError(e);
-                }
-            });
+    private void reportError(final IOException e) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                currentRequest.onError(e);
+            }
+        });
+    }
+
+    private void reportResponse(final Response res) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                currentRequest.handleResponse(res);
+            }
+        });
+    }
+
+    private void reportStartTransfer() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                currentRequest.onStartTransfer();
+            }
+        });
+    }
+
+    private void finishRequest(boolean closeSocket) {
+        currentResponse = null;
+        currentResponse = null;
+        if(closeSocket) {
+            close();
         }
     }
 
@@ -87,7 +99,7 @@ public abstract class Connection {
                 Log.e("Network", "SendThread: connected to server");
                 outputStream = getOutputStream();
             } catch (IOException e) {
-                reportListener(null, e);
+                reportError(e);
                 return;
             }
             receiveThread = new ReceiveThread();
@@ -97,20 +109,24 @@ public abstract class Connection {
                     runBody();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    reportListener(null, e);
-                    currentRequest = null;
+                    reportError(e);
+                    finishRequest(true);
                     break;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
+
         private void runBody() throws InterruptedException, IOException{
-            Log.e("Network", "SendThread: Begin to wait request");
-            semaphore.acquire();
-            Log.e("Network", "SendThread: Get a request");
+            writeSemaphore.acquire();
+            if(currentResponse != null) {
+                throw new IOException();
+            }
+            reportStartTransfer();
+            currentResponse = currentRequest.createResponse();
             currentRequest.write(outputStream);
-            Log.e("Network", "SendThread: Write request to socket: done");
+            readSemaphore.release();
         }
     }
 
@@ -120,36 +136,34 @@ public abstract class Connection {
         }
         @Override
         public void run() {
-            Log.e("Network", "ReceiveThread: start");
             try {
                 inputStream = getInputStream();
             } catch (IOException e) {
-                reportListener(null, e);
+                reportError(e);
                 return;
             }
             while (receiveThread != null) {
                 try {
                     runBody();
                 } catch (IOException e) {
-                    Log.e("Network", e.toString());
+                    e.printStackTrace();
+                    finishRequest(true);
+                    break;
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        private void runBody() throws IOException{
-            Log.e("Network", "ReceiveThread: Begin to read socket");
-            int tag = inputStream.readInt();
-            Log.e("Network", "ReceiveThread: Read socket tag: " + tag);
-            if(tag != 0xA55AAA55) {
-                throw new IOException();
+        private void runBody() throws IOException, InterruptedException{
+            if(currentResponse == null) {
+                readSemaphore.acquire();
             }
-            int len = inputStream.readInt();
-            Log.e("Network", "ReceiveThread: Read socket len: " + len);
-            byte[] data = new byte[len];
-            inputStream.readFully(data);
-            Log.e("Network", "ReceiveThread: Read socket data: " + data.toString());
-            reportListener(data, null);
+            currentResponse.read(inputStream);
+            reportResponse(currentResponse);
+            if(currentResponse.finished()) {
+                finishRequest(false);
+            }
         }
     }
 }
