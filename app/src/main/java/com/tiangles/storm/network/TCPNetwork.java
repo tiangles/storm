@@ -10,11 +10,9 @@ public class TCPNetwork{
     private TCPConnection connection;
     Handler handler = new Handler();
     Request currentRequest;
-    ResponseFactory responseFactory;
 
-    public TCPNetwork(ConnectionConfig config, ResponseFactory responseFactory) {
+    public TCPNetwork(ConnectionConfig config) {
         connection = new TCPConnection(config, handler);
-        this.responseFactory = responseFactory;
     }
 
     public void sendRequest(Request req){

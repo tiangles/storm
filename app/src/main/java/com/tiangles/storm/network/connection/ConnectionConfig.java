@@ -12,5 +12,4 @@ public interface ConnectionConfig {
     public int getServerPort();
     public int getConnectionType();
     public int getSoTimeout();
-    public ResponseFactory responseFactory();
 }

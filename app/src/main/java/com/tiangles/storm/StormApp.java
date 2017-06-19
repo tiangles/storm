@@ -3,8 +3,6 @@ package com.tiangles.storm;
 import android.content.Context;
 import android.os.Handler;
 
-import com.tiangles.storm.network.Response;
-import com.tiangles.storm.network.ResponseFactory;
 import com.tiangles.storm.network.TCPNetwork;
 import com.tiangles.storm.network.connection.ConnectionConfig;
 import com.tiangles.storm.user.User;
@@ -74,15 +72,6 @@ public class StormApp extends ZApplication {
                 return 3000;
             }
 
-            @Override
-            public ResponseFactory responseFactory() {
-                return new ResponseFactory() {
-                    @Override
-                    public Response createResponse(){
-                        return new StormResponse();
-                    }
-                } ;
-            }
-        }, new StormResponseFactory());
+        });
     }
 }
