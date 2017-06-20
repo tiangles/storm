@@ -1,15 +1,19 @@
 package com.tiangles.storm.network.connection;
 
-import com.tiangles.storm.network.ResponseFactory;
+import android.os.Handler;
+
+import com.tiangles.storm.network.JResponseFactory;
 
 public interface ConnectionConfig {
-    public static int HTTP_CONNECTION = 0;
-    public static int HTTPS_CONNECTION = 1;
-    public static int TCP_CONNECTION = 2;
-    public static int TLS_CONNECTION = 3;
+    int HTTP_CONNECTION = 0;
+    int HTTPS_CONNECTION = 1;
+    int TCP_CONNECTION = 2;
+    int TLS_CONNECTION = 3;
 
-    public String getServerAddress();
-    public int getServerPort();
-    public int getConnectionType();
-    public int getSoTimeout();
+    String getServerAddress();
+    int getServerPort();
+    int getConnectionType();
+    int getSoTimeout();
+    Handler getMessageHandler();
+    JResponseFactory getResponseFactory();
 }

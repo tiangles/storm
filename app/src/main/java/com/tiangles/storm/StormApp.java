@@ -3,6 +3,7 @@ package com.tiangles.storm;
 import android.content.Context;
 import android.os.Handler;
 
+import com.tiangles.storm.network.JResponseFactory;
 import com.tiangles.storm.network.TCPNetwork;
 import com.tiangles.storm.network.connection.ConnectionConfig;
 import com.tiangles.storm.user.User;
@@ -69,9 +70,18 @@ public class StormApp extends ZApplication {
 
             @Override
             public int getSoTimeout() {
-                return 3000;
+                return 0;
             }
 
+            @Override
+            public Handler getMessageHandler() {
+                return handler;
+            }
+
+            @Override
+            public JResponseFactory getResponseFactory() {
+                return new JResponseFactory();
+            }
         });
     }
 }

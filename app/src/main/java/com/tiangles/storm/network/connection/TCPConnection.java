@@ -13,8 +13,8 @@ public class TCPConnection extends Connection{
     private Socket socket;
     private ConnectionConfig config;
 
-    public TCPConnection(ConnectionConfig config, Handler handler){
-        super(handler);
+    public TCPConnection(ConnectionConfig config, Delegate delegate){
+        super(config, delegate);
         this.config = config;
     }
 
@@ -22,10 +22,8 @@ public class TCPConnection extends Connection{
     public void connect() throws IOException{
         socket = new Socket(config.getServerAddress(), config.getServerPort());
         int soTimeout = config.getSoTimeout();
-        if(soTimeout > 0){
-            if(soTimeout != socket.getSoTimeout()){
-                socket.setSoTimeout(config.getSoTimeout());
-            }
+        if(soTimeout > 0 && soTimeout != socket.getSoTimeout()){
+            socket.setSoTimeout(config.getSoTimeout());
         }
     }
 

@@ -1,10 +1,6 @@
 package com.tiangles.storm.user;
 
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.network.Request;
-import com.tiangles.storm.network.Response;
-
-import java.io.DataOutputStream;
 
 public class User {
     private static User mInstance;

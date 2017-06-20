@@ -1,22 +1,57 @@
 package com.tiangles.storm.network;
 
-import android.os.Handler;
-
+import com.tiangles.storm.network.connection.Connection;
 import com.tiangles.storm.network.connection.ConnectionConfig;
+import com.tiangles.storm.network.connection.Response;
 import com.tiangles.storm.network.connection.TCPConnection;
 
+import java.io.IOException;
+import java.util.Vector;
 
-public class TCPNetwork{
+
+public class TCPNetwork implements Connection.Delegate{
     private TCPConnection connection;
-    Handler handler = new Handler();
-    Request currentRequest;
+    boolean connected;
+    Vector<JRequest> requests = new Vector<>();
 
     public TCPNetwork(ConnectionConfig config) {
-        connection = new TCPConnection(config, handler);
+        connection = new TCPConnection(config, this);
     }
 
-    public void sendRequest(Request req){
+    public void sendRequest(JRequest req){
+        synchronized (requests) {
+            requests.add(req);
+        }
         connection.send(req);
-        currentRequest = req;
+
+    }
+
+    @Override
+    public void onConnected() {
+        connected = true;
+    }
+
+    @Override
+    public void onDisconnected() {
+        connected = false;
+    }
+
+    @Override
+    public void onError(IOException e) {
+
+    }
+
+    @Override
+    public void onResponse(Response res) {
+        JResponse sres = (JResponse) res;
+        synchronized (requests) {
+            for (JRequest e: requests) {
+                if(e.command().equals(sres.command())) {
+                    e.handleResponse(sres);
+                    requests.remove(e);
+                    break;
+                }
+            }
+        }
     }
 }

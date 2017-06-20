@@ -1,13 +1,11 @@
-package com.tiangles.storm.network;
+package com.tiangles.storm.network.connection;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 public interface Request {
-    Response createResponse();
-    boolean handleResponse(Response response);
-
     void onStartTransfer();
+    void onEndTransfer();
     void onError(IOException e);
 
     void write(DataOutputStream output) throws IOException;

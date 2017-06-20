@@ -4,13 +4,12 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.tiangles.storm.debug.Logger;
-import com.tiangles.storm.network.Request;
-import com.tiangles.storm.network.Response;
+import com.tiangles.storm.network.JResponseFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class Connection {
     protected abstract void connect() throws IOException;
@@ -20,22 +19,28 @@ public abstract class Connection {
 
     private SendThread sendThread;
     private ReceiveThread receiveThread;
-    private Request currentRequest;
-    private Response currentResponse;
+
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
-    private Handler handler;
-    Semaphore writeSemaphore = new Semaphore(1);
-    Semaphore readSemaphore = new Semaphore(1);
 
-    public Connection(Handler handler){
-        this.handler = handler;
-        try {
-            writeSemaphore.acquire();
-            readSemaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private Handler handler;
+    private Delegate delegate;
+
+    private JResponseFactory responseFactory;
+
+    private LinkedBlockingQueue<Request> pendingRequests = new LinkedBlockingQueue<>(8);
+
+    public interface Delegate {
+        void onConnected();
+        void onDisconnected();
+        void onError(IOException e);
+        void onResponse(Response res);
+    }
+
+    protected Connection(ConnectionConfig config, Delegate delegate){
+        handler = config.getMessageHandler();
+        responseFactory = config.getResponseFactory();
+        this.delegate = delegate;
 
         sendThread = new SendThread();
         sendThread.start();
@@ -43,12 +48,11 @@ public abstract class Connection {
 
     public void send(Request request){
         Log.e("Network", "Main: Get a request from main");
-        if(currentRequest == null) {
-            currentRequest = request;
-        } else {
-            Logger.log("Busy!");
+        try {
+            pendingRequests.put(request);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        writeSemaphore.release();
         Log.e("Network", "Main: Report request to read thread");
     }
 
@@ -56,7 +60,7 @@ public abstract class Connection {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                currentRequest.onError(e);
+                delegate.onError(e);
             }
         });
     }
@@ -65,30 +69,31 @@ public abstract class Connection {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                currentRequest.handleResponse(res);
+                delegate.onResponse(res);
             }
         });
     }
 
-    private void reportStartTransfer() {
+    private void reportStartTransfer(final Request req) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                currentRequest.onStartTransfer();
+                req.onStartTransfer();
             }
         });
     }
 
-    private void finishRequest(boolean closeSocket) {
-        currentResponse = null;
-        currentResponse = null;
-        if(closeSocket) {
-            close();
-        }
+    private void reportEndTransfer(final Request req) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                req.onEndTransfer();
+            }
+        });
     }
 
     private class SendThread extends Thread {
-        public SendThread() {
+        private SendThread() {
             super("Network-SendThread");
         }
         @Override
@@ -110,7 +115,6 @@ public abstract class Connection {
                 } catch (IOException e) {
                     e.printStackTrace();
                     reportError(e);
-                    finishRequest(true);
                     break;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -119,19 +123,20 @@ public abstract class Connection {
         }
 
         private void runBody() throws InterruptedException, IOException{
-            writeSemaphore.acquire();
-            if(currentResponse != null) {
-                throw new IOException();
+            Request req = pendingRequests.take();
+            if(req != null ){
+                reportStartTransfer(req);
+                req.write(outputStream);
+                reportEndTransfer(req);
+            } else {
+                Logger.log("Network: invalid request!");
             }
-            reportStartTransfer();
-            currentResponse = currentRequest.createResponse();
-            currentRequest.write(outputStream);
-            readSemaphore.release();
+
         }
     }
 
     private class ReceiveThread extends Thread {
-        public ReceiveThread() {
+        private ReceiveThread() {
             super("Network-ReceiveThread");
         }
         @Override
@@ -147,7 +152,6 @@ public abstract class Connection {
                     runBody();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    finishRequest(true);
                     break;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -156,14 +160,9 @@ public abstract class Connection {
         }
 
         private void runBody() throws IOException, InterruptedException{
-            if(currentResponse == null) {
-                readSemaphore.acquire();
-            }
-            currentResponse.read(inputStream);
-            reportResponse(currentResponse);
-            if(currentResponse.finished()) {
-                finishRequest(false);
-            }
+            Response res = responseFactory.createResponse();
+            res.read(inputStream);
+            reportResponse(res);
         }
     }
 }
