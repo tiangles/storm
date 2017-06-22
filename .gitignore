@@ -1,8 +1,9 @@
 *.iml
-.gradle
-/local.properties
-/.idea
+/client/android.gradle
+/client/android/local.properties
+/client/android/.idea
 .DS_Store
-/build
-/captures
-.externalNativeBuild
+/client/android/build
+/client/android/captures
+/client/android/.externalNativeBuild
+*.pyc
