@@ -12,8 +12,7 @@ public class User {
     public boolean mAuthSucceeded;
 
     public interface LoginListener {
-        public void onBeginLogin();
-        public void onLoginDone();
+        public void onLoginDone(int error, String msg);
     }
 
     public User(){

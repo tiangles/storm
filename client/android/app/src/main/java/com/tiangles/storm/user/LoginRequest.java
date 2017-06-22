@@ -1,15 +1,16 @@
 package com.tiangles.storm.user;
 
-import com.tiangles.storm.network.JRequest;
-import com.tiangles.storm.network.JResponse;
+import com.tiangles.storm.R;
+import com.tiangles.storm.SResponse;
+import com.tiangles.storm.network.Request;
+import com.tiangles.storm.network.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 
-public class LoginRequest extends JRequest {
+public class LoginRequest implements Request {
+    private String COMMAND = "login";
     private User user;
     private User.LoginListener listener;
     public LoginRequest(User user, User.LoginListener listener) {
@@ -17,57 +18,42 @@ public class LoginRequest extends JRequest {
         this.listener = listener;
     }
 
+    private void handleLoginResult(JSONObject jObj) {
+        String message = "";
+        int result = -1;
+        try {
+             result = jObj.getInt("result");
+            message = jObj.getString("message");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        user.mAuthSucceeded = (result == 0);
+        listener.onLoginDone(result, message);
+    }
+
     @Override
-    public void write(DataOutputStream output) throws IOException{
+    public byte[] data() {
         try {
             JSONObject jObj = new JSONObject();
             jObj.put("user_name", user.mUserName);
             jObj.put("password", user.mPassword);
-            byte[] data = jObj.toString().getBytes();
-            output.write(data);
+            jObj.put("cmd", "login");
+            return jObj.toString().getBytes();
         } catch (JSONException e) {
             user.mAuthSucceeded = false;
-            listener.onLoginDone();
+            listener.onLoginDone(-1, String.valueOf(R.string.network_error));
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
-    public String command() {
-        return "login";
-    }
-
-    @Override
-    public void handleResponse(JResponse response) {
-        try {
-            String result = response.data().getString("result");
-            handleLoginResult(result);
-        } catch (JSONException e) {
-            e.printStackTrace();
+    public boolean handleResponse(Response res) {
+        SResponse sRes = (SResponse)res;
+        if( sRes.getCmd().equals(COMMAND) ) {
+            handleLoginResult(sRes.getjObj());
+            return true;
         }
-    }
-
-    @Override
-    public void onStartTransfer() {
-        listener.onBeginLogin();
-    }
-
-    @Override
-    public void onEndTransfer() {
-        //do nothing
-    }
-
-    @Override
-    public void onError(IOException e) {
-        handleLoginResult(null);
-    }
-
-    private void handleLoginResult(String str) {
-        if(str != null && str.equals("succeed")) {
-            user.mAuthSucceeded = true;
-        } else {
-            user.mAuthSucceeded = false;
-        }
-        listener.onLoginDone();
+        return false;
     }
 }

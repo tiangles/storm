@@ -122,18 +122,14 @@ public class LoginActivity extends AppCompatActivity{
             );
             user.login(new User.LoginListener() {
                 @Override
-                public void onBeginLogin() {
-                    showProgress(true);
-                }
-                @Override
-                public void onLoginDone() {
+                public void onLoginDone(int error, String msg) {
                     Engine.getInstance().addEvent(new LoginEvent(user, new Date()));
                     showProgress(false);
                     if(user.mAuthSucceeded){
                         switchToMain();
                         PreferenceEngine.getInstance().saveUserInfo(user);
                     } else {
-                        mPasswordEditor.setError(getString(R.string.error_incorrect_password));
+                        mPasswordEditor.setError(msg);
                         mPasswordEditor.requestFocus();
                     }
                 }
