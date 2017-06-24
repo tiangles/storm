@@ -1,6 +1,7 @@
 import tornado.websocket
 import json
 import Config
+import HandlerConfig
 
 
 class SocketHandler(tornado.websocket.WebSocketHandler):
@@ -10,6 +11,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
     #     return True
     #
     def open(self):
+        print "Get connection request"
         self.write_message(json.dumps({
             'cmd': 'connect',
             'result': 'succeed',
@@ -25,7 +27,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         print "Handle message: %s" % message
 
         cmd = message['cmd']
-        for (c, h) in Config.cmd_handlers:
+        for (c, h) in HandlerConfig.cmd_handlers:
             if c == cmd:
                 str = h(self, message)
                 print "Send message: %s" % str

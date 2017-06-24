@@ -75,7 +75,7 @@ public class WebSocketConnection implements Connection {
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
             if(!tryReconnect()){
-                statusListener.onFailure(t, response.toString());
+                statusListener.onFailure(t, response!=null?response.toString():"");
             }
         }
     };
