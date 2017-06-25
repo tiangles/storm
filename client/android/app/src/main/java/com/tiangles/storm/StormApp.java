@@ -60,7 +60,7 @@ public class StormApp extends ZApplication {
 
             @Override
             public String getServerAddress() {
-                return "192.168.84.29";
+                return "192.168.3.11";
             }
 
             @Override

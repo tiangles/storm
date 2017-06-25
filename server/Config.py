@@ -8,3 +8,7 @@ db_config = {
     'db_name': 'storm.db'
 }
 
+cmd_handlers = [
+    (r'login', 'handlers.Handler.handle_login')
+]
+
