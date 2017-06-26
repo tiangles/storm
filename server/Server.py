@@ -35,7 +35,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
             self.handlers[c] = import_string(h)
 
     def open(self):
-        print "Get connection request"
+        print 'Get connection request'
         self.write_message(json.dumps({
             'cmd': 'connect',
             'result': 'succeed',
@@ -48,15 +48,31 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, dat):
         message = json.loads(dat)
-        print "Handle message: %s" % message
+        print 'Handle message: %s' % message
 
         cmd = message['cmd']
+        handled = False
         for (c, h) in self.handlers.items():
+            #find a handler to handle the command
             if c == cmd:
-                str = h(self, message)
-                print "Send message: %s" % str
-                self.write_message(str)
+                (code, msg) = h(self, message)
+                result = {
+                    'cmd': cmd,
+                    'result': code,
+                    'message': msg,
+                }
+                print 'Send message: %s' % result
+                self.write_message(json.dumps(result))
+                handled = True
                 break
+        # tell client
+        if not handled:
+            result = {
+                'cmd': cmd,
+                'result': -1,
+                'message': 'unknown command',
+            }
+            self.write_message(json.dumps(result))
 
 
 class Application(tornado.web.Application):

@@ -13,3 +13,5 @@ class User(Model):
     class Meta:
         database = db  # This model uses the "people.db" database.
         db_table = 'users'
+
+# User.create_table()

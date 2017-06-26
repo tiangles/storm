@@ -9,6 +9,7 @@ db_config = {
 }
 
 cmd_handlers = [
-    (r'login', 'handlers.Handler.handle_login')
+    (r'login', 'handlers.Handler.handle_login'),
+    (r'upload_event', 'handlers.Handler.handle_upload_event')
 ]
 
