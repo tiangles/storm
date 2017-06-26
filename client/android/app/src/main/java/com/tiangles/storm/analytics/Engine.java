@@ -2,6 +2,7 @@ package com.tiangles.storm.analytics;
 
 import android.os.Environment;
 
+import com.tiangles.storm.StormApp;
 import com.tiangles.storm.analytics.event.Event;
 import com.tiangles.storm.analytics.logger.FileLogger;
 import com.tiangles.storm.analytics.logger.LoggerFormatter;
@@ -39,6 +40,7 @@ public class Engine {
 
     public boolean addEvent(Event e) {
         mFileLogger.error(e.tag(), e.toString());
+        StormApp.getNetwork().sendRequest(new UploadRequest(e));
         return false;
     }
 

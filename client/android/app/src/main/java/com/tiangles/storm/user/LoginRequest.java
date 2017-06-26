@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class LoginRequest implements Request {
+public class LoginRequest extends Request {
     private String COMMAND = "login";
     private User user;
     private User.LoginListener listener;
@@ -55,5 +55,11 @@ public class LoginRequest implements Request {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onError(Exception e) {
+        user.mAuthSucceeded = false;
+        listener.onLoginDone(-1, String.valueOf(R.string.network_error));
     }
 }

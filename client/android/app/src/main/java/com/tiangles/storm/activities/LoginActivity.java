@@ -81,7 +81,6 @@ public class LoginActivity extends AppCompatActivity{
         mUserNameEditor.setError(null);
         mPasswordEditor.setError(null);
 
-
         // Store values at the time of the login attempt.
         String signInUserName = mUserNameEditor.getText().toString();
         String password = mPasswordEditor.getText().toString();

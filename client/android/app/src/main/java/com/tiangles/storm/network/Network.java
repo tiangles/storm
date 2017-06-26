@@ -6,6 +6,7 @@ import android.util.Log;
 import com.tiangles.storm.network.connection.Connection;
 import com.tiangles.storm.network.connection.WebSocketConnection;
 
+import java.io.IOException;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -32,6 +33,7 @@ public class Network {
         boolean res = connection.sendMessage(req.data());
         if(!res) {
             try {
+                Log.e("Network", "put request!");
                 pendingRequests.put(req);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -51,7 +53,7 @@ public class Network {
     private class ConnectionListener implements Connection.StatusListener {
         @Override
         public void onOpen(String msg) {
-            config.getDelegate().onOpen(msg);
+            config.getDelegate().onNetworkOpen(msg);
             sendingThread = new SendingThread();
             sendingThread.start();
         }
@@ -79,7 +81,7 @@ public class Network {
 
         @Override
         public void onClosed(int code, String reason) {
-            config.getDelegate().onClosed(code, reason);
+            config.getDelegate().onNetworkClosed(code, reason);
         }
 
         @Override
@@ -101,9 +103,16 @@ public class Network {
                 try {
                     Request req = pendingRequests.take();
                     if( !connection.sendMessage(req.data()) ) {
-                        pendingRequests.put(req);
+                        Log.e("Network", "put request in sending thread!");
+                        req.retry();
+                        if(req.getRetryTimes() > config.getReconnectMaxTime()) {
+                            req.onError(new IOException());
+                        } else {
+                            pendingRequests.put(req);
+                        }
+                        sleep(config.getReconnectInterval());
                     }
-                    wait(config.getReconnectInterval());
+                    Log.e("Network", "take request!");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

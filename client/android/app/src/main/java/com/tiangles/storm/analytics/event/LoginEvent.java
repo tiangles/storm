@@ -15,7 +15,7 @@ public class LoginEvent implements Event{
 
     @Override
     public String tag() {
-        return LoginEvent.class.getName();
+        return "login";
     }
 
     @Override

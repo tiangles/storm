@@ -40,6 +40,9 @@ public class StormApp extends ZApplication {
     }
 
     public static Network getNetwork() {
+        if(network == null) {
+            network = createNetwork();
+        }
         return network;
     }
 
@@ -60,7 +63,7 @@ public class StormApp extends ZApplication {
 
             @Override
             public String getServerAddress() {
-                return "192.168.3.11";
+                return "192.168.84.29";
             }
 
             @Override
@@ -92,15 +95,16 @@ public class StormApp extends ZApplication {
             public Delegate getDelegate() {
                 return new Delegate() {
                     @Override
-                    public void onOpen(String msg) {
+                    public void onNetworkOpen(String msg) {
                     }
 
                     @Override
-                    public void onClosed(int code, String reason) {
+                    public void onNetworkClosed(int code, String reason) {
                     }
 
                     @Override
                     public void onFailure(Throwable t, String msg) {
+                        network = null;
                     }
 
                     @Override
