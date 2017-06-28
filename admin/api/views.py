@@ -6,9 +6,11 @@ from rest_framework import pagination
 
 import device.serializers
 import device.models
+import event.models
+import event.serializers
 
 
-class DeviceViewset(rest_framework.viewsets.ModelViewSet):
+class DeviceViewSet(rest_framework.viewsets.ModelViewSet):
     queryset = device.models.Device.objects.all()
     serializer_class = device.serializers.DeviceSerializer
 
@@ -26,3 +28,8 @@ class DeviceViewset(rest_framework.viewsets.ModelViewSet):
             serializer = self.get_serializer(queryset, many=True)
             response_data = {'total': len(serializer.data), 'rows': serializer.data}
             return rest_framework.response.Response(response_data)
+
+
+class UserEventViewSet(rest_framework.viewsets.ModelViewSet):
+    queryset = event.models.UserEvent.objects.all()
+    serializer_class = event.serializers.UserEventSerializer

@@ -22,7 +22,8 @@ import device.views
 
 
 router = DefaultRouter()
-router.register(r'devices', api.views.DeviceViewset)
+router.register(r'devices', api.views.DeviceViewSet)
+router.register(r'events', api.views.UserEventViewSet)
 
 
 urlpatterns = [
