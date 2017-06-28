@@ -2,9 +2,11 @@
 {% block title %}设备管理{% endblock %}
 
 {% block page_content %}
-<link href="/static/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
-<script src="/static/bootstrap-table/bootstrap-table.min.js"></script>
-<script src="/static/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+{% load static %}
+
+<link href="{% static "bootstrap-table/bootstrap-table.min.css"%}" rel="stylesheet" />
+<script src="{% static "bootstrap-table/bootstrap-table.min.js"%}"></script>
+<script src="{% static "bootstrap-table/locale/bootstrap-table-zh-CN.js"%}"></script>
 
 <div class=" container table-responsive">
     <div class="tab-content" id="tabContent">
@@ -30,5 +32,5 @@
 
 {% block page_script %}
 <!-- get data from server -->
-<script src="/static/app.js"></script>
+<script src="{{ STATIC_URL }}app.js"></script>
 {% endblock %}
