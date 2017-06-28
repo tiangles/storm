@@ -5,13 +5,17 @@ db = models.database.db
 
 
 class User(Model):
-    user_name = CharField()
-    password = CharField()
-    first_name = CharField()
-    last_name = CharField()
+    password = CharField(max_length=128)
+    last_login = DateTimeField()
+    is_superuser = BooleanField()
+    first_name = CharField(max_length=30)
+    last_name = CharField(max_length=30)
+    email = CharField(max_length=254)
+    is_staff = BooleanField()
+    is_active = BooleanField()
+    date_joined = DateTimeField()
+    username = CharField(max_length=150)
 
     class Meta:
         database = db  # This model uses the "people.db" database.
-        db_table = 'users'
-
-# User.create_table()
+        db_table = 'auth_user'

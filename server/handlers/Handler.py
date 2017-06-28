@@ -1,7 +1,8 @@
 import json
 import time
 from models.user import User
-from models.event import Event
+from models.event import UserEvent
+from models.hashers import check_password
 
 
 def handle_login(socket, message):
@@ -9,11 +10,11 @@ def handle_login(socket, message):
     password = message['password']
 
     try:
-        user = User.select().where(User.user_name == user_name).get()
+        user = User.select().where(User.username == user_name).get()
     except:
         user = None
 
-    if user is not None and user.password == password:
+    if user is not None and check_password(password, user.password):
         socket.user = user
         return 0, 'succeed'
     else:
@@ -22,10 +23,10 @@ def handle_login(socket, message):
 
 def handle_upload_event(socket, message):
     try:
-        event = Event.create(user=socket.user,
-                             type=message['type'],
-                             event=message['event'],
-                             time=time.time())
+        event = UserEvent.create(user=socket.user,
+                                 type=message['type'],
+                                 event=message['event'],
+                                 date=time.time())
         event.save()
         return 0, 'succeed'
     except Exception, e:

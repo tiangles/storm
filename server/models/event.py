@@ -5,14 +5,12 @@ from user import User
 db = models.database.db
 
 
-class Event(Model):
-    user = ForeignKeyField(User)
-    time = DateTimeField()
+class UserEvent(Model):
+    type = CharField(max_length=64)
+    date = DateTimeField()
     event = CharField(max_length=256)
-    type = CharField(max_length=16)
+    user = ForeignKeyField(User)
 
     class Meta:
-        database = db  # This model uses the "people.db" database.
-        db_table = 'events'
-
-# Event.create_table()
+        database = db
+        db_table = 'auth_user_event'
