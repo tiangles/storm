@@ -1,4 +1,4 @@
-package com.tiangles.storm.analytics;
+package com.tiangles.storm.analytics.event;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.SResponse;

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+
 import com.tiangles.storm.R;
 import com.tiangles.storm.utilities.DES3Utils;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
@@ -27,12 +28,14 @@ public class QRCodeActivity extends AppCompatActivity {
     @BindView(R.id.iv_qr_image) ImageView mQRImage;
 
     private String mScanResult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode);
         ButterKnife.bind(this);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -71,6 +74,14 @@ public class QRCodeActivity extends AppCompatActivity {
         String message = mInputMessageTextView.getText().toString();
         String encoded = DES3Utils.encryptMode(message);
         showQRCode(PROTOCAL_HEADER + encoded);
+    }
+
+    public void showDevice(View v) {
+        if(!mScanResult.isEmpty()) {
+            Intent intent = new Intent(this, DeviceInfoActivity.class);
+            intent.putExtra("qrCode", mScanResult);
+            startActivity(intent);
+        }
     }
 
     private void showQRCode(String message) {

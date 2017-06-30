@@ -4,6 +4,7 @@ import android.os.Environment;
 
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.analytics.event.Event;
+import com.tiangles.storm.analytics.event.UploadRequest;
 import com.tiangles.storm.analytics.logger.FileLogger;
 import com.tiangles.storm.analytics.logger.LoggerFormatter;
 

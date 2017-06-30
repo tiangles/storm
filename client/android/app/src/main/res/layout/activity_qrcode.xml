@@ -53,4 +53,10 @@
         android:layout_gravity="center"
         />
 
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="showDevice"
+        android:text="显示设备信息" />
+
 </LinearLayout>
