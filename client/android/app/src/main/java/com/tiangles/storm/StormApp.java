@@ -3,6 +3,7 @@ package com.tiangles.storm;
 import android.content.Context;
 import android.os.Handler;
 
+import com.tiangles.storm.database.StormDB;
 import com.tiangles.storm.network.Configuration;
 import com.tiangles.storm.network.Delegate;
 import com.tiangles.storm.network.Network;
@@ -16,6 +17,7 @@ public class StormApp extends ZApplication {
     private static Handler handler;
     private static Network network;
     private static User user;
+    private static StormDB stormDB;
 
     @Override
     public void onCreate() {
@@ -25,6 +27,7 @@ public class StormApp extends ZApplication {
         user = new User();
         handler = new Handler();
         network = createNetwork();
+        stormDB = new StormDB(getApplicationContext());
     }
 
     public static StormApp getInstance() {
@@ -52,6 +55,10 @@ public class StormApp extends ZApplication {
 
     public static void setCurrentUser(User user) {
         StormApp.user = user;
+    }
+
+    public static StormDB getStormDB() {
+        return stormDB;
     }
 
     private static Network createNetwork(){

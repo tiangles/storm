@@ -25,5 +25,10 @@
             android:layout_height="wrap_content"
             android:onClick="showChartActivity"
             android:text="报表" />
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="showWorkshopActivity"
+            android:text="总图" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

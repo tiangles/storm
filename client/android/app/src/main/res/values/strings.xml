@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Storm</string>
+    <string name="app_name">河北建投承德上板城2X350MW超临界热电联产工程</string>
 
     <!-- Strings related to login -->
     <string name="prompt_user_name">用户名</string>
@@ -15,4 +15,6 @@
     <string name="remember_password">记住密码</string>
     <string name="auto_login">自动登录</string>
     <string name="network_error">网络错误</string>
+    <string name="title_activity_workshop">车间设备列表</string>
+    <string name="action_settings">Settings</string>
 </resources>

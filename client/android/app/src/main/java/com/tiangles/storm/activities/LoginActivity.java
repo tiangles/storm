@@ -57,9 +57,9 @@ public class LoginActivity extends AppCompatActivity{
         mPasswordEditor.setText(user.mPassword);
         mRememberPasswordBox.setChecked(user.mRememberPassword);
         mAutoLoginBox.setChecked(user.mAutoLogin);
-        if(user.mAutoLogin){
-            attemptLogin();
-        }
+//        if(user.mAutoLogin){
+//            attemptLogin();
+//        }
     }
 
     @OnClick(R.id.login_sign_in_button)

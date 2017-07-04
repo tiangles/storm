@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void showWorkshopActivity(View v){
+        Intent intent = new Intent(MainActivity.this, WorkshopActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

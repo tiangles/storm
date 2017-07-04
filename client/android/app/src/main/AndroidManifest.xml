@@ -30,6 +30,7 @@
         <activity android:name=".activities.QRCodeActivity" />
         <activity android:name=".activities.ChartActivity" />
         <activity android:name=".activities.DeviceInfoActivity" />
+        <activity android:name=".activities.WorkshopActivity" android:label="@string/title_activity_workshop" />
     </application>
 
 </manifest>
