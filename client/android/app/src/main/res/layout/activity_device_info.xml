@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="设备型号："
+        android:text="设备编码："
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="18sp" />
     <TextView
@@ -16,8 +16,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:id="@+id/device_model"/>
-
+        android:id="@+id/device_code"/>
     <Space
         android:layout_width="match_parent"
         android:layout_height="10sp" />
@@ -41,7 +40,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="设备二维码："
+        android:text="设备型号："
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="18sp" />
     <TextView
@@ -49,7 +48,87 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:id="@+id/device_qrcode_text"/>
+        android:id="@+id/device_model"/>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="所在系统："
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="18sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:id="@+id/device_system"/>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="工艺参数："
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="18sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:id="@+id/device_parameters"/>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="配电柜："
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="18sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:id="@+id/device_distribution_cabinet"/>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="就地控制柜："
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="18sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:id="@+id/device_local_control_panel"/>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DCS控制柜："
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="18sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:id="@+id/device_dcs_cabinet"/>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10sp" />
+
     <ImageView
         android:id="@+id/device_qrcode_image"
         android:layout_width="wrap_content"
