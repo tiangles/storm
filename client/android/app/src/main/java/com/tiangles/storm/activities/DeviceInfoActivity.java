@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,7 +12,7 @@ import com.google.zxing.WriterException;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.device.StormDevice;
+import com.tiangles.storm.database.device.StormDevice;
 import com.uuzuche.lib_zxing.encoding.EncodingHandler;
 
 import java.util.List;
@@ -27,8 +28,6 @@ public class DeviceInfoActivity extends AppCompatActivity {
     @BindView(R.id.device_distribution_cabinet) TextView mDeviceDistributionCabinetView;
     @BindView(R.id.device_local_control_panel) TextView mDeviceLocalControlPanelView;
     @BindView(R.id.device_dcs_cabinet) TextView mDeviceDcsCabinetView;
-
-    @BindView(R.id.device_qrcode_image) ImageView mDeviceQRCodeImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
     }
 
     private void showDevice(StormDevice device) {
-        mDeviceModelView.setText(device.getModel());
+        mDeviceModelView.setText("SAF26-17-2\n双级动叶可调轴流式风机\n6kV电动机\n轴功率3280kW\n转速990r/min\n风机全压升10311Pa\n静压升10311Pa\n入口质量流量244.58kg/s");
         mDeviceNameView.setText(device.getName());
         mDeviceCodeTextView.setText(device.getCode());
         mDeviceSystemView.setText(device.getSystem());
@@ -61,13 +60,9 @@ public class DeviceInfoActivity extends AppCompatActivity {
         mDeviceDistributionCabinetView.setText(device.getDistributionCabinet());
         mDeviceLocalControlPanelView.setText(device.getLocalControlPanel());
         mDeviceDcsCabinetView.setText(device.getDcsCabinet());
+    }
 
-        try {
-            Bitmap bmp = EncodingHandler.createQRCode(device.getCode(), 512);
-            mDeviceQRCodeImageView.setImageBitmap(bmp);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
+    public void showSystemInfo(View view) {
 
     }
 }
