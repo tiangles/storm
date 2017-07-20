@@ -1,16 +1,17 @@
 package com.tiangles.storm.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.ViewGroup;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.device.StormDevice;
+import com.tiangles.storm.database.device.StormDevice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,13 @@ public class WorkshopActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mDeviceListView.setAdapter(createDeviceListAdaptor());
+        mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(WorkshopActivity.this, DeviceSystemInfoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private SimpleAdapter createDeviceListAdaptor() {
