@@ -1,7 +1,6 @@
-package com.tiangles.storm.device;
+package com.tiangles.storm.database.device;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
