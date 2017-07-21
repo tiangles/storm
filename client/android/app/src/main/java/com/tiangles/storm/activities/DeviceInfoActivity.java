@@ -1,19 +1,15 @@
 package com.tiangles.storm.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.zxing.WriterException;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.device.StormDevice;
-import com.uuzuche.lib_zxing.encoding.EncodingHandler;
 
 import java.util.List;
 import butterknife.BindView;

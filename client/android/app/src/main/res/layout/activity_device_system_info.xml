@@ -1,75 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20sp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:id="@+id/device_code"
+        android:layout_gravity="center"
+        android:text="设备编码：10HNC10AN001"
+        android:textSize="@dimen/device_system_view_title"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="设备名称：#1机组#1引风机"
+        android:textSize="@dimen/device_system_view_name"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="系统图(含电气系统)"
+        android:textSize="@dimen/device_system_view_name"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30sp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.tiangles.storm.views.DeviceSystemView
+            android:id="@+id/device_link_forward"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:clickable="true" />
+        <com.tiangles.storm.views.DeviceSystemView
+            android:id="@+id/device_link_this"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:clickable="true" />
+        <com.tiangles.storm.views.DeviceSystemView
+            android:id="@+id/device_link_backword"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:clickable="true" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="90sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-        <ImageView
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true" >
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/power_switch"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="前相邻设备"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="10HNA30AA001"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="#1机组#1引风机入口电动门"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-        <ImageView
+            android:text="Save"/>
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/power_switch"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="本设备"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="10HNA30AA001"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="#1机组#1引风机"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-        <ImageView
+            android:text="Save"/>
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/power_switch"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="后相邻设备"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="10HNA30AA001"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="#1机组#1引风机出口电动门"
-            android:layout_height="wrap_content" />
+            android:text="Save"/>
     </LinearLayout>
 </LinearLayout>
