@@ -1,16 +1,20 @@
 package com.tiangles.storm.database;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.tiangles.greendao.gen.DaoMaster;
 import com.tiangles.greendao.gen.DaoSession;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.activities.DeviceInfoActivity;
+import com.tiangles.storm.database.dao.StormDevice;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 public class StormDB {
     private StormDeviceDao stormDeviceDao;
@@ -22,6 +26,7 @@ public class StormDB {
 
     public String createDatabaseFile(Context context) {
         File dir = context.getFilesDir();
+//        File dir =  Environment.getExternalStorageDirectory();
         String path = dir.getAbsolutePath() + "/storm.db";
         File f = new File(path);
         if(!f.exists()) {
@@ -53,5 +58,18 @@ public class StormDB {
         }
 
         return stormDeviceDao;
+    }
+
+    public StormDevice getDevice(String deviceCode) {
+        if(deviceCode != null) {
+            StormDeviceDao dao = StormApp.getStormDB().getStormDeviceDao();
+            List<StormDevice> devices = dao.queryBuilder()
+                    .where(StormDeviceDao.Properties.Code.eq(deviceCode))
+                    .build()
+                    .list();
+            assert (devices.size()<1);
+            return devices.get(0);
+        }
+        return null;
     }
 }

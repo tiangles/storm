@@ -11,7 +11,7 @@ import android.widget.SimpleAdapter;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.database.device.StormDevice;
+import com.tiangles.storm.database.dao.StormDevice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 
 public class WorkshopActivity extends AppCompatActivity {
     @BindView(R.id.workshop_device_list) ListView mDeviceListView;
+    List<Map<String, Object>> listItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,29 +35,28 @@ public class WorkshopActivity extends AppCompatActivity {
         mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(WorkshopActivity.this, DeviceSystemInfoActivity.class);
+                Intent intent = new Intent(WorkshopActivity.this, DeviceInfoActivity.class);
+                intent.putExtra("qrCode", (String)listItems.get(position).get("code"));
                 startActivity(intent);
             }
         });
     }
 
     private SimpleAdapter createDeviceListAdaptor() {
-        List<Map<String, Object>> listItems = new ArrayList<>();
         StormDeviceDao dao = StormApp.getStormDB().getStormDeviceDao();
         List<StormDevice> devices = dao.queryBuilder()
                 .build()
                 .list();
         for(StormDevice device: devices) {
             Map<String, Object> item = new HashMap<>();
-            item.put("image", R.drawable.fan);
+            item.put("code", device.getCode());
             item.put("name", device.getName());
-            item.put("model", device.getModel());
             listItems.add(item);
         }
 
         SimpleAdapter adapter = new SimpleAdapter(this, listItems,
-                R.layout.list_item_workshop_device, new String[] { "image", "name", "model" },
-                new int[] {R.id.device_qrcode_image, R.id.device_name, R.id.device_model});
+                R.layout.list_item_workshop_device, new String[] { "code", "name" },
+                new int[] {R.id.device_code, R.id.device_name});
 
         return adapter;
     }

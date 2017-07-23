@@ -2,32 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:gravity="center"
+    android:layout_gravity = "center"
     android:orientation="vertical">
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="fill_horizontal"
+        android:gravity= "fill_horizontal"
+        android:layout_gravity = "fill_horizontal"
         android:id="@+id/device_link_image"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:layout_gravity = "center"
         android:textSize="@dimen/device_link_info_title_text_size"
-        android:text="后相邻设备"
         android:id="@+id/view_title"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_gravity = "center"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/device_link_info_detail_text_size"
-        android:text="10HNA30AA001"
         android:id="@+id/device_code"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_gravity = "center"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/device_link_info_detail_text_size"
-        android:text="#1机组#1引风机出口电动门"
         android:id="@+id/device_name"/>
 </LinearLayout>

@@ -14,7 +14,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="showQRCodeActivity"
-            android:text="二维码" />
+            android:text="扫描二维码" />
         <Button
             android:id="@+id/main_bluetooth"
             android:layout_width="fill_parent"
@@ -29,6 +29,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="showWorkshopActivity"
-            android:text="总图" />
+            android:text="车间列表" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

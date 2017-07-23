@@ -1,32 +1,37 @@
-package com.tiangles.storm.database.device;
+package com.tiangles.storm.database.dao;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
 public class StormDevice {
-    @Id private Long id;
-    private String name;
-    private String code;
-    private String model;
-    private String system;
-    private String parameter;
-    private String distributionCabinet;
-    private String localControlPanel;
-    private String dcsCabinet;
-    @Generated(hash = 462611757)
-    public StormDevice(Long id, String name, String code, String model,
-            String system, String parameter, String distributionCabinet,
-            String localControlPanel, String dcsCabinet) {
+    @Id
+    Long id;
+
+    private String code;    //设备编码
+    private String name;    //设备名称
+    private String model;   //设备型号
+    private String system;  //所在系统
+    private String distributionCabinet; //配电柜
+    private String localControlPanel;   //就地控制柜
+    private String dcsCabinet;      //DCS控制柜
+
+    private String forwardDevice;
+    private String backwardDevice;
+    @Generated(hash = 1313495017)
+    public StormDevice(Long id, String code, String name, String model,
+            String system, String distributionCabinet, String localControlPanel,
+            String dcsCabinet, String forwardDevice, String backwardDevice) {
         this.id = id;
-        this.name = name;
         this.code = code;
+        this.name = name;
         this.model = model;
         this.system = system;
-        this.parameter = parameter;
         this.distributionCabinet = distributionCabinet;
         this.localControlPanel = localControlPanel;
         this.dcsCabinet = dcsCabinet;
+        this.forwardDevice = forwardDevice;
+        this.backwardDevice = backwardDevice;
     }
     @Generated(hash = 898982401)
     public StormDevice() {
@@ -37,17 +42,17 @@ public class StormDevice {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getName() {
-        return this.name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
     public String getCode() {
         return this.code;
     }
     public void setCode(String code) {
         this.code = code;
+    }
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
     public String getModel() {
         return this.model;
@@ -61,12 +66,7 @@ public class StormDevice {
     public void setSystem(String system) {
         this.system = system;
     }
-    public String getParameter() {
-        return this.parameter;
-    }
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
-    }
+
     public String getDistributionCabinet() {
         return this.distributionCabinet;
     }
@@ -84,5 +84,17 @@ public class StormDevice {
     }
     public void setDcsCabinet(String dcsCabinet) {
         this.dcsCabinet = dcsCabinet;
+    }
+    public String getForwardDevice() {
+        return this.forwardDevice;
+    }
+    public void setForwardDevice(String forwardDevice) {
+        this.forwardDevice = forwardDevice;
+    }
+    public String getBackwardDevice() {
+        return this.backwardDevice;
+    }
+    public void setBackwardDevice(String backwardDevice) {
+        this.backwardDevice = backwardDevice;
     }
 }
