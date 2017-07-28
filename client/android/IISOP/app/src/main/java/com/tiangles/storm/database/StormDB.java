@@ -62,14 +62,21 @@ public class StormDB {
 
     public StormDevice getDevice(String deviceCode) {
         if(deviceCode != null) {
-            StormDeviceDao dao = StormApp.getStormDB().getStormDeviceDao();
-            List<StormDevice> devices = dao.queryBuilder()
+            List<StormDevice> devices = getStormDeviceDao().queryBuilder()
                     .where(StormDeviceDao.Properties.Code.eq(deviceCode))
                     .build()
                     .list();
-            assert (devices.size()<1);
-            return devices.get(0);
+            assert (devices.size()<2);
+            if(devices.size()>0) {
+                return devices.get(0);
+            }
         }
         return null;
+    }
+
+    public void commitDeviceChange(StormDevice device){
+        if(device != null){
+            getStormDeviceDao().update(device);
+        }
     }
 }

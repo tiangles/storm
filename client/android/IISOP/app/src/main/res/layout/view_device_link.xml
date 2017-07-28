@@ -18,7 +18,7 @@
         android:layout_gravity = "center"
         android:textSize="@dimen/device_link_info_title_text_size"
         android:id="@+id/view_title"/>
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"

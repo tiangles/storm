@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,10 +30,19 @@ public class DeviceSystemView extends LinearLayout {
 
     private void init(){
         deviceImage = (ImageView) findViewById(R.id.device_link_image);
-        deviceCode = (TextView) findViewById(R.id.device_code);
+        deviceCode = (EditText) findViewById(R.id.device_code);
         deviceName = (TextView) findViewById(R.id.device_name);
         deviceTitle = (TextView) findViewById(R.id.view_title);
 
+        deviceCode.setEnabled(false);
+    }
+
+    public void setEditable(boolean enabled) {
+        deviceCode.setEnabled(enabled);
+    }
+
+    public CharSequence getDeviceCode(){
+        return deviceCode.getText();
     }
 
     public void setTitle(String title) {
