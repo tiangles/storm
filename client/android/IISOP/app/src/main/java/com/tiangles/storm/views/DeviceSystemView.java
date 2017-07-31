@@ -1,9 +1,11 @@
 package com.tiangles.storm.views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,7 +18,7 @@ public class DeviceSystemView extends LinearLayout {
     private TextView  deviceTitle;
     private TextView  deviceCode;
     private TextView  deviceName;
-
+    private OnClickListener onClickListener;
     public DeviceSystemView(Context context) {
         this(context, null);
     }
@@ -26,6 +28,17 @@ public class DeviceSystemView extends LinearLayout {
         // 导入布局
         LayoutInflater.from(context).inflate(R.layout.view_device_link, this, true);
         init();
+
+
+        deviceImage.setClickable(false);
+        deviceImage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onClickListener!=null){
+                    onClickListener.onClick(DeviceSystemView.this);
+                }
+            }
+        });
     }
 
     private void init(){
@@ -35,6 +48,15 @@ public class DeviceSystemView extends LinearLayout {
         deviceTitle = (TextView) findViewById(R.id.view_title);
 
         deviceCode.setEnabled(false);
+    }
+
+    public void setOnClickListener(OnClickListener l){
+        onClickListener = l;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 
     public void setEditable(boolean enabled) {
@@ -60,4 +82,5 @@ public class DeviceSystemView extends LinearLayout {
     public void setDeviceName(String name) {
         deviceName.setText(name);
     }
+
 }

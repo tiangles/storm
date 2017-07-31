@@ -18,10 +18,12 @@ public class StormDevice {
 
     private String forwardDevice;
     private String backwardDevice;
-    @Generated(hash = 1313495017)
+    private String legend;
+    @Generated(hash = 130495297)
     public StormDevice(Long id, String code, String name, String model,
             String system, String distributionCabinet, String localControlPanel,
-            String dcsCabinet, String forwardDevice, String backwardDevice) {
+            String dcsCabinet, String forwardDevice, String backwardDevice,
+            String legend) {
         this.id = id;
         this.code = code;
         this.name = name;
@@ -32,6 +34,7 @@ public class StormDevice {
         this.dcsCabinet = dcsCabinet;
         this.forwardDevice = forwardDevice;
         this.backwardDevice = backwardDevice;
+        this.legend = legend;
     }
     @Generated(hash = 898982401)
     public StormDevice() {
@@ -66,7 +69,6 @@ public class StormDevice {
     public void setSystem(String system) {
         this.system = system;
     }
-
     public String getDistributionCabinet() {
         return this.distributionCabinet;
     }
@@ -96,5 +98,11 @@ public class StormDevice {
     }
     public void setBackwardDevice(String backwardDevice) {
         this.backwardDevice = backwardDevice;
+    }
+    public String getLegend() {
+        return this.legend;
+    }
+    public void setLegend(String legend) {
+        this.legend = legend;
     }
 }

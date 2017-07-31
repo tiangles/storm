@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="#1机组#1引风机"
+        android:id="@+id/device_name"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/device_system_view_title"/>
     <TextView
@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/device_code"
         android:layout_gravity="center"
-        android:text="10HNC10AN001"
         android:textSize="@dimen/device_system_view_name"/>
     <Space
         android:layout_width="match_parent"
@@ -46,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:onClick="onEditLinkInfo"
             android:clickable="true" />
         <com.tiangles.storm.views.DeviceSystemView
             android:id="@+id/device_link_this"
