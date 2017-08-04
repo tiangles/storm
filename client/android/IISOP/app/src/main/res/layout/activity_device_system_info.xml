@@ -36,56 +36,39 @@
         android:layout_width="match_parent"
         android:layout_height="30sp" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.tiangles.storm.views.DeviceSystemView
-            android:id="@+id/device_link_forward"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:onClick="onEditLinkInfo"
-            android:clickable="true" />
-        <com.tiangles.storm.views.DeviceSystemView
-            android:id="@+id/device_link_this"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:clickable="true" />
-        <com.tiangles.storm.views.DeviceSystemView
-            android:id="@+id/device_link_backword"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:clickable="true" />
-    </LinearLayout>
 
-    <Space
+    <com.tiangles.storm.views.DeviceLinkView
+        android:id="@+id/device_link_forward"
+        android:layout_height="300dp"
         android:layout_width="match_parent"
-        android:layout_height="90sp" />
+        android:clickable="true" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_alignParentBottom="true" >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/device_link_edit"
-            android:onClick="onEditLinkInfo"
-            android:text="@string/edit"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onEditLinkInfoDone"
-            android:text="保存"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="上传"/>
-    </LinearLayout>
+
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="90sp" />-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_alignParentBottom="true" >-->
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/device_link_edit"-->
+            <!--android:onClick="onEditLinkInfo"-->
+            <!--android:text="@string/edit"/>-->
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:onClick="onEditLinkInfoDone"-->
+            <!--android:text="保存"/>-->
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="上传"/>-->
+    <!--</LinearLayout>-->
 
 </LinearLayout>

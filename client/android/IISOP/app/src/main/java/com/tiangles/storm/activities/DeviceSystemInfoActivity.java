@@ -18,10 +18,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DeviceSystemInfoActivity extends AppCompatActivity {
-    @BindView(R.id.device_link_forward) DeviceSystemView mForwardDeviceView;
-    @BindView(R.id.device_link_this) DeviceSystemView mThisDeviceView;
-    @BindView(R.id.device_link_backword) DeviceSystemView mBackwardDeviceView;
-    @BindView(R.id.device_link_edit) Button mEditButton;
+//    @BindView(R.id.device_link_forward) DeviceSystemView mForwardDeviceView;
+//    @BindView(R.id.device_link_this) DeviceSystemView mThisDeviceView;
+//    @BindView(R.id.device_link_backword) DeviceSystemView mBackwardDeviceView;
+//    @BindView(R.id.device_link_edit) Button mEditButton;
     @BindView(R.id.device_name) TextView mDeviceNameView;
     @BindView(R.id.device_code) TextView mDeviceCodeView;
 
@@ -32,18 +32,18 @@ public class DeviceSystemInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_system_info);
         ButterKnife.bind(this);
-        mForwardDeviceView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeToDevice(mDevice.getForwardDevice());
-            }
-        });
-        mBackwardDeviceView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeToDevice(mDevice.getBackwardDevice());
-            }
-        });
+//        mForwardDeviceView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeToDevice(mDevice.getForwardDevice());
+//            }
+//        });
+//        mBackwardDeviceView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeToDevice(mDevice.getBackwardDevice());
+//            }
+//        });
 
         Intent intent = this.getIntent();
         String deviceCode = intent.getStringExtra("device_code");
@@ -57,9 +57,9 @@ public class DeviceSystemInfoActivity extends AppCompatActivity {
             StormDevice forward = StormApp.getStormDB().getDevice(mDevice.getForwardDevice());
             StormDevice backward = StormApp.getStormDB().getDevice(mDevice.getBackwardDevice());
 
-            setupDeviceInfo(forward, mForwardDeviceView, "前相邻设备");
-            setupDeviceInfo(mDevice, mThisDeviceView, "本设备");
-            setupDeviceInfo(backward, mBackwardDeviceView, "后相邻设备");
+//            setupDeviceInfo(forward, mForwardDeviceView, "前相邻设备");
+//            setupDeviceInfo(mDevice, mThisDeviceView, "本设备");
+//            setupDeviceInfo(backward, mBackwardDeviceView, "后相邻设备");
 
             mDeviceCodeView.setText(mDevice.getCode());
             mDeviceNameView.setText(mDevice.getName());
@@ -90,9 +90,9 @@ public class DeviceSystemInfoActivity extends AppCompatActivity {
 
     public void onEditLinkInfo(View v){
         if(mDevice!=null && !mEditing) {
-            mForwardDeviceView.setEditable(true);
-            mBackwardDeviceView.setEditable(true);
-            mEditButton.setText(R.string.cancel);
+//            mForwardDeviceView.setEditable(true);
+//            mBackwardDeviceView.setEditable(true);
+//            mEditButton.setText(R.string.cancel);
             mEditing = true;
         } else {
             onEditLinkInfoCanceled();
@@ -124,60 +124,60 @@ public class DeviceSystemInfoActivity extends AppCompatActivity {
         String forward = mDevice.getForwardDevice();
         String backward = mDevice.getBackwardDevice();
 
-        int forwardRes = checkNewDevice(mForwardDeviceView, forward);
-        int backwardRes = checkNewDevice(mBackwardDeviceView, backward);
+//        int forwardRes = checkNewDevice(mForwardDeviceView, forward);
+//        int backwardRes = checkNewDevice(mBackwardDeviceView, backward);
 
 
-        if(forwardRes == INVALID ) {
-            showPromoteDialog("找不到可用的 前相邻设备！");
-            mForwardDeviceView.requestFocus();
-            return;
-        }
-        if(backwardRes == INVALID) {
-            showPromoteDialog("找不到可用的 后相邻设备！");
-            mBackwardDeviceView.requestFocus();
-            return;
-        }
+//        if(forwardRes == INVALID ) {
+//            showPromoteDialog("找不到可用的 前相邻设备！");
+////            mForwardDeviceView.requestFocus();
+//            return;
+//        }
+//        if(backwardRes == INVALID) {
+//            showPromoteDialog("找不到可用的 后相邻设备！");
+//            mBackwardDeviceView.requestFocus();
+//            return;
+//        }
+//
+//        if(forwardRes == CHANGED || backwardRes == CHANGED) {
+//            mDevice.setForwardDevice(forward);
+//            mDevice.setBackwardDevice(backward);
+//            StormApp.getStormDB().commitDeviceChange(mDevice);
+//            init();
+//        }
 
-        if(forwardRes == CHANGED || backwardRes == CHANGED) {
-            mDevice.setForwardDevice(forward);
-            mDevice.setBackwardDevice(backward);
-            StormApp.getStormDB().commitDeviceChange(mDevice);
-            init();
-        }
-
-        mForwardDeviceView.setEditable(false);
-        mBackwardDeviceView.setEditable(false);
-        mEditButton.setText(R.string.edit);
-        mEditing = false;
+//        mForwardDeviceView.setEditable(false);
+////        mBackwardDeviceView.setEditable(false);
+//        mEditButton.setText(R.string.edit);
+//        mEditing = false;
     }
 
     public void onEditLinkInfoCanceled() {
-        String forward = mDevice.getForwardDevice();
-        String backward = mDevice.getBackwardDevice();
-
-        if(!forward.equals(mForwardDeviceView.getDeviceCode().toString()) ||
-                !backward.equals(mBackwardDeviceView.getDeviceCode().toString()) ) {
-            final AlertDialog.Builder normalDialog = new AlertDialog.Builder(DeviceSystemInfoActivity.this);
-            normalDialog.setTitle("提示");
-            normalDialog.setMessage("放弃未保存的修改？");
-            normalDialog.setPositiveButton("放弃", new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int which){
-                    doCancelEdit();
-                }
-            });
-            normalDialog.setNegativeButton("不放弃", null);
-            normalDialog.show();
-        } else {
-            doCancelEdit();
-        }
+//        String forward = mDevice.getForwardDevice();
+//        String backward = mDevice.getBackwardDevice();
+//
+//        if(!forward.equals(mForwardDeviceView.getDeviceCode().toString()) ||
+//                !backward.equals(mBackwardDeviceView.getDeviceCode().toString()) ) {
+//            final AlertDialog.Builder normalDialog = new AlertDialog.Builder(DeviceSystemInfoActivity.this);
+//            normalDialog.setTitle("提示");
+//            normalDialog.setMessage("放弃未保存的修改？");
+//            normalDialog.setPositiveButton("放弃", new DialogInterface.OnClickListener(){
+//                @Override
+//                public void onClick(DialogInterface dialog, int which){
+//                    doCancelEdit();
+//                }
+//            });
+//            normalDialog.setNegativeButton("不放弃", null);
+//            normalDialog.show();
+//        } else {
+//            doCancelEdit();
+//        }
     }
 
     private void doCancelEdit(){
-        mForwardDeviceView.setEditable(false);
-        mBackwardDeviceView.setEditable(false);
-        mEditButton.setText(R.string.edit);
+//        mForwardDeviceView.setEditable(false);
+//        mBackwardDeviceView.setEditable(false);
+//        mEditButton.setText(R.string.edit);
         init();
         mEditing = false;
     }
