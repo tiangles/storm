@@ -1,4 +1,4 @@
-package com.tiangles.storm.deivcedrawer;
+package com.tiangles.storm.legend;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

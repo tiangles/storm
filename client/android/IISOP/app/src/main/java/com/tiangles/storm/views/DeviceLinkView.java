@@ -9,18 +9,17 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Size;
 import android.view.View;
 
 import com.tiangles.storm.database.dao.StormDevice;
-import com.tiangles.storm.deivcedrawer.DeviceBase;
-import com.tiangles.storm.deivcedrawer.ElectricValve;
-import com.tiangles.storm.deivcedrawer.LinkDrawer;
+import com.tiangles.storm.legend.LegendBase;
+import com.tiangles.storm.legend.ElectricValve;
+import com.tiangles.storm.legend.LinkDrawer;
 
 import java.util.Vector;
 
 public class DeviceLinkView extends View{
-    private DeviceBase deviceDrawer = new ElectricValve();
+    private LegendBase deviceLegend = new ElectricValve();
     private LinkDrawer linkDrawer = new LinkDrawer();
     private Paint paint = new Paint();
 
@@ -40,11 +39,11 @@ public class DeviceLinkView extends View{
     }
 
     public void setDevice(StormDevice device){
-        deviceDrawer = new ElectricValve();
-        deviceDrawer.addLeftDevice(new ElectricValve());
-        deviceDrawer.addLeftDevice(new ElectricValve());
-        deviceDrawer.addRightDevice(new ElectricValve());
-        deviceDrawer.addRightDevice(new ElectricValve());
+        deviceLegend = new ElectricValve();
+        deviceLegend.addLeftDevice(new ElectricValve());
+        deviceLegend.addLeftDevice(new ElectricValve());
+        deviceLegend.addRightDevice(new ElectricValve());
+        deviceLegend.addRightDevice(new ElectricValve());
     }
 
     @Override
@@ -52,38 +51,33 @@ public class DeviceLinkView extends View{
         paint.setColor(Color.rgb(0, 0, 0));
         paint.setStrokeWidth(2);
 
-        deviceDrawer.draw(canvas, paint);
+        deviceLegend.draw(canvas, paint);
 
-        Vector<DeviceBase> leftDevices = deviceDrawer.getLeftDevices();
-        for(int i=0; i<leftDevices.size(); ++i){
-            DeviceBase leftDevice = leftDevices.get(i);
+        Vector<LegendBase> leftLegend = deviceLegend.getLeftDevices();
+        for(int i=0; i<leftLegend.size(); ++i){
+            LegendBase leftDevice = leftLegend.get(i);
             leftDevice.draw(canvas, paint);
-            linkDrawer.draw(canvas, paint, deviceDrawer.getLeftDockPoint(), leftDevice.getRightDockPoint());
+            linkDrawer.draw(canvas, paint, deviceLegend.getLeftDockPoint(), leftDevice.getRightDockPoint());
         }
 
-        Vector<DeviceBase> rightDevices = deviceDrawer.getRightDevices();
+        Vector<LegendBase> rightDevices = deviceLegend.getRightDevices();
         for(int i=0; i<rightDevices.size(); ++i){
-            DeviceBase rightDevice = rightDevices.get(i);
+            LegendBase rightDevice = rightDevices.get(i);
             rightDevice.draw(canvas, paint);
-            linkDrawer.draw(canvas, paint, deviceDrawer.getRightDockPoint(), rightDevice.getLeftDockPoint());
+            linkDrawer.draw(canvas, paint, deviceLegend.getRightDockPoint(), rightDevice.getLeftDockPoint());
         }
-
     }
 
-    private int width;
-    private int height;
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
-        width = w;
-        height = h;
 
         int cellWidth = w/3;
         int cellHeight = h/3;
 
         Point cellPos = new Point(cellWidth, cellHeight/2);
-        deviceDrawer.setRect(new Rect(cellPos.x, cellPos.y, cellPos.x + cellWidth, cellPos.y+cellHeight));
+        deviceLegend.setRect(new Rect(cellPos.x, cellPos.y, cellPos.x + cellWidth, cellPos.y+cellHeight));
 
-        Vector<DeviceBase> leftDevices = deviceDrawer.getLeftDevices();
+        Vector<LegendBase> leftDevices = deviceLegend.getLeftDevices();
         for (int i = 0; i < leftDevices.size(); ++i) {
             cellPos.x = 0;
             cellPos.y = cellHeight - cellHeight/2;
@@ -92,11 +86,11 @@ public class DeviceLinkView extends View{
             } else if(i == 2) {
                 cellPos.y = 0;
             }
-            DeviceBase leftDevice = leftDevices.get(i);
+            LegendBase leftDevice = leftDevices.get(i);
             leftDevice.setRect(new Rect(cellPos.x, cellPos.y, cellPos.x + cellWidth, cellPos.y+cellHeight));
         }
 
-        Vector<DeviceBase> rightDevices = deviceDrawer.getRightDevices();
+        Vector<LegendBase> rightDevices = deviceLegend.getRightDevices();
         for (int i = 0; i < rightDevices.size(); ++i) {
             cellPos.x = cellWidth*2;
             cellPos.y = cellHeight - cellHeight/2;
@@ -105,7 +99,7 @@ public class DeviceLinkView extends View{
             } else if(i == 2) {
                 cellPos.y = 0;
             }
-            DeviceBase rightDevice = rightDevices.get(i);
+            LegendBase rightDevice = rightDevices.get(i);
             rightDevice.setRect(new Rect(cellPos.x, cellPos.y, cellPos.x + cellWidth, cellPos.y+cellHeight));
         }
     }
