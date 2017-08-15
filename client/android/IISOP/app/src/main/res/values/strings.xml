@@ -20,4 +20,8 @@
     <string name="title_activity_device_system_info">DeviceSystemInfoActivity</string>
     <string name="edit">编辑</string>
     <string name="cancel">取消</string>
+    <string name="view">查看</string>
+    <string name="delete">删除</string>
+    <string name="ok">确认</string>
+    <string name="can_not_find_device">找不到对应设备</string>
 </resources>

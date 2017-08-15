@@ -1,74 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
-    <Space
+    android:padding="@dimen/activity_vertical_margin"    >
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20sp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/device_name"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/device_system_view_title"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/device_code"
+            android:layout_gravity="center"
+            android:textSize="@dimen/device_system_view_name"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="系统图(含电气系统)"
+            android:textSize="@dimen/device_system_view_name"/>
 
-    <TextView
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <com.tiangles.storm.views.DeviceLinkView
+            android:id="@+id/device_link_info"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:clickable="true" />
+    </LinearLayout>
+    <com.tiangles.storm.views.DeviceLinkEditView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/device_name"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/device_system_view_title"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/device_code"
-        android:layout_gravity="center"
-        android:textSize="@dimen/device_system_view_name"/>
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30sp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="系统图(含电气系统)"
-        android:textSize="@dimen/device_system_view_name"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30sp" />
-
-
-    <com.tiangles.storm.views.DeviceLinkView
-        android:id="@+id/device_link_forward"
-        android:layout_height="300dp"
-        android:layout_width="match_parent"
-        android:clickable="true" />
-
-
-    <!--<Space-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="90sp" />-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_alignParentBottom="true" >-->
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/device_link_edit"-->
-            <!--android:onClick="onEditLinkInfo"-->
-            <!--android:text="@string/edit"/>-->
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:onClick="onEditLinkInfoDone"-->
-            <!--android:text="保存"/>-->
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="上传"/>-->
-    <!--</LinearLayout>-->
-
-</LinearLayout>
+        android:layout_gravity="bottom|center"
+        android:visibility="gone"
+        android:id="@+id/device_link_edit_view"/>
+</FrameLayout>
