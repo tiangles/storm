@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.request.UpdateDeviceRequest;
 import com.tiangles.storm.views.DeviceLinkEditView;
 import com.tiangles.storm.views.DeviceLinkView;
 
@@ -79,6 +80,9 @@ public class DeviceSystemInfoActivity extends AppCompatActivity implements Devic
                 }
                 mEditView.tryToGo();
                 init();
+
+                UpdateDeviceRequest request = new UpdateDeviceRequest(mDevice);
+                StormApp.getNetwork().sendRequest(request);
             } else {
                 Toast.makeText(this, R.string.can_not_find_device, Toast.LENGTH_SHORT).show();
             }

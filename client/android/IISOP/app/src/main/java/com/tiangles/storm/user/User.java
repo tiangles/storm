@@ -1,6 +1,7 @@
 package com.tiangles.storm.user;
 
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.request.LoginRequest;
 
 public class User {
     private static User mInstance;
@@ -30,11 +31,11 @@ public class User {
     }
 
     public void login(LoginListener listener) {
-        if(mUserName.equals("foo") && mPassword.equals("foo")) {
-            mAuthSucceeded = true;
-            listener.onLoginDone(0, "OK");
-        } else {
+//        if(mUserName.equals("foo") && mPassword.equals("foo")) {
+//            mAuthSucceeded = true;
+//            listener.onLoginDone(0, "OK");
+//        } else {
             StormApp.getNetwork().sendRequest(new LoginRequest(this, listener));
-        }
+//        }
     }
 }

@@ -1,9 +1,10 @@
-package com.tiangles.storm.user;
+package com.tiangles.storm.request;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.SResponse;
 import com.tiangles.storm.network.Request;
 import com.tiangles.storm.network.Response;
+import com.tiangles.storm.user.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
