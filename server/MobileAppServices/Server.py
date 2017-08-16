@@ -4,6 +4,8 @@ import tornado.websocket
 import json
 import Config
 
+import sys
+
 
 def import_string(dotted_path):
     """
@@ -27,6 +29,9 @@ def import_string(dotted_path):
 
 class SocketHandler(tornado.websocket.WebSocketHandler):
     clients = set()
+
+    def data_received(self, chunk):
+        pass
 
     def __init__(self, application, request, **kwargs):
         super(SocketHandler, self).__init__(application, request, **kwargs)
@@ -53,7 +58,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         cmd = message['cmd']
         handled = False
         for (c, h) in self.handlers.items():
-            #find a handler to handle the command
+            # find a handler to handle the command
             if c == cmd:
                 (code, msg) = h(self, message)
                 result = {
@@ -84,6 +89,9 @@ class Application(tornado.web.Application):
 
 
 if __name__ == '__main__':
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+
     ws_app = Application()
     server = tornado.httpserver.HTTPServer(ws_app)
     server.listen(Config.SERVER_PORT)

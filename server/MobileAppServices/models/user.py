@@ -17,5 +17,5 @@ class User(Model):
     username = CharField(max_length=150)
 
     class Meta:
-        database = db  # This model uses the "people.db" database.
+        database = db
         db_table = 'auth_user'

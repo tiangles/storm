@@ -2,7 +2,17 @@ import json
 import time
 from models.user import User
 from models.event import UserEvent
+from models.device import Device
+
 from models.hashers import check_password
+
+
+def login_required(func):
+    def wrapper(socket, message):
+        if hasattr(socket, 'user') and socket.user != None:
+            return func(socket, message)
+        else:
+            return -1, 'login required'
 
 
 def handle_login(socket, message):
@@ -21,6 +31,7 @@ def handle_login(socket, message):
         return -1, 'incorrect user name or password'
 
 
+# @login_required
 def handle_upload_event(socket, message):
     try:
         event = UserEvent.create(user=socket.user,
@@ -30,4 +41,23 @@ def handle_upload_event(socket, message):
         event.save()
         return 0, 'succeed'
     except Exception, e:
-        return -1, e
+        return -1, e.__str__()
+
+
+def handle_update_device(socket, message):
+    try:
+        j_device = message['device']
+        device = Device.create(code=j_device['code'],
+                               model=j_device['model'],
+                               name=j_device['name'],
+                               system=j_device['system'],
+                               distribution_cabinet=j_device['distribution_cabinet'],
+                               local_control_panel=j_device['local_control_panel'],
+                               dcs_cabinet=j_device['dcs_cabinet'],
+                               forward_device=j_device['forward_device'],
+                               backward_device=j_device['backward_device'],
+                               legend=j_device['legend'])
+        device.save()
+        return 0, 'succeed'
+    except Exception, e:
+        return -1, e.__str__()
