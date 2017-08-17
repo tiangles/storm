@@ -33,7 +33,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Intent intent = this.getIntent();
-        mDeviceCode = intent.getStringExtra("qrCode");
+        mDeviceCode = intent.getStringExtra("code");
         showDevice(StormApp.getStormDB().getDevice(mDeviceCode));
     }
 

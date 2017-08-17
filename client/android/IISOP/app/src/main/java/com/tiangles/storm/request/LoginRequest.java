@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 
 public class LoginRequest extends Request {
-    private String COMMAND = "login";
+    private static String COMMAND = "login";
     private User user;
     private User.LoginListener listener;
     public LoginRequest(User user, User.LoginListener listener) {

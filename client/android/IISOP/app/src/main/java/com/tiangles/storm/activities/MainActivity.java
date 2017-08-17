@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showDeviceDetailView(String scanResult) {
         Intent intent = new Intent(this, DeviceInfoActivity.class);
-        intent.putExtra("qrCode", scanResult);
+        intent.putExtra("code", scanResult);
         startActivity(intent);
     }
 }

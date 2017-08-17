@@ -1,7 +1,8 @@
 package com.tiangles.storm.request;
 
-import com.tiangles.storm.R;
+import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.device.DeviceUtils;
 import com.tiangles.storm.network.Request;
 import com.tiangles.storm.network.Response;
 
@@ -19,38 +20,23 @@ public class UpdateDeviceRequest extends Request {
         try {
             JSONObject jObj = new JSONObject();
             jObj.put("cmd", "update_device");
-            JSONObject jDev = convertDeviceToJson(mStormDevice);
-            jObj.put("device", jDev);
+            jObj.put("device", DeviceUtils.convertDeviceToJSON(mStormDevice));
             return jObj.toString().getBytes();
         } catch (JSONException e) {
-            e.printStackTrace();
+            StormApp.getDeviceManager().onUpdateDeviceDone(mStormDevice.getCode(), -1);
         }
         return null;
     }
 
     @Override
     public boolean handleResponse(Response res) {
-        return false;
+        StormApp.getDeviceManager().onUpdateDeviceDone(mStormDevice.getCode(), 0);
+        return true;
     }
 
     @Override
     public void onError(Exception e) {
-
+        StormApp.getDeviceManager().onUpdateDeviceDone(mStormDevice.getCode(), -1);
     }
 
-    private JSONObject convertDeviceToJson(StormDevice device) throws JSONException{
-        JSONObject jObj = new JSONObject();
-        jObj.put("code", device.getCode());
-        jObj.put("name", device.getName());
-        jObj.put("model", device.getModel());
-        jObj.put("system", device.getSystem());
-        jObj.put("distribution_cabinet", device.getDistributionCabinet());
-        jObj.put("local_control_panel", device.getLocalControlPanel());
-        jObj.put("dcs_cabinet", device.getDcsCabinet());
-        jObj.put("forward_device", device.getForwardDevice());
-        jObj.put("backward_device", device.getBackwardDevice());
-        jObj.put("legend", device.getLegend());
-
-        return jObj;
-    }
 }

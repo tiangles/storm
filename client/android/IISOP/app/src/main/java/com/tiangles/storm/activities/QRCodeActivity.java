@@ -79,7 +79,7 @@ public class QRCodeActivity extends AppCompatActivity {
     public void showDevice(View v) {
         if(!mScanResult.isEmpty()) {
             Intent intent = new Intent(this, DeviceInfoActivity.class);
-            intent.putExtra("qrCode", mScanResult);
+            intent.putExtra("code", mScanResult);
             startActivity(intent);
         }
     }

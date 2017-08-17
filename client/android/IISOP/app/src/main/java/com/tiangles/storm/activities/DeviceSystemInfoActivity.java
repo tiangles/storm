@@ -80,9 +80,7 @@ public class DeviceSystemInfoActivity extends AppCompatActivity implements Devic
                 }
                 mEditView.tryToGo();
                 init();
-
-                UpdateDeviceRequest request = new UpdateDeviceRequest(mDevice);
-                StormApp.getNetwork().sendRequest(request);
+                StormApp.getDeviceManager().updateDevice(mDevice);
             } else {
                 Toast.makeText(this, R.string.can_not_find_device, Toast.LENGTH_SHORT).show();
             }

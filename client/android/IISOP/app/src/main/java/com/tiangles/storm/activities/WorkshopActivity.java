@@ -36,7 +36,7 @@ public class WorkshopActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(WorkshopActivity.this, DeviceInfoActivity.class);
-                intent.putExtra("qrCode", (String)listItems.get(position).get("code"));
+                intent.putExtra("code", (String)listItems.get(position).get("code"));
                 startActivity(intent);
             }
         });
