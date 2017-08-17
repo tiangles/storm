@@ -10,9 +10,9 @@ import com.tiangles.storm.analytics.logger.LoggerFormatter;
 
 import java.util.logging.Formatter;
 
-public class Engine {
-    private static Engine mInstance;
-    private Session mCurrentSession;
+public class AnalyticsEngine {
+    private static AnalyticsEngine mInstance;
+    private AnalyticsSession mCurrentAnalyticsSession;
     private FileLogger mFileLogger;
     static final class Configuration {
         public static FileLogger.LoggerLevel loggerLevel = FileLogger.LoggerLevel.DEBUG;
@@ -21,20 +21,20 @@ public class Engine {
         public static int expiredPeriod = 1;
     }
 
-    public static Engine getInstance(){
+    public static AnalyticsEngine getInstance(){
         if(mInstance == null){
-            mInstance = new Engine();
+            mInstance = new AnalyticsEngine();
             mInstance.newSession();
         }
         return mInstance;
     }
-    private Engine(){
+    private AnalyticsEngine(){
 
     }
 
     public boolean newSession() {
         endSession();
-        mCurrentSession = new Session();
+        mCurrentAnalyticsSession = new AnalyticsSession();
         buildLogger();
         return false;
     }
@@ -50,7 +50,7 @@ public class Engine {
     }
 
     private void buildLogger(){
-        mFileLogger = new FileLogger(mCurrentSession.name());
+        mFileLogger = new FileLogger(mCurrentAnalyticsSession.name());
         mFileLogger.setLevel(Configuration.loggerLevel);
         mFileLogger.setFilePathAndFormatter(Configuration.fileDirectory,
                 Configuration.fileFormatter,

@@ -1,6 +1,6 @@
 package com.tiangles.storm.analytics;
 
-public class Session {
+public class AnalyticsSession {
 
     public String name(){
         return "StormSession";

@@ -5,13 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.AsyncTask;
 import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
@@ -19,12 +17,8 @@ import android.widget.EditText;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.analytics.Engine;
-import com.tiangles.storm.analytics.event.LoginEvent;
 import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.user.User;
-
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -122,7 +116,6 @@ public class LoginActivity extends AppCompatActivity{
             user.login(new User.LoginListener() {
                 @Override
                 public void onLoginDone(int error, String msg) {
-                    Engine.getInstance().addEvent(new LoginEvent(user, new Date()));
                     showProgress(false);
                     if(user.mAuthSucceeded){
                         switchToMain();
