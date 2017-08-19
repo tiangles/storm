@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import json
 import time
 from models.user import User
@@ -31,7 +32,6 @@ def handle_login(socket, message):
         return -1, 'incorrect user name or password'
 
 
-# @login_required
 def handle_upload_event(socket, message):
     try:
         event = UserEvent.create(user=socket.user,
@@ -61,3 +61,10 @@ def handle_update_device(socket, message):
         return 0, 'succeed'
     except Exception, e:
         return -1, e.__str__()
+
+
+def handle_sync_workshop_list(socket, message):
+    workshop_list = [{"name": "车间1",
+                      "code": "workshop_1",
+                      "device_list": "HNA30AA001|HNA50AA001|HNC10AN001|HNC20AN001|HNC10AN001|HNC20AN001|HNC10AN001|HNC20AN001|HNC10AN001|HNC20AN001",},]
+    return 0, workshop_list

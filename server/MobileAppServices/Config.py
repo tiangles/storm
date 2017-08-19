@@ -15,5 +15,6 @@ cmd_handlers = [
     (r'login',        'handlers.Handler.handle_login'),
     (r'upload_event', 'handlers.Handler.handle_upload_event'),
     (r'update_device', 'handlers.Handler.handle_update_device'),
+    (r'sync_workshop_list', 'handlers.Handler.handle_sync_workshop_list'),
 ]
 
