@@ -4,9 +4,13 @@ import android.util.Log;
 
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.request.SyncDeviceRequest;
+import com.tiangles.storm.request.SyncWorkshopListRequest;
 import com.tiangles.storm.request.UpdateDeviceRequest;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 public class DBManager {
@@ -14,6 +18,7 @@ public class DBManager {
     private Vector<DBManager.DBManagerObserver> mDeviceManagerObservers = new Vector<>();
 
     public interface DBManagerObserver{
+        void onSyncWorkshopListDone(List<StormWorkshop> workshops);
         void onDeviceUpdated(StormDevice device);
         void onDeviceSynced(StormDevice device);
     }
@@ -48,6 +53,10 @@ public class DBManager {
         return StormApp.getStormDB().getDevice(code);
     }
 
+    public List<StormWorkshop> getWorkshopList(){
+        return StormApp.getStormDB().getWorkshopList();
+    }
+
     public void onUpdateDeviceDone(String deviceCode, int result){
         if(result != 0){
             Log.e(LOG_TAG, "Update device failed, device code: "+ deviceCode);
@@ -65,4 +74,25 @@ public class DBManager {
         for(DBManager.DBManagerObserver observer: mDeviceManagerObservers){
             observer.onDeviceSynced(device);
         }
-    }}
+    }
+
+    public void syncWorkshopList(){
+        SyncWorkshopListRequest request = new SyncWorkshopListRequest();
+        StormApp.getNetwork().sendRequest(request);
+    }
+
+    public void onSyncWorkshopListDone(Vector<StormWorkshop> workshops){
+        for(StormWorkshop workshop: workshops){
+            StormApp.getStormDB().commitWorkshopChange(workshop);
+        }
+
+        for(DBManager.DBManagerObserver observer: mDeviceManagerObservers){
+            observer.onSyncWorkshopListDone(workshops);
+        }
+
+    }
+
+    public void syncWorkshopDevices(String workshopCode){
+
+    }
+}

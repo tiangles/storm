@@ -11,17 +11,20 @@ import android.widget.SimpleAdapter;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.DBManager;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.database.dao.StormWorkshop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WorkshopActivity extends AppCompatActivity {
+public class WorkshopActivity extends AppCompatActivity implements DBManager.DBManagerObserver{
     @BindView(R.id.workshop_device_list) ListView mDeviceListView;
     List<Map<String, Object>> listItems = new ArrayList<>();
 
@@ -31,26 +34,29 @@ public class WorkshopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_workshop);
         ButterKnife.bind(this);
 
-        mDeviceListView.setAdapter(createDeviceListAdaptor());
-        mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(WorkshopActivity.this, DeviceInfoActivity.class);
-                intent.putExtra("code", (String)listItems.get(position).get("code"));
-                startActivity(intent);
-            }
-        });
+//        mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(WorkshopActivity.this, DeviceInfoActivity.class);
+//                intent.putExtra("code", (String)listItems.get(position).get("code"));
+//                startActivity(intent);
+//            }
+//        });
+
+
+        List<StormWorkshop> workshops = StormApp.getDBManager().getWorkshopList();
+        mDeviceListView.setAdapter(createDeviceListAdaptor(workshops));
+
+        StormApp.getDBManager().addObserver(this);
+        StormApp.getDBManager().syncWorkshopList();
     }
 
-    private SimpleAdapter createDeviceListAdaptor() {
-        StormDeviceDao dao = StormApp.getStormDB().getStormDeviceDao();
-        List<StormDevice> devices = dao.queryBuilder()
-                .build()
-                .list();
-        for(StormDevice device: devices) {
+    private SimpleAdapter createDeviceListAdaptor(List<StormWorkshop> workshops) {
+        listItems.clear();
+        for(StormWorkshop workshop: workshops) {
             Map<String, Object> item = new HashMap<>();
-            item.put("code", device.getCode());
-            item.put("name", device.getName());
+            item.put("code", workshop.getCode());
+            item.put("name", workshop.getName());
             listItems.add(item);
         }
 
@@ -61,4 +67,18 @@ public class WorkshopActivity extends AppCompatActivity {
         return adapter;
     }
 
+    @Override
+    public void onSyncWorkshopListDone(List<StormWorkshop> workshops) {
+        mDeviceListView.setAdapter(createDeviceListAdaptor(workshops));
+    }
+
+    @Override
+    public void onDeviceUpdated(StormDevice device) {
+
+    }
+
+    @Override
+    public void onDeviceSynced(StormDevice device) {
+
+    }
 }

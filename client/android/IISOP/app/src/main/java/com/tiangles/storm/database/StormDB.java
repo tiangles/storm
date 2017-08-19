@@ -6,18 +6,23 @@ import android.os.Environment;
 import com.tiangles.greendao.gen.DaoMaster;
 import com.tiangles.greendao.gen.DaoSession;
 import com.tiangles.greendao.gen.StormDeviceDao;
+import com.tiangles.greendao.gen.StormWorkshopDao;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.activities.DeviceInfoActivity;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.database.dao.StormWorkshop;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Vector;
 
 public class StormDB {
+    private DaoSession daoSession;
     private StormDeviceDao stormDeviceDao;
+    private StormWorkshopDao stormWorkshopDao;
     private String dbPath;
 
     public StormDB(Context context) {
@@ -29,6 +34,7 @@ public class StormDB {
 //        File dir =  Environment.getExternalStorageDirectory();
         String path = dir.getAbsolutePath() + "/storm.db";
         File f = new File(path);
+//        f.delete();
         if(!f.exists()) {
             try {
                 InputStream in = context.getAssets().open("storm.db");
@@ -46,18 +52,6 @@ public class StormDB {
             }
         }
         return path;
-    }
-
-    public StormDeviceDao getStormDeviceDao() {
-        if(stormDeviceDao == null) {
-            DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(StormApp.getContext(),
-                    dbPath, null);
-            DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
-            DaoSession daoSession = daoMaster.newSession();
-            stormDeviceDao = daoSession.getStormDeviceDao();
-        }
-
-        return stormDeviceDao;
     }
 
     public StormDevice getDevice(String deviceCode) {
@@ -78,5 +72,45 @@ public class StormDB {
         if(device != null){
             getStormDeviceDao().update(device);
         }
+    }
+
+    public void commitWorkshopChange(StormWorkshop workshop) {
+        if(workshop != null) {
+            getStormWorkshopDao().update(workshop);
+        }
+    }
+
+    public List<StormWorkshop> getWorkshopList(){
+        List<StormWorkshop> workshops = getStormWorkshopDao().queryBuilder()
+                .build()
+                .list();
+        return workshops;
+    }
+
+    private StormDeviceDao getStormDeviceDao() {
+        if(stormDeviceDao == null) {
+            stormDeviceDao = getDaoSession().getStormDeviceDao();
+        }
+
+        return stormDeviceDao;
+    }
+
+    private StormWorkshopDao getStormWorkshopDao(){
+        if(stormWorkshopDao == null) {
+            stormWorkshopDao = getDaoSession().getStormWorkshopDao();
+        }
+
+        return stormWorkshopDao;
+    }
+
+    private DaoSession getDaoSession(){
+        if(daoSession == null) {
+            DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(StormApp.getContext(),
+                    dbPath, null);
+            DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
+            daoSession = daoMaster.newSession();
+
+        }
+        return daoSession;
     }
 }

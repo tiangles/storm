@@ -50,7 +50,8 @@ public class Network {
 
     private void onResponse(Response res) {
         for(Request req: requests) {
-            if(req.command().equals(res.command())) {
+            String reqCmd = req.command();
+            if(reqCmd != null && reqCmd.equals(res.command())) {
                 req.handleResponse(res);
                 requests.remove(req);
                 break;

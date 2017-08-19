@@ -9,10 +9,12 @@ public class StormWorkshop {
     @Id
     private String code;
     private String name;
-    @Generated(hash = 782120252)
-    public StormWorkshop(String code, String name) {
+    private String deviceList;
+    @Generated(hash = 1327145321)
+    public StormWorkshop(String code, String name, String deviceList) {
         this.code = code;
         this.name = name;
+        this.deviceList = deviceList;
     }
     @Generated(hash = 37746842)
     public StormWorkshop() {
@@ -28,5 +30,11 @@ public class StormWorkshop {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public String getDeviceList() {
+        return this.deviceList;
+    }
+    public void setDeviceList(String deviceList) {
+        this.deviceList = deviceList;
     }
 }
