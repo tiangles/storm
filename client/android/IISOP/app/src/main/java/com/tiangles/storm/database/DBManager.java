@@ -1,4 +1,4 @@
-package com.tiangles.storm.device;
+package com.tiangles.storm.database;
 
 import android.util.Log;
 
@@ -9,20 +9,20 @@ import com.tiangles.storm.request.UpdateDeviceRequest;
 
 import java.util.Vector;
 
-public class DeviceManager {
+public class DBManager {
     private static String LOG_TAG = "DeviceManager";
-    private Vector<DeviceManagerObserver> mDeviceManagerObservers = new Vector<>();
+    private Vector<DBManager.DBManagerObserver> mDeviceManagerObservers = new Vector<>();
 
-    public interface DeviceManagerObserver{
+    public interface DBManagerObserver{
         void onDeviceUpdated(StormDevice device);
         void onDeviceSynced(StormDevice device);
     }
 
-    public DeviceManager(){
+    public DBManager(){
 
     }
 
-    public void addObserver(DeviceManagerObserver observer) {
+    public void addObserver(DBManager.DBManagerObserver observer) {
         mDeviceManagerObservers.add(observer);
     }
 
@@ -36,7 +36,7 @@ public class DeviceManager {
     }
 
     public void syncDevice(String code){
-        SyncDeviceRequest request = new SyncDeviceRequest(code);
+        SyncDeviceRequest request = new SyncDeviceRequest(code, null);
         StormApp.getNetwork().sendRequest(request);
     }
 
@@ -52,7 +52,7 @@ public class DeviceManager {
         if(result != 0){
             Log.e(LOG_TAG, "Update device failed, device code: "+ deviceCode);
         }
-        for(DeviceManagerObserver observer: mDeviceManagerObservers){
+        for(DBManager.DBManagerObserver observer: mDeviceManagerObservers){
             observer.onDeviceUpdated(null);
         }
     }
@@ -62,8 +62,7 @@ public class DeviceManager {
             Log.e(LOG_TAG, "Sync device failed, device code: "+ deviceCode);
         }
         StormApp.getStormDB().commitDeviceChange(device);
-        for(DeviceManagerObserver observer: mDeviceManagerObservers){
+        for(DBManager.DBManagerObserver observer: mDeviceManagerObservers){
             observer.onDeviceSynced(device);
         }
-    }
-}
+    }}

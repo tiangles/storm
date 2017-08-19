@@ -1,8 +1,5 @@
 package com.tiangles.storm.analytics.event;
 
-import com.tiangles.storm.R;
-import com.tiangles.storm.SResponse;
-import com.tiangles.storm.analytics.event.Event;
 import com.tiangles.storm.network.Request;
 import com.tiangles.storm.network.Response;
 
@@ -10,26 +7,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UploadRequest extends Request {
-    private String COMMAND = "upload_event";
+    private static String COMMAND = "upload_event";
     private Event mEvent;
+
     @Override
-    public byte[] data() {
-        try {
-            JSONObject jObj = new JSONObject();
-            jObj.put("cmd", "upload_event");
-            jObj.put("type", mEvent.tag());
-            jObj.put("event", mEvent.toString());
-            return jObj.toString().getBytes();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public String command() {
+        return COMMAND;
+    }
+
+    @Override
+    public JSONObject data()  throws JSONException{
+        JSONObject jObj = new JSONObject();
+        jObj.put("cmd", "upload_event");
+        jObj.put("type", mEvent.tag());
+        jObj.put("event", mEvent.toString());
+        return jObj;
     }
 
     @Override
     public boolean handleResponse(Response res) {
-        SResponse sRes = (SResponse)res;
-        return sRes.getCmd().equals(COMMAND);
+        return res.command().equals(COMMAND);
     }
 
     @Override

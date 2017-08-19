@@ -1,7 +1,6 @@
 package com.tiangles.storm.request;
 
 import com.tiangles.storm.R;
-import com.tiangles.storm.SResponse;
 import com.tiangles.storm.network.Request;
 import com.tiangles.storm.network.Response;
 import com.tiangles.storm.user.User;
@@ -33,26 +32,23 @@ public class LoginRequest extends Request {
     }
 
     @Override
-    public byte[] data() {
-        try {
-            JSONObject jObj = new JSONObject();
-            jObj.put("user_name", user.mUserName);
-            jObj.put("password", user.mPassword);
-            jObj.put("cmd", "login");
-            return jObj.toString().getBytes();
-        } catch (JSONException e) {
-            user.mAuthSucceeded = false;
-            listener.onLoginDone(-1, String.valueOf(R.string.network_error));
-            e.printStackTrace();
-        }
-        return null;
+    public String command() {
+        return COMMAND;
+    }
+
+    @Override
+    public JSONObject data()  throws JSONException{
+        JSONObject jObj = new JSONObject();
+        jObj.put("user_name", user.mUserName);
+        jObj.put("password", user.mPassword);
+        jObj.put("cmd", "login");
+        return jObj;
     }
 
     @Override
     public boolean handleResponse(Response res) {
-        SResponse sRes = (SResponse)res;
-        if( sRes.getCmd().equals(COMMAND) ) {
-            handleLoginResult(sRes.getjObj());
+        if( res.command().equals(COMMAND) ) {
+            handleLoginResult(res.object());
             return true;
         }
         return false;

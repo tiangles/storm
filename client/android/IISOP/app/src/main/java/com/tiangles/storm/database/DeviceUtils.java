@@ -1,4 +1,4 @@
-package com.tiangles.storm.device;
+package com.tiangles.storm.database;
 
 import com.tiangles.storm.database.dao.StormDevice;
 

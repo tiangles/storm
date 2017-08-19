@@ -1,6 +1,5 @@
 package com.tiangles.storm.request;
 
-import com.tiangles.storm.SResponse;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.network.Request;
@@ -12,30 +11,31 @@ import org.json.JSONObject;
 public class SyncDeviceRequest extends Request{
     private static String COMMAND = "sync_device";
 
-    String deviceCode;
-    public SyncDeviceRequest(String deviceCode){
+    private String deviceCode;
+    private String workshop;
+    public SyncDeviceRequest(String deviceCode, String workshop){
         this.deviceCode = deviceCode;
+        this.workshop = workshop;
     }
 
     @Override
-    public byte[] data() {
-        try {
-            JSONObject jObj = new JSONObject();
-            jObj.put("cmd", COMMAND);
-            jObj.put("device_code", deviceCode);
-            return jObj.toString().getBytes();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            StormApp.getDeviceManager().onSyncDeviceDone(null, deviceCode, -1);
-        }
-        return null;
+    public String command() {
+        return COMMAND;
+    }
+
+    @Override
+    public JSONObject data() throws JSONException{
+        JSONObject jObj = new JSONObject();
+        jObj.put("cmd", COMMAND);
+        jObj.put("device_code", deviceCode);
+        jObj.put("workshop", workshop);
+        return jObj;
     }
 
     @Override
     public boolean handleResponse(Response res) {
-        SResponse sRes = (SResponse)res;
-        if(sRes.getCmd().equals(COMMAND)) {
-            handleSyncResult(sRes.getjObj());
+        if(res.command().equals(COMMAND)) {
+            handleSyncResult(res.object());
             return true;
         }
         return false;
@@ -43,7 +43,7 @@ public class SyncDeviceRequest extends Request{
 
     @Override
     public void onError(Exception e) {
-        StormApp.getDeviceManager().onSyncDeviceDone(null, deviceCode, -1);
+        StormApp.getDBManager().onSyncDeviceDone(null, deviceCode, -1);
     }
 
     private void handleSyncResult(JSONObject jObj){
@@ -61,7 +61,7 @@ public class SyncDeviceRequest extends Request{
             e.printStackTrace();
         }
 
-        StormApp.getDeviceManager().onSyncDeviceDone(device, deviceCode, resCode);
+        StormApp.getDBManager().onSyncDeviceDone(device, deviceCode, resCode);
     }
 
 }

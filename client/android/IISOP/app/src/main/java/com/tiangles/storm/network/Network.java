@@ -6,6 +6,9 @@ import android.util.Log;
 import com.tiangles.storm.network.connection.Connection;
 import com.tiangles.storm.network.connection.WebSocketConnection;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,20 +33,25 @@ public class Network {
 
     public void sendRequest(Request req) {
         requests.add(req);
-        boolean res = connection.sendMessage(req.data());
-        if(!res) {
-            try {
-                Log.e("Network", "put request!");
+        try {
+            JSONObject obj = req.data();
+            boolean res = connection.sendMessage(obj.toString().getBytes());
+            if(!res) {
                 pendingRequests.put(req);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            req.onError(e);
+        } catch ( InterruptedException e) {
+            e.printStackTrace();
+            req.onError(e);
         }
     }
 
     private void onResponse(Response res) {
         for(Request req: requests) {
-            if(req.handleResponse(res)) {
+            if(req.command().equals(res.command())) {
+                req.handleResponse(res);
                 requests.remove(req);
                 break;
             }
@@ -102,7 +110,7 @@ public class Network {
             while (sendingThread != null) {
                 try {
                     Request req = pendingRequests.take();
-                    if( !connection.sendMessage(req.data()) ) {
+                    if( !connection.sendMessage(req.data().toString().getBytes()) ) {
                         Log.e("Network", "put request in sending thread!");
                         req.retry();
                         if(req.getRetryTimes() > config.getReconnectMaxTime()) {
@@ -114,6 +122,8 @@ public class Network {
                     }
                     Log.e("Network", "take request!");
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
