@@ -4,6 +4,8 @@ import time
 from models.user import User
 from models.event import UserEvent
 from models.device import Device
+from models.workshop import Workshop
+
 
 from models.hashers import check_password
 
@@ -56,7 +58,8 @@ def handle_update_device(socket, message):
                                dcs_cabinet=j_device['dcs_cabinet'],
                                forward_device=j_device['forward_device'],
                                backward_device=j_device['backward_device'],
-                               legend=j_device['legend'])
+                               legend=j_device['legend'],
+                               workshop = Workshop.select().where(Device.code == j_device['workshop']))
         device.save()
         return 0, 'succeed'
     except Exception, e:
@@ -64,7 +67,36 @@ def handle_update_device(socket, message):
 
 
 def handle_sync_workshop_list(socket, message):
-    workshop_list = [{"name": "车间1",
-                      "code": "workshop_1",
-                      "device_list": "HNA30AA001|HNA50AA001|HNC10AN001|HNC20AN001|HNC10AN001|HNC20AN001|HNC10AN001|HNC20AN001|HNC10AN001|HNC20AN001",},]
+    workshops = Workshop.select()
+    workshop_list = []
+    for workshop in workshops:
+        devices = Device.select().where(Device.workshop == workshop)
+        device_list = ''
+        for device in devices:
+            device_list = '%s|%s'%(device_list, device.code)
+        workshop_list.append({'name': workshop.name,
+                              'code': workshop.code,
+                              'device_list': device_list})
+
     return 0, workshop_list
+
+
+def handle_sync_device(socket, message):
+    try:
+        device_code = message['device_code']
+        device_query = Device.select().where(Device.code == device_code)
+        device = device_query[0]
+        j_device = {'code': device.code,
+                    'name': device.name,
+                    'model': device.model,
+                    'system': device.system,
+                    'distribution_cabinet': device.distribution_cabinet,
+                    'local_control_panel': device.local_control_panel,
+                    'dcs_cabinet': device.dcs_cabinet,
+                    'forward_device': device.forward_device,
+                    'backward_device': device.backward_device,
+                    'legend': device.legend,
+                    'workshop': device.workshop.code, }
+        return 0, j_device
+    except Exception, e:
+        return -1, e.__str__()

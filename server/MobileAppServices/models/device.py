@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import models.database
+import models.workshop
 from peewee import *
 
 db = models.database.db
@@ -16,6 +17,7 @@ class Device(Model):
     forward_device = CharField(max_length=256, verbose_name="前向设备")
     backward_device = CharField(max_length=256, verbose_name="后向设备")
     legend = CharField(max_length=128, verbose_name="图例")
+    workshop = ForeignKeyField(models.workshop.Workshop, related_name='belong_to_workshop', on_delete='CASCADE')
 
     class Meta:
         database = db

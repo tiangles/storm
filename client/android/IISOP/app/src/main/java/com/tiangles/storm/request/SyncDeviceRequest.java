@@ -1,6 +1,7 @@
 package com.tiangles.storm.request;
 
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.DeviceUtils;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.network.Request;
 import com.tiangles.storm.network.Response;
@@ -12,10 +13,8 @@ public class SyncDeviceRequest extends Request{
     private static String COMMAND = "sync_device";
 
     private String deviceCode;
-    private String workshop;
-    public SyncDeviceRequest(String deviceCode, String workshop){
+    public SyncDeviceRequest(String deviceCode){
         this.deviceCode = deviceCode;
-        this.workshop = workshop;
     }
 
     @Override
@@ -28,7 +27,6 @@ public class SyncDeviceRequest extends Request{
         JSONObject jObj = new JSONObject();
         jObj.put("cmd", COMMAND);
         jObj.put("device_code", deviceCode);
-        jObj.put("workshop", workshop);
         return jObj;
     }
 
@@ -47,16 +45,10 @@ public class SyncDeviceRequest extends Request{
     }
 
     private void handleSyncResult(JSONObject jObj){
-        StormDevice device = new StormDevice();
+        StormDevice device = null;
         int resCode = -1;
         try {
-            device.setCode(jObj.getString("code"));
-            device.setName(jObj.getString("name"));
-            device.setModel(jObj.getString("model"));
-            device.setSystem(jObj.getString("system"));
-
-
-            resCode = 0;
+            device = DeviceUtils.converJSONToDevice(jObj.getJSONObject("message"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

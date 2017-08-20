@@ -30,27 +30,27 @@ public class StormDB {
     }
 
     public String createDatabaseFile(Context context) {
-        File dir = context.getFilesDir();
-//        File dir =  Environment.getExternalStorageDirectory();
+//        File dir = context.getFilesDir();
+        File dir =  Environment.getExternalStorageDirectory();
         String path = dir.getAbsolutePath() + "/storm.db";
-        File f = new File(path);
-//        f.delete();
-        if(!f.exists()) {
-            try {
-                InputStream in = context.getAssets().open("storm.db");
-
-                OutputStream out = new FileOutputStream(path);
-                byte[] buffer = new byte[1024];
-                int byteread = 0;
-                while ( (byteread = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, byteread);
-                }
-                in.close();
-                out.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        File f = new File(path);
+////        f.delete();
+//        if(!f.exists()) {
+//            try {
+//                InputStream in = context.getAssets().open("storm.db");
+//
+//                OutputStream out = new FileOutputStream(path);
+//                byte[] buffer = new byte[1024];
+//                int byteread = 0;
+//                while ( (byteread = in.read(buffer)) != -1) {
+//                    out.write(buffer, 0, byteread);
+//                }
+//                in.close();
+//                out.close();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
         return path;
     }
 
@@ -70,13 +70,21 @@ public class StormDB {
 
     public void commitDeviceChange(StormDevice device){
         if(device != null){
-            getStormDeviceDao().update(device);
+            if(getDevice(device.getCode()) != null) {
+                getStormDeviceDao().update(device);
+            } else {
+                getStormDeviceDao().insert(device);
+            }
         }
     }
 
     public void commitWorkshopChange(StormWorkshop workshop) {
         if(workshop != null) {
-            getStormWorkshopDao().update(workshop);
+            if(getWorkshop(workshop.getCode()) != null) {
+                getStormWorkshopDao().update(workshop);
+            } else {
+                getStormWorkshopDao().insert(workshop);
+            }
         }
     }
 
@@ -85,6 +93,19 @@ public class StormDB {
                 .build()
                 .list();
         return workshops;
+    }
+
+    public StormWorkshop getWorkshop(String code){
+        if(code != null) {
+            List<StormWorkshop> workshops = getStormWorkshopDao().queryBuilder()
+                    .build()
+                    .list();
+            assert (workshops.size()<2);
+            if(workshops.size()>0) {
+                return workshops.get(0);
+            }
+        }
+        return null;
     }
 
     private StormDeviceDao getStormDeviceDao() {

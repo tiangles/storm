@@ -36,7 +36,8 @@
         <activity
             android:name=".activities.DeviceSystemInfoActivity"
             android:label="@string/title_activity_device_system_info"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.WorkshopDeviceListActivity"></activity>
     </application>
 
 </manifest>

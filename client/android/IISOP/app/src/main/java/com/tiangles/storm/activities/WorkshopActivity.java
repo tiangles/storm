@@ -34,14 +34,14 @@ public class WorkshopActivity extends AppCompatActivity implements DBManager.DBM
         setContentView(R.layout.activity_workshop);
         ButterKnife.bind(this);
 
-//        mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(WorkshopActivity.this, DeviceInfoActivity.class);
-//                intent.putExtra("code", (String)listItems.get(position).get("code"));
-//                startActivity(intent);
-//            }
-//        });
+        mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(WorkshopActivity.this, WorkshopDeviceListActivity.class);
+                intent.putExtra("workshop_code", (String)listItems.get(position).get("code"));
+                startActivity(intent);
+            }
+        });
 
 
         List<StormWorkshop> workshops = StormApp.getDBManager().getWorkshopList();

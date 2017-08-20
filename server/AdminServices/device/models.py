@@ -4,6 +4,14 @@ from __future__ import unicode_literals
 from django.db import models
 
 
+class Workshop(models.Model):
+    code = models.SlugField(max_length=128, verbose_name="二维码")
+    name = models.CharField(max_length=128, verbose_name="名称")
+
+    class Meta:
+        db_table = 'storm_workshop'
+
+
 class Device(models.Model):
     code = models.SlugField(max_length=128, verbose_name="二维码")
     model = models.CharField(max_length=128, verbose_name="型号")
@@ -15,6 +23,8 @@ class Device(models.Model):
     forward_device = models.CharField(max_length=256, blank=True, verbose_name="前向设备")
     backward_device = models.CharField(max_length=256, blank=True, verbose_name="后向设备")
     legend = models.CharField(max_length=128, blank=True, verbose_name="图例")
+    workshop = models.ForeignKey(Workshop, related_name='belong_to_workshop')
 
     class Meta:
         db_table = 'storm_devices'
+

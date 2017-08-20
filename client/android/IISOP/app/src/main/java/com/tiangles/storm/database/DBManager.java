@@ -41,7 +41,7 @@ public class DBManager {
     }
 
     public void syncDevice(String code){
-        SyncDeviceRequest request = new SyncDeviceRequest(code, null);
+        SyncDeviceRequest request = new SyncDeviceRequest(code);
         StormApp.getNetwork().sendRequest(request);
     }
 
@@ -55,6 +55,10 @@ public class DBManager {
 
     public List<StormWorkshop> getWorkshopList(){
         return StormApp.getStormDB().getWorkshopList();
+    }
+
+    public StormWorkshop getWorkshop(String code){
+        return StormApp.getStormDB().getWorkshop(code);
     }
 
     public void onUpdateDeviceDone(String deviceCode, int result){

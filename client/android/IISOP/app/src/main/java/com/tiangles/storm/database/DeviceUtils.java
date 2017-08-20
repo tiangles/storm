@@ -1,5 +1,6 @@
 package com.tiangles.storm.database;
 
+import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
 
 import org.json.JSONException;
@@ -19,6 +20,7 @@ public class DeviceUtils {
         jObj.put("forward_device", device.getForwardDevice());
         jObj.put("backward_device", device.getBackwardDevice());
         jObj.put("legend", device.getLegend());
+        jObj.put("workshop", device.getWorkShop().getCode());
         return jObj;
     }
 
@@ -34,6 +36,7 @@ public class DeviceUtils {
         device.setForwardDevice(object.getString("forward_device"));
         device.setBackwardDevice(object.getString("backward_device"));
         device.setLegend(object.getString("legend"));
+        device.setWorkShop(StormApp.getDBManager().getWorkshop(object.getString("workshop")));
         return device;
     }
 }
