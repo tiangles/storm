@@ -43,12 +43,13 @@ public class WorkshopActivity extends AppCompatActivity implements DBManager.DBM
             }
         });
 
-
-        List<StormWorkshop> workshops = StormApp.getDBManager().getWorkshopList();
-        mDeviceListView.setAdapter(createDeviceListAdaptor(workshops));
-
         StormApp.getDBManager().addObserver(this);
-        StormApp.getDBManager().syncWorkshopList();
+        List<StormWorkshop> workshops = StormApp.getDBManager().getWorkshopList();
+        if(workshops.size() == 0) {
+            StormApp.getDBManager().syncWorkshopList();
+        } else {
+            mDeviceListView.setAdapter(createDeviceListAdaptor(workshops));
+        }
     }
 
     private SimpleAdapter createDeviceListAdaptor(List<StormWorkshop> workshops) {

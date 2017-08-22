@@ -95,7 +95,6 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
                 break;
             }
         }
-
     }
 
     @Override
@@ -122,7 +121,7 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View  view = null;
+            View  view;
             if(convertView != null) {
                 view = convertView;
             } else {
