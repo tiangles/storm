@@ -6,4 +6,27 @@
     <dimen name="device_system_view_name">20sp</dimen>
     <dimen name="device_link_info_title_text_size">9sp</dimen>
     <dimen name="device_link_info_detail_text_size">13sp</dimen>
+
+    <dimen name="list_item_name_margin_left">10dp</dimen>
+    <dimen name="list_item_padding">10dp</dimen>
+    <dimen name="list_item_divider">10dp</dimen>
+
+    <dimen name="font_size_normal">16sp</dimen>
+    <dimen name="font_size_small">14sp</dimen>
+    <dimen name="font_size_large">18sp</dimen>
+
+    <dimen name="margin_left_normal">10dp</dimen>
+    <dimen name="margin_left_large">40dp</dimen>
+    <dimen name="margin_left_small">5dp</dimen>
+    <dimen name="margin_top_normal">10dp</dimen>
+    <dimen name="margin_top_large">20dp</dimen>
+    <dimen name="margin_top_small">5dp</dimen>
+    <dimen name="margin_top_smaller">2dp</dimen>
+
+    <dimen name="padding_top_small">5dp</dimen>
+    <dimen name="padding_top_normal">10dp</dimen>
+    <dimen name="padding_top_large">20dp</dimen>
+    <dimen name="padding_left_normal">10dp</dimen>
+    <dimen name="padding_left_normal_large">20dp</dimen>
+
 </resources>

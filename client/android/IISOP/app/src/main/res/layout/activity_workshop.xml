@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical"
-    tools:context="com.tiangles.storm.activities.WorkshopActivity">
 
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/border_list"
+    android:gravity="left|center_vertical">
     <ListView
         android:id="@+id/workshop_device_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-</android.support.constraint.ConstraintLayout>
+        android:layout_height="wrap_content"
+        android:divider="@drawable/list_divider_line"
+        android:dividerHeight="2dp"/>
+    </LinearLayout>

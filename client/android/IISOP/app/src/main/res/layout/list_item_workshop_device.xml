@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:layout_marginTop="@dimen/margin_top_smaller"
+    android:layout_marginBottom="@dimen/margin_top_smaller"
+    android:padding="@dimen/padding_left_normal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/device_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="#000"/>
     <TextView
         android:id="@+id/device_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"/>
+        android:text="name"
+        android:textSize="@dimen/font_size_large"
+        android:textColor="@color/summary_black"/>
+    <TextView
+        android:id="@+id/device_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_smaller"
+        android:maxLines="1"
+        android:text="address"
+        android:textSize="@dimen/font_size_normal"
+        android:textColor="@color/summary_gray"/>
 </LinearLayout>
