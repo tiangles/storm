@@ -67,18 +67,39 @@ def handle_update_device(socket, message):
 
 
 def handle_sync_workshop_list(socket, message):
-    workshops = Workshop.select()
-    workshop_list = []
-    for workshop in workshops:
+    try:
+        workshops = Workshop.select()
+        workshop_list = []
+        for workshop in workshops:
+            devices = Device.select().where(Device.workshop == workshop)
+            device_list = ''
+            for device in devices:
+                device_list = '%s|%s'%(device_list, device.code)
+            workshop_list.append({'name': workshop.name,
+                                  'code': workshop.code,
+                                  'device_list': device_list})
+
+        return 0, workshop_list
+    except Exception, e:
+        return -1, e.__str__()
+
+
+def handle_sync_workshop(socket, message):
+    try:
+        workshop_code = message['workshop_code']
+        workshop_query = Workshop.select().where(Workshop.code == workshop_code)
+        workshop = workshop_query[0]
         devices = Device.select().where(Device.workshop == workshop)
         device_list = ''
         for device in devices:
             device_list = '%s|%s'%(device_list, device.code)
-        workshop_list.append({'name': workshop.name,
-                              'code': workshop.code,
-                              'device_list': device_list})
 
-    return 0, workshop_list
+        j_workshop = {'name': workshop.name,
+                      'code': workshop.code,
+                      'device_list': device_list}
+        return 0, j_workshop
+    except Exception, e:
+        return -1, e.__str__()
 
 
 def handle_sync_device(socket, message):

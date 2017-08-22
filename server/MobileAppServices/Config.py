@@ -17,5 +17,6 @@ cmd_handlers = [
     (r'update_device', 'handlers.Handler.handle_update_device'),
     (r'sync_device', 'handlers.Handler.handle_sync_device'),
     (r'sync_workshop_list', 'handlers.Handler.handle_sync_workshop_list'),
+    (r'sync_workshop', 'handlers.Handler.handle_sync_workshop'),
 ]
 
