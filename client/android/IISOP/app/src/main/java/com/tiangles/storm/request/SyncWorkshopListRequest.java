@@ -40,12 +40,12 @@ public class SyncWorkshopListRequest extends Request {
                 workshops.add(workshop);
             }
         } catch (JSONException e) {
-
+            e.printStackTrace();
         }
 
         StormApp.getDBManager().onSyncWorkshopListDone(workshops);
 
-        return false;
+        return true;
     }
 
     @Override

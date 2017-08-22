@@ -74,12 +74,15 @@ public class WorkshopActivity extends AppCompatActivity implements DBManager.DBM
     }
 
     @Override
-    public void onDeviceUpdated(StormDevice device) {
+    public void onSyncWorkshopDone(StormWorkshop workshop) {
 
     }
 
     @Override
-    public void onDeviceSynced(StormDevice device) {
+    public void onDeviceUpdated(StormDevice device) {
+    }
 
+    @Override
+    public void onDeviceSynced(StormDevice device) {
     }
 }

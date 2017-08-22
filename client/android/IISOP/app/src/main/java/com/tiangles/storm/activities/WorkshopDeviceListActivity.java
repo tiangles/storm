@@ -29,8 +29,9 @@ import butterknife.ButterKnife;
 public class WorkshopDeviceListActivity extends AppCompatActivity implements DBManager.DBManagerObserver{
     @BindView(R.id.workshop_device_list)
     ListView mDeviceListView;
-    List<StormDevice> listItems = new ArrayList<>();
-    String[] deviceCodes;
+    private List<StormDevice> listItems = new ArrayList<>();
+    private String[] deviceCodes;
+    private DeviceListAdaptor listAdaptor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +51,13 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
 
         Intent intent = this.getIntent();
         String workshopCode = intent.getStringExtra("workshop_code");
-        init(workshopCode);
+        StormWorkshop workshop = StormApp.getDBManager().getWorkshop(workshopCode);
+        StormApp.getDBManager().syncWorkshop(workshop.getCode());
+        init(workshop);
     }
 
-    private void init(String workshopCode){
-        StormWorkshop workshop = StormApp.getDBManager().getWorkshop(workshopCode);
+    private void init(StormWorkshop workshop){
+
         String deviceList = workshop.getDeviceList();
         deviceCodes = deviceList.split("\\|");
 
@@ -77,7 +80,8 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
             listItems.add(device);
         }
 
-        mDeviceListView.setAdapter(new DeviceListAdaptor());
+        listAdaptor = new DeviceListAdaptor();
+        mDeviceListView.setAdapter(listAdaptor);
     }
 
     private void updateListView(int position){
@@ -85,6 +89,12 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
 
     @Override
     public void onSyncWorkshopListDone(List<StormWorkshop> workshops) {
+
+    }
+
+    @Override
+    public void onSyncWorkshopDone(StormWorkshop workshop) {
+        init(workshop);
     }
 
     @Override
@@ -92,6 +102,7 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
         for(int i=0; i<deviceCodes.length; ++i){
             if(device.getCode().equals(deviceCodes[i])) {
                 updateListView(i);
+                listAdaptor.notifyDataSetInvalidated();
                 break;
             }
         }
@@ -99,7 +110,11 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
 
     @Override
     public void onDeviceSynced(StormDevice device) {
-
+        for(StormDevice dev: listItems) {
+            if(dev.getCode().equals(device.getCode())){
+                dev.setName(dev.getName());
+            }
+        }
     }
 
     private class DeviceListAdaptor extends BaseAdapter{

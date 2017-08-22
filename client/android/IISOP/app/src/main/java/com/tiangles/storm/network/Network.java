@@ -18,7 +18,12 @@ public class Network {
     private Connection connection;
     private LinkedBlockingQueue<Request> pendingRequests = new LinkedBlockingQueue<>(8);
     private Vector<Request> requests = new Vector<>();
-    SendingThread sendingThread = null;
+    private SendingThread sendingThread = null;
+    private OnServerPushedMessageListener  onServerPushedMessageListener;
+
+    public interface OnServerPushedMessageListener{
+        void onServerPushedMessage(Response message);
+    }
 
     public Network(Configuration config) {
         this.config = config;
@@ -29,6 +34,10 @@ public class Network {
             connection.setStatusListener(new ConnectionListener());
             connection.startConnect();
         }
+    }
+
+    public void setOnServerPushedMessageListener(OnServerPushedMessageListener listener) {
+        onServerPushedMessageListener = listener;
     }
 
     public void sendRequest(Request req) {
@@ -49,6 +58,7 @@ public class Network {
     }
 
     private void onResponse(Response res) {
+        boolean handled = false;
         for(Request req: requests) {
             String reqCmd = req.command();
             if(reqCmd != null && reqCmd.equals(res.command())) {
@@ -56,6 +66,10 @@ public class Network {
                 requests.remove(req);
                 break;
             }
+        }
+
+        if(!handled && onServerPushedMessageListener!= null) {
+            onServerPushedMessageListener.onServerPushedMessage(res);
         }
     }
 

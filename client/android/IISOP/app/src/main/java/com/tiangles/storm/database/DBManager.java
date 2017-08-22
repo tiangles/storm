@@ -7,10 +7,10 @@ import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.request.SyncDeviceRequest;
 import com.tiangles.storm.request.SyncWorkshopListRequest;
+import com.tiangles.storm.request.SyncWorkshopRequest;
 import com.tiangles.storm.request.UpdateDeviceRequest;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 public class DBManager {
@@ -19,6 +19,7 @@ public class DBManager {
 
     public interface DBManagerObserver{
         void onSyncWorkshopListDone(List<StormWorkshop> workshops);
+        void onSyncWorkshopDone(StormWorkshop workshop);
         void onDeviceUpdated(StormDevice device);
         void onDeviceSynced(StormDevice device);
     }
@@ -26,6 +27,19 @@ public class DBManager {
     public DBManager(){
 
     }
+
+    public StormDevice getDevice(String code) {
+        return StormApp.getStormDB().getDevice(code);
+    }
+
+    public List<StormWorkshop> getWorkshopList(){
+        return StormApp.getStormDB().getWorkshopList();
+    }
+
+    public StormWorkshop getWorkshop(String code){
+        return StormApp.getStormDB().getWorkshop(code);
+    }
+
 
     public void addObserver(DBManager.DBManagerObserver observer) {
         mDeviceManagerObservers.add(observer);
@@ -46,19 +60,21 @@ public class DBManager {
     }
 
     public void syncDevice(StormDevice device) {
-
+        syncDevice(device.getCode());
     }
 
-    public StormDevice getDevice(String code) {
-        return StormApp.getStormDB().getDevice(code);
+    public void syncWorkshopList(){
+        SyncWorkshopListRequest request = new SyncWorkshopListRequest();
+        StormApp.getNetwork().sendRequest(request);
     }
 
-    public List<StormWorkshop> getWorkshopList(){
-        return StormApp.getStormDB().getWorkshopList();
+    public void syncWorkshop(String workshopCode){
+        SyncWorkshopRequest request = new SyncWorkshopRequest(workshopCode);
+        StormApp.getNetwork().sendRequest(request);
     }
 
-    public StormWorkshop getWorkshop(String code){
-        return StormApp.getStormDB().getWorkshop(code);
+    public void syncWorkshop(StormWorkshop workshop) {
+        syncWorkshop(workshop.getCode());
     }
 
     public void onUpdateDeviceDone(String deviceCode, int result){
@@ -80,11 +96,6 @@ public class DBManager {
         }
     }
 
-    public void syncWorkshopList(){
-        SyncWorkshopListRequest request = new SyncWorkshopListRequest();
-        StormApp.getNetwork().sendRequest(request);
-    }
-
     public void onSyncWorkshopListDone(Vector<StormWorkshop> workshops){
         for(StormWorkshop workshop: workshops){
             StormApp.getStormDB().commitWorkshopChange(workshop);
@@ -94,6 +105,13 @@ public class DBManager {
             observer.onSyncWorkshopListDone(workshops);
         }
 
+    }
+
+    public void onSyncWorkshopDone(StormWorkshop workshop){
+        StormApp.getStormDB().commitWorkshopChange(workshop);
+        for(DBManager.DBManagerObserver observer: mDeviceManagerObservers){
+            observer.onSyncWorkshopDone(workshop);
+        }
     }
 
     public void syncWorkshopDevices(String workshopCode){
