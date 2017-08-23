@@ -32,6 +32,7 @@ public class StormWorkshop {
         this.name = name;
     }
     public String getDeviceList() {
+
         return this.deviceList;
     }
     public void setDeviceList(String deviceList) {

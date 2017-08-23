@@ -49,6 +49,7 @@ public class SyncDeviceRequest extends Request{
         int resCode = -1;
         try {
             device = DeviceUtils.converJSONToDevice(jObj.getJSONObject("message"));
+            resCode = jObj.getInt("result");
         } catch (JSONException e) {
             e.printStackTrace();
         }

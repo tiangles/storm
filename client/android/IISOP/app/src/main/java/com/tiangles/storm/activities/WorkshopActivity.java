@@ -76,6 +76,7 @@ public class WorkshopActivity extends AppCompatActivity implements DBManager.DBM
     @Override
     public void onSyncWorkshopDone(StormWorkshop workshop) {
 
+
     }
 
     @Override

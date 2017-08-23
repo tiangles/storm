@@ -30,27 +30,9 @@ public class StormDB {
     }
 
     public String createDatabaseFile(Context context) {
-//        File dir = context.getFilesDir();
-        File dir =  Environment.getExternalStorageDirectory();
+        File dir = context.getFilesDir();
+//        File dir =  Environment.getExternalStorageDirectory();
         String path = dir.getAbsolutePath() + "/storm.db";
-//        File f = new File(path);
-////        f.delete();
-//        if(!f.exists()) {
-//            try {
-//                InputStream in = context.getAssets().open("storm.db");
-//
-//                OutputStream out = new FileOutputStream(path);
-//                byte[] buffer = new byte[1024];
-//                int byteread = 0;
-//                while ( (byteread = in.read(buffer)) != -1) {
-//                    out.write(buffer, 0, byteread);
-//                }
-//                in.close();
-//                out.close();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
         return path;
     }
 
@@ -130,7 +112,7 @@ public class StormDB {
                     dbPath, null);
             DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
             daoSession = daoMaster.newSession();
-
+            daoSession.clear();
         }
         return daoSession;
     }

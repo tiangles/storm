@@ -84,9 +84,6 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
         mDeviceListView.setAdapter(listAdaptor);
     }
 
-    private void updateListView(int position){
-    }
-
     @Override
     public void onSyncWorkshopListDone(List<StormWorkshop> workshops) {
 
@@ -101,7 +98,6 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
     public void onDeviceUpdated(StormDevice device) {
         for(int i=0; i<deviceCodes.length; ++i){
             if(device.getCode().equals(deviceCodes[i])) {
-                updateListView(i);
                 listAdaptor.notifyDataSetInvalidated();
                 break;
             }
@@ -112,7 +108,8 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
     public void onDeviceSynced(StormDevice device) {
         for(StormDevice dev: listItems) {
             if(dev.getCode().equals(device.getCode())){
-                dev.setName(dev.getName());
+                dev.setName(device.getName());
+                listAdaptor.notifyDataSetInvalidated();
             }
         }
     }
