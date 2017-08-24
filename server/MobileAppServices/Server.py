@@ -1,3 +1,4 @@
+import threading
 from importlib import import_module
 
 import tornado.websocket
@@ -60,7 +61,11 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         for (c, h) in self.handlers.items():
             # find a handler to handle the command
             if c == cmd:
-                (code, msg) = h(self, message)
+                try:
+                    (code, msg) = h(self, message)
+                except Exception, e:
+                    (code, msg) = -1, e.__str__()
+
                 result = {
                     'cmd': cmd,
                     'result': code,
@@ -78,6 +83,30 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
                 'message': 'unknown command',
             }
             self.write_message(json.dumps(result))
+
+    @classmethod
+    def broadcast(cls, msg):
+        for client in SocketHandler.clients:
+            client.write_message(json.dumps(msg))
+
+
+timer = None
+
+
+def timer_task():
+    message = {
+        'cmd': 'signal_parameter_updated',
+        'result': 0,
+        'message': {
+            'device_code' : 'HNC10AN001',
+            'value': ''
+        },
+    }
+    SocketHandler.broadcast(message)
+
+    global timer
+    timer = threading.Timer(2.0, timer_task, [])
+    timer.start()
 
 
 class Application(tornado.web.Application):

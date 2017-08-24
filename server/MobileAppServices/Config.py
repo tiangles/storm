@@ -18,5 +18,7 @@ cmd_handlers = [
     (r'sync_device', 'handlers.Handler.handle_sync_device'),
     (r'sync_workshop_list', 'handlers.Handler.handle_sync_workshop_list'),
     (r'sync_workshop', 'handlers.Handler.handle_sync_workshop'),
+    (r'get_signal_parameter_record', 'handlers.Handler.handle_get_signal_parameter_record'),
+
 ]
 
