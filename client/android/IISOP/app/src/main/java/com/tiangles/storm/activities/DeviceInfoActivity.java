@@ -10,6 +10,11 @@ import android.widget.TextView;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.preference.PreferenceEngine;
+import com.tiangles.storm.request.GetSignalParameterRecordRequest;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +30,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
     @BindView(R.id.device_dcs_cabinet) TextView mDeviceDcsCabinetView;
 
     private String mDeviceCode;
+    private Timer mTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,21 @@ public class DeviceInfoActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
         mDeviceCode = intent.getStringExtra("code");
         showDevice(StormApp.getStormDB().getDevice(mDeviceCode));
+
+        mTimer = new Timer();
+        int refreshInterval = PreferenceEngine.getInstance().getSignalParameterRefreshInterval();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                GetSignalParameterRecordRequest request = new GetSignalParameterRecordRequest(mDeviceCode, new GetSignalParameterRecordRequest.OnSignalParameterRecordListener() {
+                    @Override
+                    public void onRecord(String deviceCode, String value, String time) {
+                        mDeviceParameterView.setText(value);
+                    }
+                });
+                StormApp.getNetwork().sendRequest(request);
+            }
+        }, refreshInterval, refreshInterval);
     }
 
     private void showDevice(StormDevice device) {

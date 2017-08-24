@@ -11,6 +11,7 @@ public class PreferenceEngine {
     private final String KEY_CURRENT_USER_PASSWORD = "key_current_user_password";
     private final String KEY_AUTO_LOGIN = "key_auto_login";
     private final String KEY_REMEMBER_PASSWORD = "key_remember_password";
+    private final String KEY_SIGNAL_PARAMETER_REFRESH_INTERVAL = "key_signal_parameter_refresh_interval";
 
     private static PreferenceEngine mInstance;
     private SharedPreferences mDefaultSharedPreference;
@@ -67,6 +68,16 @@ public class PreferenceEngine {
     public boolean getRememberPassword() {
         return getDefaultPreference().getBoolean(KEY_REMEMBER_PASSWORD, false);
     }
+
+    public int getSignalParameterRefreshInterval(){
+        return getDefaultPreference().getInt(KEY_SIGNAL_PARAMETER_REFRESH_INTERVAL, 5*1000);
+    }
+
+
+    public void setSignalParameterRefreshInterval(int interval){
+        getDefaultPreference().edit().putInt(KEY_SIGNAL_PARAMETER_REFRESH_INTERVAL, interval).commit();
+    }
+
 
     public User loadUserInfo(User user) {
         user.set(getUserName(),
