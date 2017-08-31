@@ -2,10 +2,43 @@ import models
 from rest_framework import serializers
 
 
-class DeviceSerializer(serializers.HyperlinkedModelSerializer):
+class DeviceDetailSerializer(serializers.HyperlinkedModelSerializer):
+    workshop = serializers.ReadOnlyField(source='workshop.name')
+
     class Meta:
         model = models.Device
         fields = ('id',
-                  'qr_code',
+                  'code',
                   'model',
-                  'name',)
+                  'name',
+                  'system',
+                  'distribution_cabinet',
+                  'local_control_panel',
+                  'dcs_cabinet',
+                  'forward_device',
+                  'backward_device',
+                  'legend',
+                  'workshop',)
+        depth = 1
+
+
+class DeviceListSerializer(serializers.HyperlinkedModelSerializer):
+    workshop = serializers.ReadOnlyField(source='workshop.name')
+
+    class Meta:
+        model = models.Device
+        fields = ('id',
+                  'code',
+                  'model',
+                  'name',
+                  'system',
+                  'workshop',)
+        depth = 1
+
+
+class WorkshopListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Workshop
+        fields = ('index',
+                  'name',
+                  'code',)

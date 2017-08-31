@@ -6,7 +6,6 @@ $(document).ready(function() {
 
 var TableInit = function () {
     var $customer_table = $('#tb_devices');
-    var workshop_code = $('#workshop_code').val();
     var oTableInit = new Object();
     //初始化Table
     oTableInit.Init = function () {
@@ -38,30 +37,19 @@ var TableInit = function () {
             columns: [{
                 checkbox: true
             }, {
-                field: 'code',
-                title: '设备编码',
-                formatter: function(value, row, index){
-                    return '<a  target="_blank" href=/view/device?code=' + row.code + '>'+value+'</a>';
-                }
-            }, {
                 field: 'name',
                 title: '名称',
             }, {
                 field: 'model',
                 title: '型号',
             }, {
-                field: 'system',
-                title: '所在系统',
-            }, {
-
-                field: 'workshop',
-                title: '所在车间',
+                field: 'qr_code',
+                title: '二维码',
             }]
         });
     };
     oTableInit.queryParams = function (params) {
         var temp = {
-            workshop: workshop_code,
             page_size: params.limit,
             page: params.offset+1,
             pk: params.search

@@ -19,15 +19,20 @@ from rest_framework.routers import DefaultRouter
 
 import api.views
 import device.views
+import staff.views
 
 
 router = DefaultRouter()
+router.register(r'workshops', api.views.WorkshopViewSet)
 router.register(r'devices', api.views.DeviceViewSet)
-router.register(r'events', api.views.UserEventViewSet)
 
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
     url(r'^api/v1/', include(router.urls)),
-    url(r'^devices/', device.views.view_devices, name = 'view_devices'),
+    url(r'^admin/', admin.site.urls),
+    url(r'^login/', staff.views.login, name='login'),
+    url(r'^logout/', staff.views.logout, name='logout'),
+    url(r'^view/workshops/$', device.views.view_workshop_list, name='view_workshop_list'),
+    url(r'^view/devices', device.views.view_device_list, name='view_device_list_of_workshop'),
+    url(r'^view/device/detail', device.views.view_device, name='view_specified_device'),
 ]

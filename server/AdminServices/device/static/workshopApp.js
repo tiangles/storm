@@ -11,7 +11,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $customer_table.bootstrapTable({
-            url: '/api/v1/devices/',          //请求后台的URL（*）
+            url: '/api/v1/workshops/',          //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -38,24 +38,17 @@ var TableInit = function () {
             columns: [{
                 checkbox: true
             }, {
-                field: 'code',
-                title: '设备编码',
-                formatter: function(value, row, index){
-                    return '<a  target="_blank" href=/view/device?code=' + row.code + '>'+value+'</a>';
-                }
+                field: 'index',
+                title: '编码',
             }, {
                 field: 'name',
                 title: '名称',
+                formatter: function(value, row, index){
+                    return '<a  target="_blank" href=/view/devices?workshop=' + row.code + '>'+value+'</a>';
+                }
             }, {
-                field: 'model',
+                field: 'code',
                 title: '型号',
-            }, {
-                field: 'system',
-                title: '所在系统',
-            }, {
-
-                field: 'workshop',
-                title: '所在车间',
             }]
         });
     };

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}设备管理{% endblock %}
+
+{% block page_content %}
+{% load static %}
+
+<link href="{% static "bootstrap-table/bootstrap-table.min.css"%}" rel="stylesheet" />
+<script src="{% static "bootstrap-table/bootstrap-table.min.js"%}"></script>
+<script src="{% static "bootstrap-table/locale/bootstrap-table-zh-CN.js"%}"></script>
+<form>
+    <input type="hidden" id="workshop_code" value="{{workshop_code}}">
+</form>
+<div class=" container-fluid table-responsive">
+    <div class="tab-content" id="tabContent">
+        <div id="toolbar" class="btn-group">
+            <button id="btn_add" type="button" class="btn btn-info btn-sm rightSize">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;新增
+            </button>
+            <button id="btn_edit" type="button" class="btn btn-info btn-sm rightSize">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;修改
+            </button>
+            <button id="btn_delete" type="button" class="btn btn-info btn-sm rightSize">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除
+            </button>
+            <button id="btn_approve" type="button" class="btn btn-info btn-sm rightSize">
+                <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp;批量导入
+            </button>
+        </div>
+        <table id="tb_devices"></table>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block page_script %}
+<!-- get data from server -->
+<script src="{% static "deviceApp.js"%}"></script>
+
+{% endblock %}
