@@ -11,10 +11,11 @@ def login(request):
         print("POST")
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
+        redirect_to = request.POST.get('next', '/view/workshops/')
         user = django.contrib.auth.authenticate(username=username, password=password)
         if user is not None and user.is_active and user.is_authenticated():
             django.contrib.auth.login(request, user)
-            return HttpResponseRedirect("/devices")
+            return HttpResponseRedirect(redirect_to)
 
     return render(request, 'login.html', {})
 

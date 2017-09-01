@@ -1,35 +1,80 @@
 {% extends "base.html" %}
-{% block title %}设备管理{% endblock %}
+{% block title %}设备信息{% endblock %}
 
 {% block page_content %}
 {% load static %}
 <link href="{% static "bootstrap-table/bootstrap-table.min.css"%}" rel="stylesheet" />
 <script src="{% static "bootstrap-table/bootstrap-table.min.js"%}"></script>
 <script src="{% static "bootstrap-table/locale/bootstrap-table-zh-CN.js"%}"></script>
-<form>
-    <input type="hidden" id="workshop_code" value="{{workshop_code}}">
-</form>
-<div class=" container-fluid table-responsive">
-<h1 class="jumbotron masthead ">设备详情</h1>
-    <div class="tab-content" id="tabContent">
-        <div id="toolbar" class="btn-group">
-            <button id="btn_add" type="button" class="btn btn-info btn-sm rightSize">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;新增
-            </button>
-            <button id="btn_edit" type="button" class="btn btn-info btn-sm rightSize">
-                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;修改
-            </button>
-            <button id="btn_delete" type="button" class="btn btn-info btn-sm rightSize">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除
-            </button>
-            <button id="btn_approve" type="button" class="btn btn-info btn-sm rightSize">
-                <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp;批量导入
-            </button>
-        </div>
-        <table id="tb_devices"></table>
-    </div>
 
+<div class="container-fluid">
+    <h1 class="jumbotron masthead">设备信息</h1>
+    <div class="col-md-4">
+        <br>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane active in" id="home">
+                <form id="tab">
+                    <div class="form-group">
+                        <label>编码</label>
+                        <input type="text" id="device_code" value="{{device_code}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>名称</label>
+                        <input id="device_name" type="text" value="{{device_name}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>所在系统</label>
+                        <input id="system" type="text" value="{{system}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>配电柜</label>
+                        <input id="distribution_cabinet" type="text" value="{{distribution_cabinet}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>就地控制柜</label>
+                        <input id="local_control_panel" type="text" value="{{local_control_panel}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>DCS控制柜</label>
+                        <input id="dcs_cabinet" type="text" value="{{dcs_cabinet}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>前向设备</label>
+                        <input id="forward_device" type="text" value="{{forward_device}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>后向设备</label>
+                        <input id="backward_device" type="text" value="{{backward_device}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>图例</label>
+                        <input id="legend" type="text" value="{{legend}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>型号</label>
+                        <textarea id="device_model" rows="3" class="form-control">{{device_model}}</textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="profile">
+            <form id="tab2">
+                <div class="form-group">
+                    <label>New Password</label>
+                        <input type="password" class="form-control">
+                    </div>
+                    <div>
+                        <button class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="btn-toolbar list-toolbar">
+        <button class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+        <a href="#myModal" data-toggle="modal" class="btn btn-danger">Delete</a>
+    </div>
+    </div>
 </div>
+
 {% endblock %}
 
 {% block page_script %}

@@ -44,7 +44,7 @@ var TableInit = function () {
                 field: 'name',
                 title: '名称',
                 formatter: function(value, row, index){
-                    return '<a  target="_blank" href=/view/devices?workshop=' + row.code + '>'+value+'</a>';
+                    return '<a href=/view/devices?workshop=' + row.code + '>'+value+'</a>';
                 }
             }, {
                 field: 'code',

@@ -41,7 +41,7 @@ var TableInit = function () {
                 field: 'code',
                 title: '设备编码',
                 formatter: function(value, row, index){
-                    return '<a  target="_blank" href=/view/device?code=' + row.code + '>'+value+'</a>';
+                    return '<a href=/view/device/detail?code=' + row.code + '>'+value+'</a>';
                 }
             }, {
                 field: 'name',
@@ -56,6 +56,9 @@ var TableInit = function () {
 
                 field: 'workshop',
                 title: '所在车间',
+                formatter: function(value, row, index){
+                    return '<a href=/view/devices?code=' + row.workshop_code + '>'+value+'</a>';
+                }
             }]
         });
     };

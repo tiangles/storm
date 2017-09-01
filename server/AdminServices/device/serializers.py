@@ -24,6 +24,7 @@ class DeviceDetailSerializer(serializers.HyperlinkedModelSerializer):
 
 class DeviceListSerializer(serializers.HyperlinkedModelSerializer):
     workshop = serializers.ReadOnlyField(source='workshop.name')
+    workshop_code = serializers.ReadOnlyField(source='workshop.code')
 
     class Meta:
         model = models.Device
@@ -32,7 +33,8 @@ class DeviceListSerializer(serializers.HyperlinkedModelSerializer):
                   'model',
                   'name',
                   'system',
-                  'workshop',)
+                  'workshop',
+                  'workshop_code',)
         depth = 1
 
 

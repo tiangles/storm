@@ -14,7 +14,7 @@ class Workshop(models.Model):
 
 
 class Device(models.Model):
-    code = models.SlugField(max_length=128, verbose_name='二维码')
+    code = models.SlugField(max_length=128, verbose_name='编码')
     model = models.CharField(max_length=128, verbose_name='型号')
     name = models.CharField(max_length=128, verbose_name='名称')
     system = models.CharField(max_length=128, verbose_name='所在系统')
