@@ -22,7 +22,6 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,7 +36,11 @@
             android:name=".activities.DeviceSystemInfoActivity"
             android:label="@string/title_activity_device_system_info"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.WorkshopDeviceListActivity"></activity>
+        <activity android:name=".activities.WorkshopDeviceListActivity" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings">
+        </activity>
     </application>
 
 </manifest>

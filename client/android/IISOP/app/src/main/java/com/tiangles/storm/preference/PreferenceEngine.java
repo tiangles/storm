@@ -8,6 +8,8 @@ import com.tiangles.storm.user.User;
 
 public class PreferenceEngine {
     private final String KEY_CURRENT_USER_NAME = "key_current_user_name";
+    private final String KEY_SERVER_ADDRESS = "key_server_address";
+    private final String KEY_SERVER_PORT = "key_server_port";
     private final String KEY_CURRENT_USER_PASSWORD = "key_current_user_password";
     private final String KEY_AUTO_LOGIN = "key_auto_login";
     private final String KEY_REMEMBER_PASSWORD = "key_remember_password";
@@ -35,6 +37,15 @@ public class PreferenceEngine {
 
     public void clear() {
         getDefaultPreference().edit().clear().commit();
+    }
+
+    public String getServerAddress(){
+        return getDefaultPreference().getString(KEY_SERVER_ADDRESS, "127.0.0.1");
+    }
+
+    public int getServerPort(){
+        String port =  getDefaultPreference().getString(KEY_SERVER_PORT, "8129");
+        return Integer.parseInt(port);
     }
 
     public void setUserName(String userName) {

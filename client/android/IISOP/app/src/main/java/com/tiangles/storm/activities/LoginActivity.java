@@ -61,6 +61,13 @@ public class LoginActivity extends AppCompatActivity{
         attemptLogin();
     }
 
+    @OnClick(R.id.login_setting_button)
+    public void onSetting(){
+        Intent intent = new Intent(LoginActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+
     @OnEditorAction(R.id.login_password)
     public boolean onEditorAction(int id){
         if (id == R.id.login_password_action || id == EditorInfo.IME_NULL) {

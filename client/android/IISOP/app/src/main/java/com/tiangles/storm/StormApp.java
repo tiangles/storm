@@ -9,6 +9,7 @@ import com.tiangles.storm.network.Configuration;
 import com.tiangles.storm.network.Delegate;
 import com.tiangles.storm.network.Network;
 import com.tiangles.storm.network.Response;
+import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.user.User;
 import com.uuzuche.lib_zxing.ZApplication;
 
@@ -28,7 +29,7 @@ public class StormApp extends ZApplication {
 
         user = new User();
         handler = new Handler();
-        network = createNetwork();
+//        network = createNetwork();
         stormDB = new StormDB(getApplicationContext());
         deviceManager = new DBManager();
     }
@@ -77,12 +78,12 @@ public class StormApp extends ZApplication {
 
             @Override
             public String getServerAddress() {
-                return "192.168.3.11";
+                return PreferenceEngine.getInstance().getServerAddress();
             }
 
             @Override
             public int getServerPort() {
-                return 8080;
+                return PreferenceEngine.getInstance().getServerPort();
             }
 
             @Override
