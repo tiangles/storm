@@ -56,6 +56,12 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+//        AppManager.getAppManager().finishActivity(this);
+    }
+
     @OnClick(R.id.login_sign_in_button)
     public void onSignIn(){
         attemptLogin();
@@ -181,7 +187,9 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void switchToMain(){
+        finish();
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 }

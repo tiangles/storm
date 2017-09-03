@@ -2,6 +2,7 @@ package com.tiangles.storm.legend;
 
 import com.tiangles.storm.legend.model.Circle;
 import com.tiangles.storm.legend.model.Line;
+import com.tiangles.storm.legend.model.Text;
 
 
 public class ElectricValve extends LegendBase {
@@ -24,7 +25,7 @@ public class ElectricValve extends LegendBase {
 
         circles.add(new Circle(0, -h, h /2));
 
-//        texts.add(new Text("M", 0, -h));
+        texts.add(new Text("M", 0, -h));
 
         leftLinkPoint.set(-2* h, 0);
         rightLinkPoint.set(2* h, 0);

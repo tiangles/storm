@@ -41,21 +41,6 @@ public class DeviceInfoActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
         mDeviceCode = intent.getStringExtra("code");
         showDevice(StormApp.getStormDB().getDevice(mDeviceCode));
-
-        mTimer = new Timer();
-        int refreshInterval = PreferenceEngine.getInstance().getSignalParameterRefreshInterval();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                GetSignalParameterRecordRequest request = new GetSignalParameterRecordRequest(mDeviceCode, new GetSignalParameterRecordRequest.OnSignalParameterRecordListener() {
-                    @Override
-                    public void onRecord(String deviceCode, String value, String time) {
-                        mDeviceParameterView.setText(value);
-                    }
-                });
-                StormApp.getNetwork().sendRequest(request);
-            }
-        }, refreshInterval, refreshInterval);
     }
 
     private void showDevice(StormDevice device) {
@@ -73,5 +58,30 @@ public class DeviceInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(DeviceInfoActivity.this, DeviceSystemInfoActivity.class);
         intent.putExtra("device_code", mDeviceCode);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mTimer = new Timer();
+        int refreshInterval = PreferenceEngine.getInstance().getSignalParameterRefreshInterval();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                GetSignalParameterRecordRequest request = new GetSignalParameterRecordRequest(mDeviceCode, new GetSignalParameterRecordRequest.OnSignalParameterRecordListener() {
+                    @Override
+                    public void onRecord(String deviceCode, String value, String time) {
+                        mDeviceParameterView.setText(value);
+                    }
+                });
+                StormApp.getNetwork().sendRequest(request);
+            }
+        }, refreshInterval, refreshInterval);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mTimer.cancel();
     }
 }
