@@ -39,7 +39,7 @@ var TableInit = function () {
                 checkbox: true
             }, {
                 field: 'index',
-                title: '编码',
+                title: '编号',
             }, {
                 field: 'name',
                 title: '名称',
@@ -48,7 +48,7 @@ var TableInit = function () {
                 }
             }, {
                 field: 'code',
-                title: '型号',
+                title: '编码',
             }]
         });
     };
