@@ -55,7 +55,17 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, '..', 'database', 'storm.sqlite3'),
+    },
+    'device_db': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, '..', 'database', 'storm_device.sqlite3'),
     }
+}
+
+DATABASE_ROUTERS = ['StormAdmin.database_router.DatabaseAppsRouter']
+DATABASE_APPS_MAPPING = {
+    'device': 'device_db',
+    'event': 'device_db',
 }
 
 AUTH_PASSWORD_VALIDATORS = [

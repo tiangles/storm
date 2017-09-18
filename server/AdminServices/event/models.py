@@ -15,7 +15,7 @@ class UserEvent(models.Model):
     user = models.ForeignKey(User)
 
     class Meta:
-        db_table = 'auth_user_event'
+        db_table = 'user_event'
 
 
 class SessionManager(BaseSessionManager):
@@ -28,7 +28,7 @@ class UserEventSession(AbstractBaseSession):
     user = models.ForeignKey(User)
 
     class Meta(AbstractBaseSession.Meta):
-        db_table = 'auth_user_event_session'
+        db_table = 'user_event_session'
 
 
     @classmethod
