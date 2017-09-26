@@ -11,8 +11,9 @@ public class LegendFactory {
     public static LegendBase createLegend(StormDevice device) {
         LegendBase legend = makeLegend(device);
         if (legend != null) {
-            legend.addLeftDevice(makeLegend(StormApp.getStormDB().getDevice(device.getForwardDevice())));
-            legend.addRightDevice(makeLegend(StormApp.getStormDB().getDevice(device.getBackwardDevice())));
+            ///TODO:
+//            legend.addLeftDevice(makeLegend(StormApp.getStormDB().getDevice(device.getForward_device())));
+//            legend.addRightDevice(makeLegend(StormApp.getStormDB().getDevice(device.getBackward_device())));
         }
         return legend;
     }

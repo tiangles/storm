@@ -34,8 +34,7 @@ public class SyncWorkshopRequest extends Request {
         try {
             JSONObject jWorkshop = res.object().getJSONObject("message");
             StormWorkshop workshop = new StormWorkshop(jWorkshop.getString("code"),
-                    jWorkshop.getString("name"),
-                    jWorkshop.getString("device_list"));
+                    jWorkshop.getString("name"));
             StormApp.getDBManager().onSyncWorkshopDone(workshop);
         } catch (JSONException e) {
             e.printStackTrace();

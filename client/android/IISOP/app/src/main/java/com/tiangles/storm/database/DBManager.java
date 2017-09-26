@@ -5,6 +5,7 @@ import android.util.Log;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
+import com.tiangles.storm.request.SyncDatabaseRequest;
 import com.tiangles.storm.request.SyncDeviceRequest;
 import com.tiangles.storm.request.SyncWorkshopListRequest;
 import com.tiangles.storm.request.SyncWorkshopRequest;
@@ -16,6 +17,7 @@ import java.util.Vector;
 public class DBManager {
     private static String LOG_TAG = "DeviceManager";
     private Vector<DBManager.DBManagerObserver> mDeviceManagerObservers = new Vector<>();
+    StormDB stormDB;// = new StormDB(getApplicationContext());
 
     public interface DBManagerObserver{
         void onSyncWorkshopListDone(List<StormWorkshop> workshops);
@@ -25,19 +27,23 @@ public class DBManager {
     }
 
     public DBManager(){
+        StormApp.getNetwork().sendRequest(new SyncDatabaseRequest());
+    }
 
+    public StormDB getStormDB(){
+        return stormDB;
     }
 
     public StormDevice getDevice(String code) {
-        return StormApp.getStormDB().getDevice(code);
+        return getStormDB().getDevice(code);
     }
 
     public List<StormWorkshop> getWorkshopList(){
-        return StormApp.getStormDB().getWorkshopList();
+        return getStormDB().getWorkshopList();
     }
 
     public StormWorkshop getWorkshop(String code){
-        return StormApp.getStormDB().getWorkshop(code);
+        return getStormDB().getWorkshop(code);
     }
 
 
@@ -90,7 +96,7 @@ public class DBManager {
         if(result != 0){
             Log.e(LOG_TAG, "Sync device failed, device code: "+ deviceCode);
         }
-        StormApp.getStormDB().commitDeviceChange(device);
+        getStormDB().commitDeviceChange(device);
         for(DBManager.DBManagerObserver observer: mDeviceManagerObservers){
             observer.onDeviceSynced(device);
         }
@@ -98,7 +104,7 @@ public class DBManager {
 
     public void onSyncWorkshopListDone(Vector<StormWorkshop> workshops){
         for(StormWorkshop workshop: workshops){
-            StormApp.getStormDB().commitWorkshopChange(workshop);
+            getStormDB().commitWorkshopChange(workshop);
         }
 
         for(DBManager.DBManagerObserver observer: mDeviceManagerObservers){
@@ -108,10 +114,14 @@ public class DBManager {
     }
 
     public void onSyncWorkshopDone(StormWorkshop workshop){
-        StormApp.getStormDB().commitWorkshopChange(workshop);
+        getStormDB().commitWorkshopChange(workshop);
         for(DBManager.DBManagerObserver observer: mDeviceManagerObservers){
             observer.onSyncWorkshopDone(workshop);
         }
+    }
+
+    public void onSyncDatabaseDone(String dbFile){
+        stormDB = new StormDB(StormApp.getContext(), dbFile);
     }
 
     public void syncWorkshopDevices(String workshopCode){

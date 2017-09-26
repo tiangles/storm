@@ -47,11 +47,8 @@ public class LoginRequest extends Request {
 
     @Override
     public boolean handleResponse(Response res) {
-        if( res.command().equals(COMMAND) ) {
-            handleLoginResult(res.object());
-            return true;
-        }
-        return false;
+        handleLoginResult(res.object());
+        return true;
     }
 
     @Override

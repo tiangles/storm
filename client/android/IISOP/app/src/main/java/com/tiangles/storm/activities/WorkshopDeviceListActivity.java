@@ -57,11 +57,6 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
     }
 
     private void init(StormWorkshop workshop){
-
-        String deviceList = workshop.getDeviceList();
-        deviceCodes = deviceList.split("\\|");
-
-        createDeviceListAdaptor(deviceCodes);
     }
 
     private void createDeviceListAdaptor(String[] deviceCodes) {

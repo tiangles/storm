@@ -39,7 +39,7 @@ public class DeviceSystemInfoActivity extends AppCompatActivity implements Devic
     }
 
     private void init(String deviceCode) {
-        mDevice = StormApp.getStormDB().getDevice(deviceCode);
+        mDevice = StormApp.getDBManager().getDevice(deviceCode);
         init();
     }
 
@@ -69,11 +69,13 @@ public class DeviceSystemInfoActivity extends AppCompatActivity implements Devic
 
     public void onLinkedDeviceChanged(String deviceCode, String newCode) {
         if(deviceCode != newCode) {
-            if(newCode.isEmpty() || StormApp.getStormDB().getDevice(newCode) != null) {
+            if(newCode.isEmpty() || StormApp.getDBManager().getDevice(newCode) != null) {
                 if(mCurrentLinkedDevice == LEFT_DEVICE) {
-                    mDevice.setForwardDevice(newCode);
+                    ///TODO:
+//                    mDevice.setForward_device(newCode);
                 } else if(mCurrentLinkedDevice == RIGHT_DEVICE) {
-                    mDevice.setBackwardDevice(newCode);
+                    ///TODO:
+//                    mDevice.setBackward_device(newCode);
                 }
                 mEditView.tryToGo();
                 init();

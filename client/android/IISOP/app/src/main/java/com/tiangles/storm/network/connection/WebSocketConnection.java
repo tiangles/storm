@@ -266,7 +266,7 @@ public class WebSocketConnection implements Connection {
         private int mReconnectMaxTime = 0;
 
         public Builder(Configuration configuration) {
-            url = "ws://" + configuration.getServerAddress() + ":" + configuration.getServerPort();
+            url = "ws://" + configuration.getServerAddress() + ":" + configuration.getServerPort() + "/api";
             handler = configuration.getMessageHandler();
             mReconnectInterval = configuration.getReconnectInterval();
             mReconnectMaxTime = configuration.getReconnectMaxTime();

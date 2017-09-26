@@ -40,7 +40,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         mDeviceCode = intent.getStringExtra("code");
-        showDevice(StormApp.getStormDB().getDevice(mDeviceCode));
+        showDevice(StormApp.getDBManager().getDevice(mDeviceCode));
     }
 
     private void showDevice(StormDevice device) {
@@ -49,9 +49,9 @@ public class DeviceInfoActivity extends AppCompatActivity {
         mDeviceCodeTextView.setText(device.getCode());
         mDeviceSystemView.setText(device.getSystem());
         mDeviceParameterView.setText("--");
-        mDeviceDistributionCabinetView.setText(device.getDistributionCabinet());
-        mDeviceLocalControlPanelView.setText(device.getLocalControlPanel());
-        mDeviceDcsCabinetView.setText(device.getDcsCabinet());
+        mDeviceDistributionCabinetView.setText(device.getDistribution_cabinet());
+        mDeviceLocalControlPanelView.setText(device.getLocal_control_panel());
+        mDeviceDcsCabinetView.setText(device.getDcs_cabinet());
     }
 
     public void showSystemInfo(View view) {

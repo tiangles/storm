@@ -25,15 +25,8 @@ public class StormDB {
     private StormWorkshopDao stormWorkshopDao;
     private String dbPath;
 
-    public StormDB(Context context) {
-        dbPath = createDatabaseFile(context);
-    }
-
-    public String createDatabaseFile(Context context) {
-        File dir = context.getFilesDir();
-//        File dir =  Environment.getExternalStorageDirectory();
-        String path = dir.getAbsolutePath() + "/storm.db";
-        return path;
+    public StormDB(Context context, String dbPath) {
+        this.dbPath = dbPath;
     }
 
     public StormDevice getDevice(String deviceCode) {

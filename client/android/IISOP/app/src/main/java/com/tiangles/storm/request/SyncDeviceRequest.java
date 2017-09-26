@@ -32,11 +32,8 @@ public class SyncDeviceRequest extends Request{
 
     @Override
     public boolean handleResponse(Response res) {
-        if(res.command().equals(COMMAND)) {
-            handleSyncResult(res.object());
-            return true;
-        }
-        return false;
+        handleSyncResult(res.object());
+        return true;
     }
 
     @Override
