@@ -115,3 +115,10 @@ def handle_get_signal_parameter_record(socket, message):
         'value': '%2.2f K Pa'%(value,),
         'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S %f')}
     return 0, j_record
+
+
+def handle_sync_database(socket, message):
+    return 0, {
+        'url': 'http://192.168.3.11:8128/static/storm_device.sqlite3',
+        'db_version': '1.0'
+    }

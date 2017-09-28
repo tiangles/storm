@@ -28,14 +28,14 @@ def import_string(dotted_path):
         raise msg
 
 
-class SocketHandler(tornado.websocket.WebSocketHandler):
+class WebsocketHandler(tornado.websocket.WebSocketHandler):
     clients = set()
 
     def data_received(self, chunk):
         pass
 
     def __init__(self, application, request, **kwargs):
-        super(SocketHandler, self).__init__(application, request, **kwargs)
+        super(WebsocketHandler, self).__init__(application, request, **kwargs)
         self.handlers = {}
         for (c, h) in Config.cmd_handlers:
             self.handlers[c] = import_string(h)
@@ -47,10 +47,10 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
             'result': 'succeed',
             'code': 101
         }))
-        SocketHandler.clients.add(self)
+        WebsocketHandler.clients.add(self)
 
     def on_close(self):
-        SocketHandler.clients.remove(self)
+        WebsocketHandler.clients.remove(self)
 
     def on_message(self, dat):
         message = json.loads(dat)
@@ -72,7 +72,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
                     'message': msg,
                 }
                 print 'Send message: %s' % result
-                self.write_message(json.dumps(result))
+                self.write_message(result)
                 handled = True
                 break
         # tell client
@@ -86,7 +86,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
 
     @classmethod
     def broadcast(cls, msg):
-        for client in SocketHandler.clients:
+        for client in WebsocketHandler.clients:
             client.write_message(json.dumps(msg))
 
 
@@ -102,7 +102,7 @@ def timer_task():
             'value': ''
         },
     }
-    SocketHandler.broadcast(message)
+    WebsocketHandler.broadcast(message)
 
     global timer
     timer = threading.Timer(2.0, timer_task, [])
@@ -112,7 +112,8 @@ def timer_task():
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
-            (r'/', SocketHandler),
+            (r'/api', WebsocketHandler),
+            (r'/database', WebsocketHandler),
         ]
         tornado.web.Application.__init__(self, handlers, **Config.settings)
 

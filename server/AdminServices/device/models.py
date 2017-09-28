@@ -5,8 +5,7 @@ from django.db import models
 
 
 class Workshop(models.Model):
-    index = models.SlugField(max_length=128, null=True, default=0, verbose_name='编号')
-    code = models.SlugField(max_length=128, verbose_name='编码')
+    code = models.SlugField(max_length=128, primary_key=True, verbose_name='编码')
     name = models.CharField(max_length=128, verbose_name='名称')
 
     class Meta:
@@ -14,15 +13,15 @@ class Workshop(models.Model):
 
 
 class Device(models.Model):
-    code = models.SlugField(max_length=128, verbose_name='编码')
+    code = models.SlugField(max_length=128, primary_key=True, verbose_name='编码')
     model = models.CharField(max_length=128, verbose_name='型号')
     name = models.CharField(max_length=128, verbose_name='名称')
     system = models.CharField(max_length=128, verbose_name='所在系统')
-    distribution_cabinet = models.CharField(max_length=128, verbose_name='配电柜')
-    local_control_panel = models.CharField(max_length=128, verbose_name='就地控制柜')
-    dcs_cabinet = models.CharField(max_length=128, verbose_name='DCS控制柜')
+    distribution_cabinet = models.CharField(max_length=128, verbose_name='配电柜', blank=True, null=True)
+    local_control_panel = models.CharField(max_length=128, verbose_name='就地控制柜', blank=True, null=True)
+    dcs_cabinet = models.CharField(max_length=128, verbose_name='DCS控制柜', blank=True, null=True)
     legend = models.CharField(max_length=128, blank=True, verbose_name='图例')
-    workshop = models.ForeignKey(Workshop, related_name='belong_to_workshop')
+    workshop = models.ForeignKey(Workshop, related_name='belong_to_workshop', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         db_table = 'storm_devices'

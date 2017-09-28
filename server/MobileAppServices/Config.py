@@ -4,7 +4,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SERVER_ADDRESS = ''
 SERVER_PORT = 8129
 
-settings = {}
+settings = {
+    "static_path": os.path.join(os.path.dirname(__file__), "static"),
+}
 
 db_config = {
     'backup': 'sqlite',
@@ -19,6 +21,7 @@ cmd_handlers = [
     (r'sync_workshop_list', 'handlers.Handler.handle_sync_workshop_list'),
     (r'sync_workshop', 'handlers.Handler.handle_sync_workshop'),
     (r'get_signal_parameter_record', 'handlers.Handler.handle_get_signal_parameter_record'),
+    (r'sync_database', 'handlers.Handler.handle_sync_database'),
 
 ]
 
