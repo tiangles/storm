@@ -14,6 +14,7 @@ public class PreferenceEngine {
     private final String KEY_AUTO_LOGIN = "key_auto_login";
     private final String KEY_REMEMBER_PASSWORD = "key_remember_password";
     private final String KEY_SIGNAL_PARAMETER_REFRESH_INTERVAL = "key_signal_parameter_refresh_interval";
+    private final String KEY_CURRENT_DATABASE_VERSION = "key_current_database_version";
 
     private static PreferenceEngine mInstance;
     private SharedPreferences mDefaultSharedPreference;
@@ -108,5 +109,13 @@ public class PreferenceEngine {
             setUserPassword("");
         }
         setUserName(user.mUserName);
+    }
+
+    public String getCurrentDatabaseVersion(){
+        return getDefaultPreference().getString(KEY_CURRENT_DATABASE_VERSION, "");
+    }
+
+    public void setCurrentDatabaseVersion(String version){
+        getDefaultPreference().edit().putString(KEY_CURRENT_DATABASE_VERSION, version).commit();
     }
 }

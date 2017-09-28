@@ -26,11 +26,10 @@ import java.util.Vector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WorkshopDeviceListActivity extends AppCompatActivity implements DBManager.DBManagerObserver{
+public class WorkshopDeviceListActivity extends AppCompatActivity {
     @BindView(R.id.workshop_device_list)
     ListView mDeviceListView;
     private List<StormDevice> listItems = new ArrayList<>();
-    private String[] deviceCodes;
     private DeviceListAdaptor listAdaptor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,85 +46,42 @@ public class WorkshopDeviceListActivity extends AppCompatActivity implements DBM
             }
         });
 
-        StormApp.getDBManager().addObserver(this);
-
         Intent intent = this.getIntent();
         String workshopCode = intent.getStringExtra("workshop_code");
         StormWorkshop workshop = StormApp.getDBManager().getWorkshop(workshopCode);
-        StormApp.getDBManager().syncWorkshop(workshop.getCode());
         init(workshop);
     }
 
     private void init(StormWorkshop workshop){
+        List<StormDevice> devices = StormApp.getDBManager().getDeviceFromWorkshop(workshop);
+        createDeviceListAdaptor(devices);
     }
 
-    private void createDeviceListAdaptor(String[] deviceCodes) {
+    private void createDeviceListAdaptor(List<StormDevice> devices) {
         listItems.clear();
-        for(String deviceCode: deviceCodes) {
-            if(deviceCode.isEmpty()) {
-                continue;
+        for(StormDevice device: devices) {
+            if(device != null) {
+                listItems.add(device);
             }
-            StormDevice device = StormApp.getDBManager().getDevice(deviceCode);
-            if(device == null) {
-                device = new StormDevice();
-                device.setName("--");
-                device.setCode(deviceCode);
-                StormApp.getDBManager().syncDevice(deviceCode);
-            }
-            listItems.add(device);
         }
 
         listAdaptor = new DeviceListAdaptor();
         mDeviceListView.setAdapter(listAdaptor);
     }
 
-    @Override
-    public void onSyncWorkshopListDone(List<StormWorkshop> workshops) {
-
-    }
-
-    @Override
-    public void onSyncWorkshopDone(StormWorkshop workshop) {
-        init(workshop);
-    }
-
-    @Override
-    public void onDeviceUpdated(StormDevice device) {
-        for(int i=0; i<deviceCodes.length; ++i){
-            if(device.getCode().equals(deviceCodes[i])) {
-                listAdaptor.notifyDataSetInvalidated();
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void onDeviceSynced(StormDevice device) {
-        for(StormDevice dev: listItems) {
-            if(dev.getCode().equals(device.getCode())){
-                dev.setName(device.getName());
-                listAdaptor.notifyDataSetInvalidated();
-            }
-        }
-    }
-
     private class DeviceListAdaptor extends BaseAdapter{
-
         @Override
         public int getCount() {
             return listItems.size();
         }
-
         @Override
         public Object getItem(int position) {
             return listItems.get(position);
         }
-
         @Override
         public long getItemId(int position) {
             return position;
         }
-
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View  view;

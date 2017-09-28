@@ -43,6 +43,17 @@ public class StormDB {
         return null;
     }
 
+    public List<StormDevice> getDeviceFromWorkshop(String workshopCode){
+        if(workshopCode != null) {
+            List<StormDevice> devices = getStormDeviceDao().queryBuilder()
+                    .where(StormDeviceDao.Properties.Workshop_id.eq(workshopCode))
+                    .build()
+                    .list();
+            return devices;
+        }
+        return null;
+    }
+
     public void commitDeviceChange(StormDevice device){
         if(device != null){
             if(getDevice(device.getCode()) != null) {

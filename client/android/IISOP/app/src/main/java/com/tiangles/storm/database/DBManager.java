@@ -1,23 +1,30 @@
 package com.tiangles.storm.database;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
-import com.tiangles.storm.request.SyncDatabaseRequest;
-import com.tiangles.storm.request.SyncDeviceRequest;
-import com.tiangles.storm.request.SyncWorkshopListRequest;
+import com.tiangles.storm.preference.PreferenceEngine;
+import com.tiangles.storm.request.SyncDatabaseVersionRequest;
 import com.tiangles.storm.request.SyncWorkshopRequest;
 import com.tiangles.storm.request.UpdateDeviceRequest;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Vector;
+
+import okhttp3.OkHttpClient;
 
 public class DBManager {
     private static String LOG_TAG = "DeviceManager";
     private Vector<DBManager.DBManagerObserver> mDeviceManagerObservers = new Vector<>();
-    StormDB stormDB;// = new StormDB(getApplicationContext());
+    private StormDB stormDB;
+    private String currentVersion = "1.0";
 
     public interface DBManagerObserver{
         void onSyncWorkshopListDone(List<StormWorkshop> workshops);
@@ -27,7 +34,8 @@ public class DBManager {
     }
 
     public DBManager(){
-        StormApp.getNetwork().sendRequest(new SyncDatabaseRequest());
+        currentVersion = PreferenceEngine.getInstance().getCurrentDatabaseVersion();
+        StormApp.getNetwork().sendRequest(new SyncDatabaseVersionRequest(currentVersion));
     }
 
     public StormDB getStormDB(){
@@ -46,41 +54,17 @@ public class DBManager {
         return getStormDB().getWorkshop(code);
     }
 
+    public List<StormDevice> getDeviceFromWorkshop(StormWorkshop workshop){
+        return getStormDB().getDeviceFromWorkshop(workshop.getCode());
+    }
 
     public void addObserver(DBManager.DBManagerObserver observer) {
         mDeviceManagerObservers.add(observer);
     }
 
-    public void updateDevice(String code){
-
-    }
-
     public void updateDevice(StormDevice device) {
         UpdateDeviceRequest request = new UpdateDeviceRequest(device);
         StormApp.getNetwork().sendRequest(request);
-    }
-
-    public void syncDevice(String code){
-        SyncDeviceRequest request = new SyncDeviceRequest(code);
-        StormApp.getNetwork().sendRequest(request);
-    }
-
-    public void syncDevice(StormDevice device) {
-        syncDevice(device.getCode());
-    }
-
-    public void syncWorkshopList(){
-        SyncWorkshopListRequest request = new SyncWorkshopListRequest();
-        StormApp.getNetwork().sendRequest(request);
-    }
-
-    public void syncWorkshop(String workshopCode){
-        SyncWorkshopRequest request = new SyncWorkshopRequest(workshopCode);
-        StormApp.getNetwork().sendRequest(request);
-    }
-
-    public void syncWorkshop(StormWorkshop workshop) {
-        syncWorkshop(workshop.getCode());
     }
 
     public void onUpdateDeviceDone(String deviceCode, int result){
@@ -120,11 +104,61 @@ public class DBManager {
         }
     }
 
-    public void onSyncDatabaseDone(String dbFile){
-        stormDB = new StormDB(StormApp.getContext(), dbFile);
+    public void onSyncDatabaseDone(String version, String url){
+        String dbPath = databaseFilePath();
+        File dbFile = new File(dbPath);
+        if(!version.equals(currentVersion) || !dbFile.exists()) {
+            runHttpRequest(version, url);
+        } else {
+            createDababaseSession(dbPath);
+        }
     }
 
-    public void syncWorkshopDevices(String workshopCode){
+    private String databaseFilePath( ) {
+//        File dir = StormApp.getContext().getFilesDir();
+        File dir =  Environment.getExternalStorageDirectory();
+        String path = dir.getAbsolutePath() + "/storm.db";
+        return path;
+    }
 
+    private void runHttpRequest(final String version, final String url) {
+        final Thread t = new Thread(){
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                okhttp3.Request request = new okhttp3.Request.Builder().url(url).build();
+                try {
+                    okhttp3.Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        String dbFile = databaseFilePath();
+                        Log.e("database", "store database file to "+ dbFile);
+                        byte[] buf = new byte[2048];
+                        int len = 0;
+
+                        InputStream is = response.body().byteStream();
+                        long total = response.body().contentLength();
+                        File file = new File(dbFile);
+                        if(file.exists()) {
+                            file.delete();
+                        }
+                        FileOutputStream fos = new FileOutputStream(file);
+                        while ((len = is.read(buf)) != -1) {
+                            fos.write(buf, 0, len);
+                        }
+                        currentVersion = version;
+                        PreferenceEngine.getInstance().setCurrentDatabaseVersion(currentVersion);
+                        createDababaseSession(dbFile);
+                    }
+                } catch (IOException e) {
+                    ///TODO: handle network error
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
+    }
+
+    private void createDababaseSession(String path){
+        stormDB = new StormDB(StormApp.getContext(), path);
     }
 }
