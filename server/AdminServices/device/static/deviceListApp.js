@@ -57,7 +57,11 @@ var TableInit = function () {
                 field: 'workshop',
                 title: '所在车间',
                 formatter: function(value, row, index){
-                    return '<a href=/view/devices?code=' + row.workshop_code + '>'+value+'</a>';
+                    if(row.workshop_code != null) {
+                        return '<a href=/view/devices/?workshop=' + row.workshop_code + '>'+value+'</a>';
+                    } else {
+                        return '--';
+                    }
                 }
             }]
         });
@@ -66,7 +70,7 @@ var TableInit = function () {
         var temp = {
             workshop: workshop_code,
             page_size: params.limit,
-            page: params.offset+1,
+            offset: params.offset,
             pk: params.search
         };
         return temp;

@@ -9,9 +9,8 @@ from staff.login_required import login_required
 
 
 @login_required
-def view_device_list(request, workshop=None):
-    # workshop_code = request.GET.get('workshop', None)
-    workshop_code = workshop
+def view_device_list(request):
+    workshop_code = request.GET.get('workshop', None)
     if workshop_code is None:
         workshop_code = 'all'
     return render(request, 'view_device_list.html', {"workshop_code": workshop_code})

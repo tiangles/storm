@@ -50,7 +50,8 @@ class DeviceViewSet(rest_framework.viewsets.ModelViewSet):
             serializer = self.get_serializer(page, many=True)
         else:
             serializer = self.get_serializer(queryset, many=True)
-        response_data = {'total': len(serializer.data), 'rows': serializer.data}
+        total = len(device.models.Device.objects.all())
+        response_data = {'total': total, 'rows': serializer.data}
         return rest_framework.response.Response(response_data)
 
     def filter_queryset(self, queryset):

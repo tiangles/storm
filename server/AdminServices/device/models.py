@@ -15,13 +15,13 @@ class Workshop(models.Model):
 
 class Device(models.Model):
     code = models.SlugField(max_length=128, primary_key=True, verbose_name='编码')
-    model = models.CharField(max_length=128, verbose_name='型号')
+    model = models.CharField(max_length=128, verbose_name='型号', null=True)
     name = models.CharField(max_length=128, verbose_name='名称')
-    system = models.CharField(max_length=128, verbose_name='所在系统', blank=True, null=True)
-    distribution_cabinet = models.CharField(max_length=128, verbose_name='配电柜', blank=True, null=True)
-    local_control_panel = models.CharField(max_length=128, verbose_name='就地控制柜', blank=True, null=True)
-    dcs_cabinet = models.CharField(max_length=128, verbose_name='DCS控制柜', blank=True, null=True)
-    legend = models.CharField(max_length=128, blank=True, verbose_name='图例')
+    system = models.CharField(max_length=128, verbose_name='所在系统', null=True)
+    distribution_cabinet = models.CharField(max_length=128, verbose_name='配电柜', null=True)
+    local_control_panel = models.CharField(max_length=128, verbose_name='就地控制柜', null=True)
+    dcs_cabinet = models.CharField(max_length=128, verbose_name='DCS控制柜', null=True)
+    legend = models.CharField(max_length=128, verbose_name='图例', null=True)
     workshop = models.ForeignKey(Workshop, related_name='belong_to_workshop', on_delete=models.SET_NULL, null=True)
 
     class Meta:
@@ -62,8 +62,8 @@ class DeviceSignal(models.Model):
 
 
 class DeviceLinkInfo(models.Model):
-    left_device = models.SlugField(max_length=12, verbose_name='前向设备')
-    right_device = models.SlugField(max_length=12, verbose_name='后向设备')
+    left_device = models.ForeignKey(Device, related_name='forward_device', verbose_name='前向设备')
+    right_device = models.ForeignKey(Device, related_name='backward_device', verbose_name='后向设备')
 
     class Meta:
         db_table = 'device_link_info'
