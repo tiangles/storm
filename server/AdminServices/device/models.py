@@ -6,6 +6,7 @@ from django.db import models
 
 class Workshop(models.Model):
     code = models.SlugField(max_length=128, primary_key=True, verbose_name='编码')
+    workshop_index = models.IntegerField(unique=True, verbose_name='编号')
     name = models.CharField(max_length=128, verbose_name='名称')
 
     class Meta:
@@ -16,7 +17,7 @@ class Device(models.Model):
     code = models.SlugField(max_length=128, primary_key=True, verbose_name='编码')
     model = models.CharField(max_length=128, verbose_name='型号')
     name = models.CharField(max_length=128, verbose_name='名称')
-    system = models.CharField(max_length=128, verbose_name='所在系统')
+    system = models.CharField(max_length=128, verbose_name='所在系统', blank=True, null=True)
     distribution_cabinet = models.CharField(max_length=128, verbose_name='配电柜', blank=True, null=True)
     local_control_panel = models.CharField(max_length=128, verbose_name='就地控制柜', blank=True, null=True)
     dcs_cabinet = models.CharField(max_length=128, verbose_name='DCS控制柜', blank=True, null=True)

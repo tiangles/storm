@@ -38,17 +38,17 @@ var TableInit = function () {
             columns: [{
                 checkbox: true
             }, {
-                field: 'index',
+                field: 'workshop_index',
                 title: '编号',
+            }, {
+                field: 'code',
+                title: '编码',
             }, {
                 field: 'name',
                 title: '名称',
                 formatter: function(value, row, index){
                     return '<a href=/view/devices?workshop=' + row.code + '>'+value+'</a>';
                 }
-            }, {
-                field: 'code',
-                title: '编码',
             }]
         });
     };
@@ -56,7 +56,7 @@ var TableInit = function () {
         var temp = {
             workshop: workshop_code,
             page_size: params.limit,
-            page: params.offset+1,
+            offset: params.offset,
             pk: params.search
         };
         return temp;

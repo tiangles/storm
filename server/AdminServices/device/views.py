@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-import rest_framework.viewsets
-import serializers
+
 import models
+import db_importer
 from staff.login_required import login_required
 
 
@@ -28,8 +28,6 @@ def view_device(request):
                                                     "distribution_cabinet": device.distribution_cabinet,
                                                     "local_control_panel": device.local_control_panel,
                                                     "dcs_cabinet": device.dcs_cabinet,
-                                                    "forward_device": device.forward_device,
-                                                    "backward_device": device.backward_device,
                                                     "legend": device.legend,
                                                     "device_model": device.model,})
     else:
@@ -38,4 +36,11 @@ def view_device(request):
 
 @login_required
 def view_workshop_list(request):
+    return render(request, 'view_workshop_list.html', {})
+
+
+@login_required
+def import_device_database(request):
+    # db_importer.import_workshop_data('/home/btian/workshop.xlsx')
+    db_importer.import_device_data('/home/btian/device.xlsx')
     return render(request, 'view_workshop_list.html', {})

@@ -7,16 +7,13 @@ class DeviceDetailSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Device
-        fields = ('id',
-                  'code',
+        fields = ('code',
                   'model',
                   'name',
                   'system',
                   'distribution_cabinet',
                   'local_control_panel',
                   'dcs_cabinet',
-                  'forward_device',
-                  'backward_device',
                   'legend',
                   'workshop',)
         depth = 1
@@ -28,8 +25,7 @@ class DeviceListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Device
-        fields = ('id',
-                  'code',
+        fields = ('code',
                   'model',
                   'name',
                   'system',
@@ -41,6 +37,6 @@ class DeviceListSerializer(serializers.HyperlinkedModelSerializer):
 class WorkshopListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Workshop
-        fields = ('index',
+        fields = ('workshop_index',
                   'name',
                   'code',)

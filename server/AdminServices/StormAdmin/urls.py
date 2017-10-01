@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^login/', staff.views.login, name='login'),
     url(r'^logout/', staff.views.logout, name='logout'),
     url(r'^view/workshops/$', device.views.view_workshop_list, name='view_workshop_list'),
+    url(r'^view/workshops/import_db$', device.views.import_device_database, name='import_device_database'),
     url(r'^view/devices', device.views.view_device_list, name='view_device_list_of_workshop'),
     url(r'^view/device/detail', device.views.view_device, name='view_specified_device'),
 ]
