@@ -5,10 +5,12 @@ import android.os.Environment;
 
 import com.tiangles.greendao.gen.DaoMaster;
 import com.tiangles.greendao.gen.DaoSession;
+import com.tiangles.greendao.gen.DeviceLinkInfoDao;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.greendao.gen.StormWorkshopDao;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.activities.DeviceInfoActivity;
+import com.tiangles.storm.database.dao.DeviceLinkInfo;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 
@@ -23,6 +25,7 @@ public class StormDB {
     private DaoSession daoSession;
     private StormDeviceDao stormDeviceDao;
     private StormWorkshopDao stormWorkshopDao;
+    private DeviceLinkInfoDao deviceLinkInfoDao;
     private String dbPath;
 
     public StormDB(Context context, String dbPath) {
@@ -41,6 +44,22 @@ public class StormDB {
             }
         }
         return null;
+    }
+
+    public List<DeviceLinkInfo> getLeftLinkInfoForDevice(StormDevice device){
+        return getDeviceLinkInfoDao().queryBuilder()
+                .where(DeviceLinkInfoDao.Properties.Right_device_id.eq(device.getCode()))
+                .build()
+                .list();
+
+    }
+
+    public List<DeviceLinkInfo> getRightLinkInfoForDevice(StormDevice device){
+        return getDeviceLinkInfoDao().queryBuilder()
+                .where(DeviceLinkInfoDao.Properties.Left_device_id.eq(device.getCode()))
+                .build()
+                .list();
+
     }
 
     public List<StormDevice> getDeviceFromWorkshop(String workshopCode){
@@ -84,6 +103,7 @@ public class StormDB {
     public StormWorkshop getWorkshop(String code){
         if(code != null) {
             List<StormWorkshop> workshops = getStormWorkshopDao().queryBuilder()
+                    .where(StormWorkshopDao.Properties.Code.eq(code))
                     .build()
                     .list();
             assert (workshops.size()<2);
@@ -108,6 +128,13 @@ public class StormDB {
         }
 
         return stormWorkshopDao;
+    }
+
+    private DeviceLinkInfoDao getDeviceLinkInfoDao(){
+        if(deviceLinkInfoDao == null){
+            deviceLinkInfoDao = getDaoSession().getDeviceLinkInfoDao();
+        }
+        return deviceLinkInfoDao;
     }
 
     private DaoSession getDaoSession(){

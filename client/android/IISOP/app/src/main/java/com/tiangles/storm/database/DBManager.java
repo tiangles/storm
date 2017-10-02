@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.dao.DeviceLinkInfo;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.preference.PreferenceEngine;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -44,6 +46,38 @@ public class DBManager {
 
     public StormDevice getDevice(String code) {
         return getStormDB().getDevice(code);
+    }
+
+    public List<StormDevice> getLeftDevice(StormDevice device) {
+        ArrayList<StormDevice> result = new ArrayList<>();
+        if(device != null) {
+            List<DeviceLinkInfo> leftLink = getStormDB().getLeftLinkInfoForDevice(device);
+            if(leftLink != null) {
+                for(DeviceLinkInfo info: leftLink) {
+                    StormDevice leftDevice = getStormDB().getDevice(info.getLeft_device_id());
+                    if(leftDevice != null) {
+                        result.add(leftDevice);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<StormDevice> getRightDevice(StormDevice device) {
+        ArrayList<StormDevice> result = new ArrayList<>();
+        if(device != null) {
+            List<DeviceLinkInfo> rightLink = getStormDB().getRightLinkInfoForDevice(device);
+            if(rightLink != null) {
+                for(DeviceLinkInfo info: rightLink) {
+                    StormDevice rightDevice = getStormDB().getDevice(info.getRight_device_id());
+                    if(rightDevice != null) {
+                        result.add(rightDevice);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public List<StormWorkshop> getWorkshopList(){

@@ -3,6 +3,8 @@ package com.tiangles.storm.legend;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
 
+import java.util.List;
+
 public class LegendFactory {
     public LegendFactory() {
 
@@ -12,8 +14,13 @@ public class LegendFactory {
         LegendBase legend = makeLegend(device);
         if (legend != null) {
             ///TODO:
-//            legend.addLeftDevice(makeLegend(StormApp.getStormDB().getDevice(device.getForward_device())));
-//            legend.addRightDevice(makeLegend(StormApp.getStormDB().getDevice(device.getBackward_device())));
+            for(StormDevice leftDevice: StormApp.getDBManager().getLeftDevice(device)){
+                legend.addLeftDevice(makeLegend(leftDevice));
+            }
+
+            for(StormDevice rightDevice: StormApp.getDBManager().getLeftDevice(device)){
+                legend.addRightDevice(makeLegend(rightDevice));
+            }
         }
         return legend;
     }

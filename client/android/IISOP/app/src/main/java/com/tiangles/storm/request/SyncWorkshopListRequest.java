@@ -35,6 +35,7 @@ public class SyncWorkshopListRequest extends Request {
             for(int i=0; i<jWorkshops.length(); ++i){
                 JSONObject jWorkshop = (JSONObject)jWorkshops.get(i);
                 StormWorkshop workshop = new StormWorkshop(jWorkshop.getString("code"),
+                        jWorkshop.getInt("workshop_index"),
                         jWorkshop.getString("name"));
                 workshops.add(workshop);
             }
