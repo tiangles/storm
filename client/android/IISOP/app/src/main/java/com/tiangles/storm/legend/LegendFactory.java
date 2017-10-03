@@ -1,48 +1,147 @@
 package com.tiangles.storm.legend;
 
+import android.content.Context;
+
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.legend.model.Circle;
+import com.tiangles.storm.legend.model.Line;
 
-import java.util.List;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class LegendFactory {
-    public LegendFactory() {
-
+    private static LegendFactory instance;
+    private Map<String, LegendBase> allLegends = new HashMap<>();
+    private LegendFactory() {
+        loadLegend(StormApp.getContext());
     }
 
-    public static LegendBase createLegend(StormDevice device) {
-        LegendBase legend = makeLegend(device);
+    public static LegendFactory getInstance(){
+        if(instance == null) {
+            instance = new LegendFactory();
+        }
+        return instance;
+    }
+
+    public LegendBase createLegend(StormDevice device) {
+        LegendBase legend = allLegends.get(device.getLegend().trim());
         if (legend != null) {
             ///TODO:
             for(StormDevice leftDevice: StormApp.getDBManager().getLeftDevice(device)){
-                legend.addLeftDevice(makeLegend(leftDevice));
+                LegendBase leftLegend = allLegends.get(leftDevice.getLegend().trim());
+                if(leftLegend != null){
+                    legend.addLeftDevice(leftLegend);
+                }
             }
 
-            for(StormDevice rightDevice: StormApp.getDBManager().getLeftDevice(device)){
-                legend.addRightDevice(makeLegend(rightDevice));
+            for(StormDevice rightDevice: StormApp.getDBManager().getRightDevice(device)){
+                LegendBase rightLegend = allLegends.get(rightDevice.getLegend().trim());
+                if(rightLegend != null){
+                    legend.addRightDevice(rightLegend);
+                }
             }
         }
         return legend;
     }
 
-    private static LegendBase makeLegend(StormDevice device) {
-        LegendBase legend = null;
-        if (device == null) {
-            return null;
-        }
-        String legendName = device.getLegend().trim();
-        if (legendName.equals("电动阀门")) {
-            legend = new ElectricValve();
-        } else if (legendName.equals("电动风机")) {
-            legend = new ElectricValve();
-        } else if (legendName.equals("电动调节阀门")) {
-            legend = new ElectricValve();
-        }
+    private void loadLegend(Context context){
+        try{
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
 
-        if(legend != null) {
-            legend.setCode(device.getCode());
-            legend.setName(device.getName());
+            InputStream is = context.getAssets().open("device_legend.xml");
+            Document doc = builder.parse(is);
+            Element rootElement = doc.getDocumentElement();
+            NodeList items = rootElement.getChildNodes();
+            for(int i=0; i<items.getLength(); ++i) {
+                Node item = items.item(i);
+                if(item.getNodeType()==Node.ELEMENT_NODE) {
+                    createLegnedFromNode(item);
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
         }
-        return legend;
+    }
+
+    private void createLegnedFromNode(Node item) {
+        String type=item.getAttributes().getNamedItem("name").getNodeValue();
+        LegendBase legend = new LegendBase();
+
+        for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
+            if(node.getNodeType()==Node.ELEMENT_NODE) {
+                if(node.getNodeName().equals("meta")) {
+                    loadMeta(legend, node);
+                } else if(node.getNodeName().equals("draw")) {
+                    loadDraw(legend, node);
+                }
+            }
+        }
+        allLegends.put(type, legend);
+    }
+
+    private void loadMeta(LegendBase legend, Node item){
+        for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
+            if(node.getNodeType()==Node.ELEMENT_NODE && node != null) {
+                if(node.getNodeName().equals("offset")) {
+                    String x=node.getAttributes().getNamedItem("x").getNodeValue();
+                    String y=node.getAttributes().getNamedItem("y").getNodeValue();
+                } else if(node.getNodeName().equals("size")) {
+                    String width=node.getAttributes().getNamedItem("width").getNodeValue();
+                    String height=node.getAttributes().getNamedItem("height").getNodeValue();
+                } else if(node.getNodeName().equals("base_length")) {
+                    String baseLength=node.getFirstChild().getNodeValue();
+                    legend.baseLength = Float.valueOf(baseLength);
+                } else if(node.getNodeName().equals("name_offset")) {
+                    String nameOffset = node.getFirstChild().getNodeValue();
+                    legend.nameOffset = Integer.valueOf(nameOffset);
+                } else if(node.getNodeName().equals("code_offset")) {
+                    String codeOffset = node.getFirstChild().getNodeValue();
+                    legend.codeOffset = Integer.valueOf(codeOffset);
+                }
+            }
+        }
+    }
+
+    private void loadDraw(LegendBase legend, Node item){
+        for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
+            if (node.getNodeType() == Node.ELEMENT_NODE && node != null) {
+                if(node.getNodeName().equals("line")) {
+                    String x1=node.getAttributes().getNamedItem("x1").getNodeValue();
+                    String y1=node.getAttributes().getNamedItem("y1").getNodeValue();
+                    String x2=node.getAttributes().getNamedItem("x2").getNodeValue();
+                    String y2=node.getAttributes().getNamedItem("y2").getNodeValue();
+                    legend.lines.add(new Line(Integer.parseInt(x1),
+                            Integer.parseInt(y1),
+                            Integer.parseInt(x2),
+                            Integer.parseInt(y2)));
+                } else if(node.getNodeName().equals("circle")) {
+                    String cx=node.getAttributes().getNamedItem("cx").getNodeValue();
+                    String cy=node.getAttributes().getNamedItem("cy").getNodeValue();
+                    String r=node.getAttributes().getNamedItem("r").getNodeValue();
+                    legend.circles.add(new Circle(Integer.parseInt(cx),
+                            Integer.parseInt(cy),
+                            Integer.parseInt(r)));
+                } else if(node.getNodeName().equals("text")) {
+
+                }
+            }
+        }
     }
 }

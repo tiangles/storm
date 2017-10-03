@@ -14,6 +14,7 @@ import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.DBManager;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
+import com.tiangles.storm.legend.LegendFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public class WorkshopActivity extends AppCompatActivity implements DBManager.DBM
         if(workshops.size() != 0) {
             mDeviceListView.setAdapter(createDeviceListAdaptor(workshops));
         }
+
     }
 
     private SimpleAdapter createDeviceListAdaptor(List<StormWorkshop> workshops) {

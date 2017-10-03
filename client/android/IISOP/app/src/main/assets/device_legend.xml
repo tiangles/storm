@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device_legend>
+    <device name="电动风机">
+        <meta>
+            <offset x="160" y="160" />
+            <size width="320" height="320"/>
+            <base_length>340</base_length>
+            <name_offset>90</name_offset>
+            <code_offset>130</code_offset>
+        </meta>
+        <draw type="svg">
+            <line x1="-80" y1="-40" x2="80"  y2="40" stroke="black" stroke-width="2" />
+            <line x1="-80" y1="40"  x2="80"  y2="-40" stroke="black" stroke-width="2" />
+            <line x1="-80" y1="-40" x2="-80" y2="40" stroke="black" stroke-width="2" />
+            <line x1="80"  y1="40"  x2="80"  y2="-40" stroke="black" stroke-width="2" />
+
+            <line x1="0" y1="0" x2="0" y2="-40"/>
+            <circle cx="0" cy="-80" r="40" stroke="black"
+                stroke-width="2" fill="red"/>
+
+            <line x1="-80"  y1="0"  x2="-160"  y2="0" stroke="black" stroke-width="2" />
+            <line x1="80"  y1="0"  x2="160"  y2="0" stroke="black" stroke-width="2" />
+        </draw>
+    </device>
+</device_legend>

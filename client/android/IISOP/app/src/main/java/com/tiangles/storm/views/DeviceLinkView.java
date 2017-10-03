@@ -62,7 +62,7 @@ public class DeviceLinkView extends View implements View.OnTouchListener{
 
     public void setDevice(StormDevice device){
         if(device != null) {
-            deviceLegend = LegendFactory.createLegend(device);
+            deviceLegend = LegendFactory.getInstance().createLegend(device);
             updateLegendRect(viewWidth, viewHeight);
             invalidate();
         }

@@ -12,7 +12,7 @@ import com.tiangles.storm.legend.model.Text;
 
 import java.util.Vector;
 
-public abstract class LegendBase {
+public class LegendBase {
     protected String name = "#1引风机出口电动门";
     protected String code = "HNA50AA001";
     protected boolean highlight;

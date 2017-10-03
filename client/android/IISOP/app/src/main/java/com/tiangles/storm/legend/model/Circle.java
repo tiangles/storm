@@ -8,8 +8,8 @@ public class Circle {
         this.radius = radius;
     }
 
-    public Circle(int x, int y, int radius) {
-        this.center = new Point(x, y);
+    public Circle(int cx, int cy, int radius) {
+        this.center = new Point(cx, cy);
         this.radius = radius;
     }
     public Point center;
