@@ -14,6 +14,8 @@ import com.tiangles.storm.database.dao.DeviceLinkInfo;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -93,10 +95,18 @@ public class StormDB {
         }
     }
 
-    public List<StormWorkshop> getWorkshopList(){
-        List<StormWorkshop> workshops = getStormWorkshopDao().queryBuilder()
-                .build()
-                .list();
+    public List<StormWorkshop> getWorkshopList(String keyword){
+        List<StormWorkshop> workshops;
+        if(keyword == null || keyword.isEmpty()){
+            workshops = getStormWorkshopDao().queryBuilder()
+                    .build()
+                    .list();
+        } else {
+            QueryBuilder qb = getStormWorkshopDao().queryBuilder();
+            qb = qb.where(qb.or(StormWorkshopDao.Properties.Code.like(keyword),
+                            StormWorkshopDao.Properties.Name.like(keyword)));
+            workshops = qb.build().list();
+        }
         return workshops;
     }
 
