@@ -95,10 +95,12 @@ public class StormDB {
         }
     }
 
-    public List<StormWorkshop> getWorkshopList(String keyword){
+    public List<StormWorkshop> getWorkshopList(String keyword, int offset, int limit){
         List<StormWorkshop> workshops;
         if(keyword == null || keyword.isEmpty()){
             workshops = getStormWorkshopDao().queryBuilder()
+                    .offset(offset)
+                    .limit(limit)
                     .build()
                     .list();
         } else {

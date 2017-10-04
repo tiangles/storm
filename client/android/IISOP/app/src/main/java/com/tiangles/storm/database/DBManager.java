@@ -80,8 +80,8 @@ public class DBManager {
         return result;
     }
 
-    public List<StormWorkshop> getWorkshopList(String keyword){
-        return getStormDB().getWorkshopList(keyword);
+    public List<StormWorkshop> getWorkshopList(String keyword, int offset, int limit){
+        return getStormDB().getWorkshopList(keyword, offset, limit);
     }
 
     public StormWorkshop getWorkshop(String code){

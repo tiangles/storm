@@ -34,6 +34,9 @@ public class WorkshopActivity extends AppCompatActivity{
     @BindView(R.id.root_view) View mRootView;
     View mFooterView;
     private MyAdaptor mListAdaptor;
+    private int mCurrentRecordOffset;
+    private static int PAGE_SIZE = 20;
+    boolean isLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +51,10 @@ public class WorkshopActivity extends AppCompatActivity{
         mDeviceListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             int lastVisibleItem;
             int totalItemCount;
-            boolean isLoading;
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (totalItemCount==lastVisibleItem&&scrollState==SCROLL_STATE_IDLE) {
                     if (!isLoading) {
-                        isLoading=true;
                         mFooterView.findViewById(R.id.load_layout).setVisibility(View.VISIBLE);
                         loadMore();
                     }
@@ -91,6 +92,8 @@ public class WorkshopActivity extends AppCompatActivity{
             public void afterTextChanged(Editable s) {
                 String keyword = s.toString();
                 if(keyword.isEmpty()){
+                    mListAdaptor.workshops.clear();
+                    mCurrentRecordOffset = 0;
                     updateWorkshopListByKeyword(null);
                 } else {
                     updateWorkshopListByKeyword("%"+keyword+"%");
@@ -102,18 +105,26 @@ public class WorkshopActivity extends AppCompatActivity{
     }
 
     public void updateWorkshopListByKeyword(String keyword){
-        List<StormWorkshop> workshops = StormApp.getDBManager().getWorkshopList(keyword);
+        List<StormWorkshop> workshops = StormApp.getDBManager().getWorkshopList(keyword, mCurrentRecordOffset,  PAGE_SIZE);
         if(mListAdaptor == null) {
             mListAdaptor = new MyAdaptor(workshops);
             mDeviceListView.setAdapter(mListAdaptor);
         } else {
-            mListAdaptor.workshops = workshops;
+            if(keyword != null) {
+                mListAdaptor.workshops = workshops;
+            } else {
+                mListAdaptor.workshops.addAll(workshops);
+            }
             mListAdaptor.notifyDataSetChanged();
         }
     }
 
     private void loadMore(){
+        isLoading = true;
+        mCurrentRecordOffset += PAGE_SIZE;
+        updateWorkshopListByKeyword(null);
         mFooterView.findViewById(R.id.load_layout).setVisibility(View.GONE);
+        isLoading = false;
     }
 
     private class MyAdaptor extends BaseAdapter{
@@ -145,7 +156,7 @@ public class WorkshopActivity extends AppCompatActivity{
                 view = getLayoutInflater().inflate(R.layout.list_item_workshop_device, null);
             }
             ((TextView)view.findViewById(R.id.device_code)).setText(workshops.get(position).getCode());
-            ((TextView)view.findViewById(R.id.device_name)).setText(workshops.get(position).getName());
+            ((TextView)view.findViewById(R.id.device_name)).setText(""+position+". "+workshops.get(position).getName());
             return view;
         }
     }
