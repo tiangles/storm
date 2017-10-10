@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.panel.PanelActivity;
 import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.request.GetSignalParameterRecordRequest;
 
@@ -18,6 +19,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DeviceInfoActivity extends AppCompatActivity {
     @BindView(R.id.device_code) TextView mDeviceCodeTextView;
@@ -77,6 +79,14 @@ public class DeviceInfoActivity extends AppCompatActivity {
                 StormApp.getNetwork().sendRequest(request);
             }
         }, refreshInterval, refreshInterval);
+    }
+
+    @OnClick(R.id.device_dcs_cabinet)
+    public void showPanelInfo(){
+        Intent intent = new Intent(DeviceInfoActivity.this, PanelActivity.class);
+        intent.putExtra("device_code", mDeviceCode);
+        startActivity(intent);
+
     }
 
     @Override

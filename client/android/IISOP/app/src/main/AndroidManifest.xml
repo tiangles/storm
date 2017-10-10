@@ -41,6 +41,10 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings">
         </activity>
+        <activity
+            android:name=".panel.PanelActivity"
+            android:label="柜柜柜">
+        </activity>
     </application>
 
 </manifest>

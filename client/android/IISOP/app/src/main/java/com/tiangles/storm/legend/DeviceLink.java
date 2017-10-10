@@ -12,13 +12,13 @@ import com.tiangles.storm.legend.model.Text;
 
 import java.util.Vector;
 
-public class ElectricalSystem {
-    protected String name = "#1引风机出口电动门";
-    protected String code = "HNA50AA001";
+public class DeviceLink {
+    protected String name;
+    protected String code;
     protected boolean highlight;
 
-    protected Vector<ElectricalSystem> leftDevices = new Vector<>();
-    protected Vector<ElectricalSystem> rightDevices = new Vector<>();
+    protected Vector<DeviceLink> leftDevices = new Vector<>();
+    protected Vector<DeviceLink> rightDevices = new Vector<>();
     protected Rect rect;
     protected Vector<Line> lines = new Vector<>();
     protected Vector<Circle> circles = new Vector<>();
@@ -50,23 +50,23 @@ public class ElectricalSystem {
         this.name = name;
     }
 
-    public void addLeftDevice(ElectricalSystem d) {
+    public void addLeftDevice(DeviceLink d) {
         if(d != null) {
             leftDevices.add(d);
         }
     }
 
-    public void addRightDevice(ElectricalSystem d) {
+    public void addRightDevice(DeviceLink d) {
         if(d != null) {
             rightDevices.add(d);
         }
     }
 
-    public Vector<ElectricalSystem> getLeftDevices(){
+    public Vector<DeviceLink> getLeftDevices(){
         return leftDevices;
     }
 
-    public Vector<ElectricalSystem> getRightDevices(){
+    public Vector<DeviceLink> getRightDevices(){
         return rightDevices;
     }
 

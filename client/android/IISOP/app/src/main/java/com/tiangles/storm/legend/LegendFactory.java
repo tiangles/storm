@@ -23,7 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class LegendFactory {
     private static LegendFactory instance;
-    private Map<String, LegendBase> allLegends = new HashMap<>();
+    private Map<String, DeviceLink> allLegends = new HashMap<>();
     private LegendFactory() {
         loadLegend(StormApp.getContext());
     }
@@ -35,19 +35,19 @@ public class LegendFactory {
         return instance;
     }
 
-    public LegendBase createLegend(StormDevice device) {
-        LegendBase legend = allLegends.get(device.getLegend().trim());
+    public DeviceLink createLegend(StormDevice device) {
+        DeviceLink legend = allLegends.get(device.getLegend().trim());
         if (legend != null) {
             ///TODO:
             for(StormDevice leftDevice: StormApp.getDBManager().getLeftDevice(device)){
-                LegendBase leftLegend = allLegends.get(leftDevice.getLegend().trim());
+                DeviceLink leftLegend = allLegends.get(leftDevice.getLegend().trim());
                 if(leftLegend != null){
                     legend.addLeftDevice(leftLegend);
                 }
             }
 
             for(StormDevice rightDevice: StormApp.getDBManager().getRightDevice(device)){
-                LegendBase rightLegend = allLegends.get(rightDevice.getLegend().trim());
+                DeviceLink rightLegend = allLegends.get(rightDevice.getLegend().trim());
                 if(rightLegend != null){
                     legend.addRightDevice(rightLegend);
                 }
@@ -82,7 +82,7 @@ public class LegendFactory {
 
     private void createLegnedFromNode(Node item) {
         String type=item.getAttributes().getNamedItem("name").getNodeValue();
-        LegendBase legend = new LegendBase();
+        DeviceLink legend = new DeviceLink();
 
         for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
             if(node.getNodeType()==Node.ELEMENT_NODE) {
@@ -96,7 +96,7 @@ public class LegendFactory {
         allLegends.put(type, legend);
     }
 
-    private void loadMeta(LegendBase legend, Node item){
+    private void loadMeta(DeviceLink legend, Node item){
         for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
             if(node.getNodeType()==Node.ELEMENT_NODE && node != null) {
                 if(node.getNodeName().equals("offset")) {
@@ -119,7 +119,7 @@ public class LegendFactory {
         }
     }
 
-    private void loadDraw(LegendBase legend, Node item){
+    private void loadDraw(DeviceLink legend, Node item){
         for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
             if (node.getNodeType() == Node.ELEMENT_NODE && node != null) {
                 if(node.getNodeName().equals("line")) {

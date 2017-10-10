@@ -10,16 +10,15 @@ import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
-import com.tiangles.storm.legend.LegendBase;
+import com.tiangles.storm.legend.DeviceLink;
 import com.tiangles.storm.legend.LegendFactory;
 import com.tiangles.storm.legend.LinkDrawer;
+import com.tiangles.storm.legend.PanelLink;
 
 import java.util.Vector;
 
@@ -28,7 +27,7 @@ public class DeviceLinkView extends View implements View.OnTouchListener{
     private int viewHeight = 80;
     private GestureDetector mDetector;
 
-    private LegendBase deviceLegend;
+    private DeviceLink deviceLegend;
     private LinkDrawer linkDrawer = new LinkDrawer();
     private Paint paint = new Paint();
     private OnLinkedDeviceClickedListener mListener = null;
@@ -80,12 +79,12 @@ public class DeviceLinkView extends View implements View.OnTouchListener{
                 handled = handled?handled : handleClickEvent(deviceLegend, OnLinkedDeviceClickedListener.THIS_DEVICE, x, y);
                 deviceLegend.setHighlight(false);
 
-                for(LegendBase legend: deviceLegend.getLeftDevices()) {
+                for(DeviceLink legend: deviceLegend.getLeftDevices()) {
                     legend.setHighlight(false);
                     handled = handled?handled : handleClickEvent(legend, OnLinkedDeviceClickedListener.LEFT_DEVICE, x, y);
                 }
 
-                for(LegendBase legend: deviceLegend.getRightDevices()) {
+                for(DeviceLink legend: deviceLegend.getRightDevices()) {
                     legend.setHighlight(false);
                     handled = handled?handled :handleClickEvent(legend, OnLinkedDeviceClickedListener.RIGHT_DEVICE, x, y);
                 }
@@ -114,19 +113,17 @@ public class DeviceLinkView extends View implements View.OnTouchListener{
 
         deviceLegend.draw(canvas, paint);
 
-        Vector<LegendBase> leftLegend = deviceLegend.getLeftDevices();
+        Vector<DeviceLink> leftLegend = deviceLegend.getLeftDevices();
         for(int i=0; i<leftLegend.size(); ++i){
-            LegendBase leftDevice = leftLegend.get(i);
+            DeviceLink leftDevice = leftLegend.get(i);
             leftDevice.draw(canvas, paint);
-            paint.setColor(Color.rgb(0, 0, 0));
             linkDrawer.draw(canvas, paint, deviceLegend.getLeftDockPoint(), leftDevice.getRightDockPoint());
         }
 
-        Vector<LegendBase> rightDevices = deviceLegend.getRightDevices();
+        Vector<DeviceLink> rightDevices = deviceLegend.getRightDevices();
         for(int i=0; i<rightDevices.size(); ++i){
-            LegendBase rightDevice = rightDevices.get(i);
+            DeviceLink rightDevice = rightDevices.get(i);
             rightDevice.draw(canvas, paint);
-            paint.setColor(Color.rgb(0, 0, 0));
             linkDrawer.draw(canvas, paint, deviceLegend.getRightDockPoint(), rightDevice.getLeftDockPoint());
         }
     }
@@ -150,28 +147,28 @@ public class DeviceLinkView extends View implements View.OnTouchListener{
         Point cellPos = new Point(cellWidth*cellIndex.x, cellHeight*cellIndex.y);
         deviceLegend.setRect(new Rect(cellPos.x, cellPos.y, cellPos.x + cellWidth, cellPos.y+cellHeight));
 
-        Vector<LegendBase> leftDevices = deviceLegend.getLeftDevices();
+        Vector<DeviceLink> leftDevices = deviceLegend.getLeftDevices();
         for (int i = 0; i < leftDevices.size(); ++i) {
             cellIndex.x = 0;
             cellIndex.y = i;
             cellPos.x = cellWidth*cellIndex.x;
             cellPos.y = cellHeight*cellIndex.y;
-            LegendBase leftDevice = leftDevices.get(i);
+            DeviceLink leftDevice = leftDevices.get(i);
             leftDevice.setRect(new Rect(cellPos.x, cellPos.y, cellPos.x + cellWidth, cellPos.y+cellHeight));
         }
 
-        Vector<LegendBase> rightDevices = deviceLegend.getRightDevices();
+        Vector<DeviceLink> rightDevices = deviceLegend.getRightDevices();
         for (int i = 0; i < rightDevices.size(); ++i) {
             cellIndex.x = 2;
             cellIndex.y = i;
             cellPos.x = cellWidth*cellIndex.x;
             cellPos.y = cellHeight*cellIndex.y;
-            LegendBase rightDevice = rightDevices.get(i);
+            DeviceLink rightDevice = rightDevices.get(i);
             rightDevice.setRect(new Rect(cellPos.x, cellPos.y, cellPos.x + cellWidth, cellPos.y+cellHeight));
         }
     }
 
-    private boolean handleClickEvent(LegendBase legend, int linkDirection, int x, int y) {
+    private boolean handleClickEvent(DeviceLink legend, int linkDirection, int x, int y) {
         if(legend.getRect().contains(x, y)) {
             legend.setHighlight(true);
             mListener.onLinkedDeviceClicked(legend.getCode(), linkDirection);
