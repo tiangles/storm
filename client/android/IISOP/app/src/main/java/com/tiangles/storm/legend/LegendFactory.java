@@ -23,7 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class LegendFactory {
     private static LegendFactory instance;
-    private Map<String, DeviceLink> allLegends = new HashMap<>();
+    private Map<String, DeviceLinkLegend> allLegends = new HashMap<>();
     private LegendFactory() {
         loadLegend(StormApp.getContext());
     }
@@ -36,24 +36,26 @@ public class LegendFactory {
     }
 
     public DeviceLink createLegend(StormDevice device) {
-        DeviceLink legend = allLegends.get(device.getLegend().trim());
+        DeviceLink link = null;
+        DeviceLinkLegend legend = allLegends.get(device.getLegend().trim());
         if (legend != null) {
-            ///TODO:
+            link = new DeviceLink(legend);
+            link.setCode(device.getCode());
+            link.setName(device.getName());
             for(StormDevice leftDevice: StormApp.getDBManager().getLeftDevice(device)){
-                DeviceLink leftLegend = allLegends.get(leftDevice.getLegend().trim());
-                if(leftLegend != null){
-                    legend.addLeftDevice(leftLegend);
+                DeviceLink leftLink = createLegend(leftDevice);
+                if(leftLink != null){
+                    link.addLeftDevice(leftLink);
                 }
             }
-
             for(StormDevice rightDevice: StormApp.getDBManager().getRightDevice(device)){
-                DeviceLink rightLegend = allLegends.get(rightDevice.getLegend().trim());
-                if(rightLegend != null){
-                    legend.addRightDevice(rightLegend);
+                DeviceLink rightLink = createLegend(rightDevice);
+                if(rightLink != null){
+                    link.addRightDevice(rightLink);
                 }
             }
         }
-        return legend;
+        return link;
     }
 
     private void loadLegend(Context context){
@@ -82,8 +84,7 @@ public class LegendFactory {
 
     private void createLegnedFromNode(Node item) {
         String type=item.getAttributes().getNamedItem("name").getNodeValue();
-        DeviceLink legend = new DeviceLink();
-
+        DeviceLinkLegend legend = new DeviceLinkLegend();
         for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
             if(node.getNodeType()==Node.ELEMENT_NODE) {
                 if(node.getNodeName().equals("meta")) {
@@ -96,7 +97,7 @@ public class LegendFactory {
         allLegends.put(type, legend);
     }
 
-    private void loadMeta(DeviceLink legend, Node item){
+    private void loadMeta(DeviceLinkLegend legend, Node item){
         for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
             if(node.getNodeType()==Node.ELEMENT_NODE && node != null) {
                 if(node.getNodeName().equals("offset")) {
@@ -119,7 +120,7 @@ public class LegendFactory {
         }
     }
 
-    private void loadDraw(DeviceLink legend, Node item){
+    private void loadDraw(DeviceLinkLegend legend, Node item){
         for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
             if (node.getNodeType() == Node.ELEMENT_NODE && node != null) {
                 if(node.getNodeName().equals("line")) {

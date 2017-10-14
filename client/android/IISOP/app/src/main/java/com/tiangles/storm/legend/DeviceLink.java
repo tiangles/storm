@@ -17,20 +17,15 @@ public class DeviceLink {
     protected String code;
     protected boolean highlight;
 
+    protected DeviceLinkLegend legend;
+
     protected Vector<DeviceLink> leftDevices = new Vector<>();
     protected Vector<DeviceLink> rightDevices = new Vector<>();
     protected Rect rect;
-    protected Vector<Line> lines = new Vector<>();
-    protected Vector<Circle> circles = new Vector<>();
-    protected Vector<Text> texts = new Vector<>();
-    protected int nameOffset = 0;
-    protected int codeOffset = 0;
-    protected Point leftLinkPoint = new Point();
-    protected Point rightLinkPoint = new Point();
-    protected int textFontSize = 50;
-    protected int codeFontSize = 35;
-    protected int nameFontSize = 25;
-    protected float baseLength = 80.f;
+
+    public DeviceLink(DeviceLinkLegend legend){
+        this.legend = legend;
+    }
 
     public void setHighlight(boolean highlight) {
         this.highlight = highlight;
@@ -79,11 +74,11 @@ public class DeviceLink {
     }
 
     public Point getLeftDockPoint() {
-        return new Point(leftLinkPoint.x+rect.centerX(), leftLinkPoint.y+rect.centerY());
+        return new Point(legend.leftLinkPoint.x+rect.centerX(), legend.leftLinkPoint.y+rect.centerY());
     }
 
     public Point getRightDockPoint() {
-        return new Point(rightLinkPoint.x+rect.centerX(), rightLinkPoint.y+rect.centerY());
+        return new Point(legend.rightLinkPoint.x+rect.centerX(), legend.rightLinkPoint.y+rect.centerY());
     }
 
     public void draw(Canvas canvas, Paint paint) {
@@ -95,23 +90,23 @@ public class DeviceLink {
         paint.setStrokeWidth(3);
 
 
-        float radio = baseLength /(float) rect.width();
+        float radio = legend.baseLength /(float) rect.width();
         canvas.translate(rect.centerX(), rect.centerY());
         canvas.scale(radio, radio);
 
-        paint.setTextSize(textFontSize);
+        paint.setTextSize(legend.textFontSize);
         paint.setStyle(Paint.Style.STROKE);
-        for(Line line: lines) {
+        for(Line line: legend.lines) {
             canvas.drawLine(line.p1.x, line.p1.y, line.p2.x, line.p2.y, paint);
         }
-        for(Circle circle: circles) {
+        for(Circle circle: legend.circles) {
             canvas.drawCircle(circle.center.x, circle.center.y, circle.radius, paint);
         }
         paint.setStyle(Paint.Style.FILL);
 
         Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
         int baseline = (fontMetrics.bottom - fontMetrics.top) / 2 ;
-        for(Text text: texts) {
+        for(Text text: legend.texts) {
             Rect bounds = new Rect();
             paint.getTextBounds(text.c, 0, 1, bounds);
             canvas.drawText(text.c,
@@ -127,22 +122,22 @@ public class DeviceLink {
     }
 
     private void drawCode(Canvas canvas, Paint paint){
-        paint.setTextSize(codeFontSize);
+        paint.setTextSize(legend.codeFontSize);
         Rect bounds = new Rect();
         paint.getTextBounds(code, 0, code.length(), bounds);
         canvas.drawText(code,
                 -bounds.width()/2,
-                nameOffset,
+                legend.nameOffset,
                 paint);
     }
 
     private void drawName(Canvas canvas, Paint paint) {
-        paint.setTextSize(nameFontSize);
+        paint.setTextSize(legend.nameFontSize);
         Rect bounds = new Rect();
         paint.getTextBounds(name, 0, name.length(), bounds);
         canvas.drawText(name,
                 -bounds.width()/2,
-                codeOffset,
+                legend.codeOffset,
                 paint);
     }
 
