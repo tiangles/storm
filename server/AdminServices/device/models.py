@@ -38,24 +38,20 @@ class DeviceSignalParameterRecord(models.Model):
 
 
 class DeviceSignal(models.Model):
-    figure_number = models.SlugField(max_length=12, verbose_name='图号')
-    code = models.SlugField(max_length=12, unique=True, verbose_name='测点编码')
+    code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='测点编码')
+    figure_number = models.SlugField(max_length=16, verbose_name='图号')
+    for_device = models.ForeignKey(to=Device, related_name='belong_to_device', verbose_name='所属设备')
     name = models.CharField(max_length=128, verbose_name='测点名称')
-    io_type = models.SlugField(max_length=4, verbose_name='I/O 类型')
+    io_type = models.SlugField(max_length=16, verbose_name='I/O 类型')
     signal_type = models.CharField(max_length=16, verbose_name='信号类型')
-    power_supply = models.SlugField(max_length=4, verbose_name='供电方')
-    isolate = models.BooleanField(default=False, verbose_name='隔离')
-    connect_to = models.SlugField(max_length=8, verbose_name='连接系统')
-    unit = models.CharField(max_length=8, verbose_name='量程单位')
-    min_value = models.FloatField(verbose_name='量程下限')
-    max_value = models.FloatField(verbose_name='量程上限')
-    lll = models.BooleanField(default=False, verbose_name='LLL')
-    ll = models.BooleanField(default=False, verbose_name='LL')
-    l = models.BooleanField(default=False, verbose_name='L')
-    h = models.BooleanField(default=False, verbose_name='H')
-    hh = models.BooleanField(default=False, verbose_name='HH')
-    hhh = models.BooleanField(default=False, verbose_name='HHH')
-    tendency = models.BooleanField(default=False, verbose_name='趋势')
+    remark = models.CharField(max_length=128, verbose_name='备注')
+    power_supply = models.SlugField(max_length=16, verbose_name='供电方')
+    connect_to_system = models.SlugField(max_length=16, verbose_name='连接系统')
+    status_when_io_is_1 = models.CharField(max_length=16, verbose_name='I/O为1时状态')
+    status_when_io_is_0 = models.CharField(max_length=16, verbose_name='I/O为0时状态')
+    interface_type = models.CharField(max_length=16, verbose_name='接点型式')
+    control_signal_type = models.CharField(max_length=16, verbose_name='控制信号有效方式')
+    incident_record = models.CharField(max_length=256, verbose_name='事故顺序记录')
 
     class Meta:
         db_table = 'device_signal'

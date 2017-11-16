@@ -24,8 +24,14 @@
             <button id="btn_delete" type="button" class="btn btn-info btn-sm rightSize">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除
             </button>
-            <button id="btn_approve" type="button" class="btn btn-info btn-sm rightSize">
+            <button id="btn_approve" type="button" class="btn btn-info btn-sm rightSize" onclick="location.href='/view/devices/import_devices/'">
                 <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp;批量导入
+            </button>
+            <button id="btn_approve" type="button" class="btn btn-info btn-sm rightSize" onclick="location.href='/view/devices/import_device_link_info/'">
+                <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp;创建链接
+            </button>
+            <button id="btn_approve" type="button" class="btn btn-info btn-sm rightSize" onclick="location.href='/view/devices/import_signal/'">
+                <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp;导入信号
             </button>
         </div>
         <table id="tb_devices"></table>

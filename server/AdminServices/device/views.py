@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 import models
@@ -39,7 +40,24 @@ def view_workshop_list(request):
 
 
 @login_required
-def import_device_database(request):
-    # db_importer.import_workshop_data('/home/btian/workshop.xlsx')
-    db_importer.import_device_data('/home/btian/device.xlsx')
-    return render(request, 'view_workshop_list.html', {})
+def import_workshops(request):
+    db_importer.import_workshop_data('/media/btian/workspace/Storm_Doc/V2.0/04-workshop.xlsx')
+    return HttpResponseRedirect("/view/workshops/")
+
+
+@login_required
+def import_devices(request):
+    db_importer.import_device_data('/media/btian/workspace/Storm_Doc/V2.0/01-devices-1.xlsx')
+    return HttpResponseRedirect("/view/devices/")
+
+
+@login_required
+def import_device_link_info(request):
+    db_importer.import_device_link_info_data('/media/btian/workspace/Storm_Doc/V2.0/01-devices-1.xlsx')
+    return HttpResponseRedirect("/view/devices/")
+
+
+@login_required
+def import_signal(request):
+    db_importer.import_signal_data('/media/btian/workspace/Storm_Doc/V2.0/02-signals.xlsx')
+    return HttpResponseRedirect("/view/devices/")

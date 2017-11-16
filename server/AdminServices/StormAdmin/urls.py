@@ -32,8 +32,13 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', staff.views.login, name='login'),
     url(r'^logout/', staff.views.logout, name='logout'),
+
     url(r'^view/workshops/$', device.views.view_workshop_list, name='view_workshop_list'),
-    url(r'^view/workshops/import_db$', device.views.import_device_database, name='import_device_database'),
-    url(r'^view/devices', device.views.view_device_list, name='view_device_list_of_workshop'),
-    url(r'^view/device/detail', device.views.view_device, name='view_specified_device'),
+    url(r'^view/workshops/import_workshops/$', device.views.import_workshops, name='import_workshops'),
+
+    url(r'^view/devices/$', device.views.view_device_list, name='view_device_list_of_workshop'),
+    url(r'^view/devices/import_devices/$', device.views.import_devices, name='import_devices'),
+    url(r'^view/devices/import_device_link_info/$', device.views.import_device_link_info, name='mport_device_link_info'),
+    url(r'^view/devices/import_signal/$', device.views.import_signal, name='import_signal'),
+    url(r'^view/device/detail/', device.views.view_device, name='view_specified_device'),
 ]
