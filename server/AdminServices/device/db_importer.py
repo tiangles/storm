@@ -1,7 +1,8 @@
 from .models import Device as StormDevice
 from .models import Workshop as StormWorkshop
 from .models import DeviceLinkInfo
-from .models import DeviceSignal
+from .models import DeviceDioSignal
+from .models import DCSConnection, DeviceAioSignal
 import xlrd
 import time
 
@@ -21,6 +22,20 @@ def load_cell(sheet, row, col):
     return sheet.cell_value(row, col)
 
 
+def load_int_cell(sheet, row, col):
+    cell = sheet.cell(row, col)
+    if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
+        return ''
+    return int(cell.value)
+
+
+def load_boolean_cell(sheet, row, col):
+    cell = sheet.cell(row, col)
+    if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
+        return False
+    return True
+
+
 def import_device(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('B'))
     model = load_cell(sheet, row_index, column('H'))
@@ -36,7 +51,7 @@ def import_device(sheet, row_index):
     else:
         workshop = None
 
-    StormDevice.objects.get_or_create(code=code,
+    StormDevice.objects.update_or_create(code=code,
                          model=model,
                          name=name,
                          system=system,
@@ -51,12 +66,13 @@ def import_workshop(sheet, row_index):
     workshop_index = load_null_blank_cell(sheet, row_index, column('A'))
     code = load_null_blank_cell(sheet, row_index, column('B'))
     name = load_null_blank_cell(sheet, row_index, column('C'))
-    StormWorkshop.objects.get_or_create(workshop_index=workshop_index,
+    StormWorkshop.objects.update_or_create(workshop_index=workshop_index,
                                             code=code,
                                             name=name)
 
-def import_signal(sheet, row_index):
-    code = load_cell(sheet, row_index, column('C'))
+
+def import_dio_signal(sheet, row_index):
+    code = load_null_blank_cell(sheet, row_index, column('C'))
     figure_number = load_cell(sheet, row_index, column('B'))
     for_device_code = load_cell(sheet, row_index, column('D'))
     for_device = StormDevice.objects.get(code=for_device_code)
@@ -71,7 +87,7 @@ def import_signal(sheet, row_index):
     interface_type = load_cell(sheet, row_index, column('M'))
     control_signal_type = load_cell(sheet, row_index, column('N'))
     incident_record = load_cell(sheet, row_index, column('O'))
-    DeviceSignal.objects.update_or_create(code=code,
+    DeviceDioSignal.objects.update_or_create(code=code,
                                           figure_number=figure_number,
                                           for_device=for_device,
                                           name=name,
@@ -87,6 +103,95 @@ def import_signal(sheet, row_index):
                                           incident_record=incident_record)
 
 
+def import_aio_signal(sheet, row_index):
+    code = load_null_blank_cell(sheet, row_index, column('C'))
+    figure_number = load_cell(sheet, row_index, column('B'))
+    for_device_code = load_cell(sheet, row_index, column('D'))
+    for_device = StormDevice.objects.get(code=for_device_code)
+    name = load_cell(sheet, row_index, column('E'))
+    io_type = load_cell(sheet, row_index, column('F'))
+    signal_type = load_cell(sheet, row_index, column('G'))
+    isolation = load_cell(sheet, row_index, column('H'))
+    unit = load_cell(sheet, row_index, column('I'))
+    min_range = load_cell(sheet, row_index, column('J'))
+    max_range = load_cell(sheet, row_index, column('K'))
+    remark = load_cell(sheet, row_index, column('L'))
+    power_supply = load_cell(sheet, row_index, column('M'))
+    connect_to_system = load_cell(sheet, row_index, column('N'))
+    lll = load_boolean_cell(sheet, row_index, column('O'))
+    ll = load_boolean_cell(sheet, row_index, column('P'))
+    l = load_boolean_cell(sheet, row_index, column('Q'))
+    h = load_boolean_cell(sheet, row_index, column('R'))
+    hh = load_boolean_cell(sheet, row_index, column('S'))
+    hhh = load_boolean_cell(sheet, row_index, column('T'))
+    tendency = load_boolean_cell(sheet, row_index, column('U'))
+    DeviceAioSignal.objects.update_or_create(code=code,
+                                             figure_number=figure_number,
+                                             for_device=for_device,
+                                             name=name,
+                                             io_type=io_type,
+                                             signal_type=signal_type,
+                                             isolation=isolation,
+                                             unit=unit,
+                                             min_range=min_range,
+                                             max_range=max_range,
+                                             remark=remark,
+                                             power_supply=power_supply,
+                                             connect_to_system=connect_to_system,
+                                             lll=lll,
+                                             ll=ll,
+                                             l=l,
+                                             h=h,
+                                             hh=hh,
+                                             hhh=hhh,
+                                             tendency=tendency)
+
+
+def import_dcs_connection(sheet, row_index):
+    code = load_null_blank_cell(sheet, row_index, column('C'))
+    belong_to_system = load_cell(sheet, row_index, column('B'))
+    description = load_cell(sheet, row_index, column('D'))
+    dcs_cabinet_number = load_cell(sheet, row_index, column('E'))
+    id_type = load_cell(sheet, row_index, column('F'))
+    signal_type = load_cell(sheet, row_index, column('G'))
+    face_name = load_cell(sheet, row_index, column('H'))
+    clamp = load_int_cell(sheet, row_index, column('I'))
+    channel = load_int_cell(sheet, row_index, column('J'))
+    terminal_a = load_int_cell(sheet, row_index, column('K'))
+    terminal_b = load_int_cell(sheet, row_index, column('L'))
+    terminal_c = load_int_cell(sheet, row_index, column('M'))
+    cable_number_1 = load_cell(sheet, row_index, column('N'))
+    cable_number_2 = load_cell(sheet, row_index, column('O'))
+    cable_number_3 = load_cell(sheet, row_index, column('P'))
+    cable_code = load_cell(sheet, row_index, column('Q'))
+    cable_model = load_cell(sheet, row_index, column('R'))
+    cabel_backup_core = load_cell(sheet, row_index, column('S'))
+    cable_direction = load_cell(sheet, row_index, column('T'))
+    remarks = load_cell(sheet, row_index, column('U'))
+    DCSConnection.objects.update_or_create(
+        code=code,
+        belong_to_system=belong_to_system,
+        description=description,
+        dcs_cabinet_number=dcs_cabinet_number,
+        id_type=id_type,
+        signal_type=signal_type,
+        face_name=face_name,
+        clamp=clamp,
+        channel=channel,
+        terminal_a=terminal_a,
+        terminal_b=terminal_b,
+        terminal_c=terminal_c,
+        cable_number_1=cable_number_1,
+        cable_number_2=cable_number_2,
+        cable_number_3=cable_number_3,
+        cable_code=cable_code,
+        cable_model=cable_model,
+        cabel_backup_core=cabel_backup_core,
+        cable_direction=cable_direction,
+        remarks=remarks,)
+
+
+
 def import_device_link_info(sheet, row_index):
     left_device_code = load_null_blank_cell(sheet, row_index, column('B'))
     left_device = StormDevice.objects.get(code=left_device_code)
@@ -100,16 +205,16 @@ def import_device_link_info(sheet, row_index):
             right_device = StormDevice.objects.get(code=right_deice_code)
         except Exception:
             raise ValueError('can not find specified device with code:%s'%right_deice_code)
-        DeviceLinkInfo.objects.get_or_create(left_device=left_device,
+        DeviceLinkInfo.objects.update_or_create(left_device=left_device,
                                              right_device=right_device)
 
 
-def do_import_data(file_path, row_offset, load_func):
+def do_import_data(file_path, sheet_index, row_offset, load_func):
     begin_time = time.time()
     imported_count = 0
 
     with xlrd.open_workbook(file_path) as file_data:
-        sheet = file_data.sheet_by_index(0)
+        sheet = file_data.sheet_by_index(sheet_index)
         nrows = sheet.nrows
         for row_index in range(row_offset, nrows):
             try:
@@ -122,17 +227,21 @@ def do_import_data(file_path, row_offset, load_func):
 
 
 def import_device_data(file_path):
-    do_import_data(file_path, 2, import_device)
+    do_import_data(file_path, 0, 2, import_device)
 
 
 def import_device_link_info_data(file_path):
-    do_import_data(file_path, 2, import_device_link_info)
+    do_import_data(file_path, 0, 2, import_device_link_info)
 
 
 def import_workshop_data(file_path):
-    do_import_data(file_path, 1, import_workshop)
+    do_import_data(file_path, 0, 1, import_workshop)
 
 
 def import_signal_data(file_path):
-    do_import_data(file_path, 1, import_signal)
+    do_import_data(file_path, 0, 1, import_dio_signal)
+    do_import_data(file_path, 1, 1, import_aio_signal)
 
+
+def import_dcs_connection_data(file_path):
+    do_import_data(file_path, 0, 2, import_dcs_connection)

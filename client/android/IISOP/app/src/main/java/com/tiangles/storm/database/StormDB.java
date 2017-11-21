@@ -1,33 +1,36 @@
 package com.tiangles.storm.database;
 
 import android.content.Context;
-import android.os.Environment;
 
+import com.tiangles.greendao.gen.DCSConnectionDao;
 import com.tiangles.greendao.gen.DaoMaster;
 import com.tiangles.greendao.gen.DaoSession;
+import com.tiangles.greendao.gen.DeviceAioSignalDao;
+import com.tiangles.greendao.gen.DeviceDioSignalDao;
 import com.tiangles.greendao.gen.DeviceLinkInfoDao;
+import com.tiangles.greendao.gen.DeviceDioSignalDao;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.greendao.gen.StormWorkshopDao;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.activities.DeviceInfoActivity;
+import com.tiangles.storm.database.dao.DCSConnection;
+import com.tiangles.storm.database.dao.DeviceAioSignal;
+import com.tiangles.storm.database.dao.DeviceDioSignal;
 import com.tiangles.storm.database.dao.DeviceLinkInfo;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
-import java.util.Vector;
 
 public class StormDB {
     private DaoSession daoSession;
     private StormDeviceDao stormDeviceDao;
     private StormWorkshopDao stormWorkshopDao;
     private DeviceLinkInfoDao deviceLinkInfoDao;
+    private DeviceDioSignalDao deviceDioSignalDao;
+    private DeviceAioSignalDao deviceAioSignalDao;
+    private DCSConnectionDao dcsConnection;
     private String dbPath;
 
     public StormDB(Context context, String dbPath) {
@@ -71,6 +74,55 @@ public class StormDB {
                     .build()
                     .list();
             return devices;
+        }
+        return null;
+    }
+
+    public List<DeviceDioSignal> getDioSignalsForDevice(String deviceCode){
+        List<DeviceDioSignal> signals = getDeviceDioSignalDao().queryBuilder()
+                .where(DeviceDioSignalDao.Properties.For_device_id.eq(deviceCode))
+                .build()
+                .list();
+        return signals;
+    }
+
+    public List<DeviceAioSignal> getAioSignalsForDevice(String deviceCode){
+        List<DeviceAioSignal> signals = getDeviceAioSignalDao().queryBuilder()
+                .where(DeviceAioSignalDao.Properties.For_device_id.eq(deviceCode))
+                .build()
+                .list();
+        return signals;
+    }
+
+    public DCSConnection getDCSConnection(String connectionCode){
+        List<DCSConnection> connections = getDcsConnection().queryBuilder()
+                .where(DCSConnectionDao.Properties.Code.eq(connectionCode))
+                .build()
+                .list();
+        if(connections.size()>0) {
+            return connections.get(0);
+        }
+        return null;
+    }
+
+    public DeviceDioSignal getDeviceDioSignal(String code) {
+        List<DeviceDioSignal> signals = getDeviceDioSignalDao().queryBuilder()
+                .where(DeviceDioSignalDao.Properties.Code.eq(code))
+                .build()
+                .list();
+        if(signals.size()>0){
+            return signals.get(0);
+        }
+        return null;
+    }
+
+    public DeviceAioSignal getDeviceAioSignal(String code) {
+        List<DeviceAioSignal> signals = getDeviceAioSignalDao().queryBuilder()
+                .where(DeviceAioSignalDao.Properties.Code.eq(code))
+                .build()
+                .list();
+        if(signals.size()>0){
+            return signals.get(0);
         }
         return null;
     }
@@ -147,6 +199,27 @@ public class StormDB {
             deviceLinkInfoDao = getDaoSession().getDeviceLinkInfoDao();
         }
         return deviceLinkInfoDao;
+    }
+
+    private DeviceDioSignalDao getDeviceDioSignalDao(){
+        if(deviceDioSignalDao == null) {
+            deviceDioSignalDao = getDaoSession().getDeviceDioSignalDao();
+        }
+        return deviceDioSignalDao;
+    }
+
+    private DeviceAioSignalDao getDeviceAioSignalDao(){
+            if(deviceAioSignalDao == null) {
+                deviceAioSignalDao = getDaoSession().getDeviceAioSignalDao();
+            }
+            return deviceAioSignalDao;
+        }
+
+    private DCSConnectionDao getDcsConnection(){
+        if(dcsConnection == null){
+            dcsConnection = getDaoSession().getDCSConnectionDao();
+        }
+        return dcsConnection;
     }
 
     private DaoSession getDaoSession(){

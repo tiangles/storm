@@ -16,31 +16,31 @@ public class StormWorkshop {
     private String code;
     private int workshop_index;
     private String name;
-@Generated(hash = 1013761996)
-public StormWorkshop(String code, int workshop_index, String name) {
-    this.code = code;
-    this.workshop_index = workshop_index;
-    this.name = name;
-}
-@Generated(hash = 37746842)
-public StormWorkshop() {
-}
-public String getCode() {
-    return this.code;
-}
-public void setCode(String code) {
-    this.code = code;
-}
-public String getName() {
-    return this.name;
-}
-public void setName(String name) {
-    this.name = name;
-}
-public int getWorkshop_index() {
-    return this.workshop_index;
-}
-public void setWorkshop_index(int workshop_index) {
-    this.workshop_index = workshop_index;
-}
+    @Generated(hash = 1013761996)
+    public StormWorkshop(String code, int workshop_index, String name) {
+        this.code = code;
+        this.workshop_index = workshop_index;
+        this.name = name;
+    }
+    @Generated(hash = 37746842)
+    public StormWorkshop() {
+    }
+    public String getCode() {
+        return this.code;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getWorkshop_index() {
+        return this.workshop_index;
+    }
+    public void setWorkshop_index(int workshop_index) {
+        this.workshop_index = workshop_index;
+    }
 }

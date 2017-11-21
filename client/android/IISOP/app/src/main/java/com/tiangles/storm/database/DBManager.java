@@ -4,12 +4,14 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.dao.DCSConnection;
+import com.tiangles.storm.database.dao.DeviceAioSignal;
+import com.tiangles.storm.database.dao.DeviceDioSignal;
 import com.tiangles.storm.database.dao.DeviceLinkInfo;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.request.SyncDatabaseVersionRequest;
-import com.tiangles.storm.request.SyncWorkshopRequest;
 import com.tiangles.storm.request.UpdateDeviceRequest;
 
 import java.io.File;
@@ -90,6 +92,44 @@ public class DBManager {
 
     public List<StormDevice> getDeviceFromWorkshop(StormWorkshop workshop){
         return getStormDB().getDeviceFromWorkshop(workshop.getCode());
+    }
+
+    public List<DCSConnection> getDCSConnectionsFromSignals(List<DeviceDioSignal> dioSignals, List<DeviceAioSignal> aioSignals){
+        List<DCSConnection> connections = new ArrayList<>();
+
+        if(dioSignals != null){
+            for(DeviceDioSignal signal: dioSignals) {
+                connections.add(getDCSConnection(signal.getCode()));
+            }
+        }
+
+        if(aioSignals != null){
+            for(DeviceAioSignal signal: aioSignals) {
+                connections.add(getDCSConnection(signal.getCode()));
+            }
+        }
+        return  connections;
+    }
+
+    public List<DeviceDioSignal> getDioSignalsForDevice(String deviceCode){
+        return getStormDB().getDioSignalsForDevice(deviceCode);
+    }
+
+    public List<DeviceAioSignal> getAioSignalsForDevice(String deviceCode){
+        return getStormDB().getAioSignalsForDevice(deviceCode);
+    }
+
+
+    public DCSConnection getDCSConnection(String connectionCode){
+        return getStormDB().getDCSConnection(connectionCode);
+    }
+
+    public DeviceDioSignal getDeviceDioSignal(String code){
+        return getStormDB().getDeviceDioSignal(code);
+    }
+
+    public DeviceAioSignal getDeviceAioSignal(String code){
+        return getStormDB().getDeviceAioSignal(code);
     }
 
     public void addObserver(DBManager.DBManagerObserver observer) {

@@ -9,11 +9,16 @@ import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.dao.DCSConnection;
+import com.tiangles.storm.database.dao.DeviceAioSignal;
+import com.tiangles.storm.database.dao.DeviceDioSignal;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.panel.PanelActivity;
 import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.request.GetSignalParameterRecordRequest;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,12 +31,16 @@ public class DeviceInfoActivity extends AppCompatActivity {
     @BindView(R.id.device_name) TextView mDeviceNameView;
     @BindView(R.id.device_model) TextView mDeviceModelView;
     @BindView(R.id.device_system) Button mDeviceSystemView;
+    @BindView(R.id.device_status) TextView mDeviceStatusView;
     @BindView(R.id.device_parameters) TextView mDeviceParameterView;
     @BindView(R.id.device_distribution_cabinet) TextView mDeviceDistributionCabinetView;
     @BindView(R.id.device_local_control_panel) TextView mDeviceLocalControlPanelView;
     @BindView(R.id.device_dcs_cabinet) TextView mDeviceDcsCabinetView;
 
     private String mDeviceCode;
+    List<DeviceDioSignal> mDioSignals;
+    List<DeviceAioSignal> mAioSignals;
+    List<DCSConnection> mDCSConnections;
     private Timer mTimer;
 
     @Override
@@ -54,6 +63,10 @@ public class DeviceInfoActivity extends AppCompatActivity {
         mDeviceDistributionCabinetView.setText(device.getDistribution_cabinet());
         mDeviceLocalControlPanelView.setText(device.getLocal_control_panel());
         mDeviceDcsCabinetView.setText(device.getDcs_cabinet());
+
+        mDioSignals = StormApp.getDBManager().getDioSignalsForDevice(device.getCode());
+        mAioSignals = StormApp.getDBManager().getAioSignalsForDevice(device.getCode());
+        mDCSConnections = StormApp.getDBManager().getDCSConnectionsFromSignals(mDioSignals, mAioSignals);
     }
 
     public void showSystemInfo(View view) {
@@ -70,10 +83,10 @@ public class DeviceInfoActivity extends AppCompatActivity {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                GetSignalParameterRecordRequest request = new GetSignalParameterRecordRequest(mDeviceCode, new GetSignalParameterRecordRequest.OnSignalParameterRecordListener() {
+                GetSignalParameterRecordRequest request = new GetSignalParameterRecordRequest(mDeviceCode, mDCSConnections, new GetSignalParameterRecordRequest.OnSignalParameterRecordListener() {
                     @Override
-                    public void onRecord(String deviceCode, String value, String time) {
-                        mDeviceParameterView.setText(value);
+                    public void onRecord(String deviceCode, Map<String, Double> parameters, String time) {
+                        updateParameters(parameters);
                     }
                 });
                 StormApp.getNetwork().sendRequest(request);
@@ -93,5 +106,26 @@ public class DeviceInfoActivity extends AppCompatActivity {
     public void onPause(){
         super.onPause();
         mTimer.cancel();
+    }
+
+    private void updateParameters(Map<String, Double> parameters){
+        StringBuilder sb = new StringBuilder();
+        for(String code: parameters.keySet()){
+            DCSConnection connection = StormApp.getDBManager().getDCSConnection(code);
+            DeviceDioSignal dioSignal = StormApp.getDBManager().getDeviceDioSignal(code);
+            if(dioSignal != null && connection != null && parameters.get(code)>-12){
+                mDeviceStatusView.setText(dioSignal.getStatus_when_io_is_1());
+            }
+            DeviceAioSignal aioSignal = StormApp.getDBManager().getDeviceAioSignal(code);
+            if(aioSignal!=null && connection!=null) {
+                sb.append(parameters.get(code));
+                sb.append("\t");
+                sb.append(aioSignal.getUnit());
+                sb.append("\t");
+                sb.append(aioSignal.getName());
+                sb.append("\n");
+            }
+        }
+        mDeviceParameterView.setText(sb.toString());
     }
 }

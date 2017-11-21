@@ -3,6 +3,7 @@ package com.tiangles.storm.legend;
 import android.graphics.Point;
 
 import com.tiangles.storm.legend.model.Circle;
+import com.tiangles.storm.legend.model.Ellipse;
 import com.tiangles.storm.legend.model.Line;
 import com.tiangles.storm.legend.model.Text;
 
@@ -15,6 +16,7 @@ import java.util.Vector;
 public class DeviceLinkLegend {
     protected Vector<Line> lines = new Vector<>();
     protected Vector<Circle> circles = new Vector<>();
+    protected Vector<Ellipse> ellipses = new Vector<>();
     protected Vector<Text> texts = new Vector<>();
     protected int nameOffset = 0;
     protected int codeOffset = 0;

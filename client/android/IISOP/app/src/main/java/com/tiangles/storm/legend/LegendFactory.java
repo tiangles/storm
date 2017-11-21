@@ -5,7 +5,9 @@ import android.content.Context;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.legend.model.Circle;
+import com.tiangles.storm.legend.model.Ellipse;
 import com.tiangles.storm.legend.model.Line;
+import com.tiangles.storm.legend.model.Text;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -140,7 +142,19 @@ public class LegendFactory {
                             Integer.parseInt(cy),
                             Integer.parseInt(r)));
                 } else if(node.getNodeName().equals("text")) {
-
+                    String x = node.getAttributes().getNamedItem("x").getNodeValue();
+                    String y = node.getAttributes().getNamedItem("y").getNodeValue();
+                    String text = node.getNodeValue();
+                    legend.texts.add(new Text(text, Integer.parseInt(x), Integer.parseInt(y)));
+                } else if(node.getNodeName().equals("ellipse")) {
+                    String cx=node.getAttributes().getNamedItem("cx").getNodeValue();
+                    String cy=node.getAttributes().getNamedItem("cy").getNodeValue();
+                    String rx=node.getAttributes().getNamedItem("rx").getNodeValue();
+                    String ry=node.getAttributes().getNamedItem("ry").getNodeValue();
+                    legend.ellipses.add(new Ellipse(Integer.parseInt(cx),
+                            Integer.parseInt(cy),
+                            Integer.parseInt(rx),
+                            Integer.parseInt(ry)));
                 }
             }
         }

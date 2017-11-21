@@ -40,5 +40,6 @@ urlpatterns = [
     url(r'^view/devices/import_devices/$', device.views.import_devices, name='import_devices'),
     url(r'^view/devices/import_device_link_info/$', device.views.import_device_link_info, name='mport_device_link_info'),
     url(r'^view/devices/import_signal/$', device.views.import_signal, name='import_signal'),
+    url(r'^view/devices/import_dcs_connection/$', device.views.import_dcs_connection, name='import_signal'),
     url(r'^view/device/detail/', device.views.view_device, name='view_specified_device'),
 ]

@@ -37,10 +37,10 @@ class DeviceSignalParameterRecord(models.Model):
         db_table = 'device_signal_parameter_record'
 
 
-class DeviceSignal(models.Model):
+class DeviceDioSignal(models.Model):
     code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='测点编码')
     figure_number = models.SlugField(max_length=16, verbose_name='图号')
-    for_device = models.ForeignKey(to=Device, related_name='belong_to_device', verbose_name='所属设备')
+    for_device = models.ForeignKey(to=Device, related_name='dio_belong_to_device', verbose_name='所属设备')
     name = models.CharField(max_length=128, verbose_name='测点名称')
     io_type = models.SlugField(max_length=16, verbose_name='I/O 类型')
     signal_type = models.CharField(max_length=16, verbose_name='信号类型')
@@ -54,7 +54,32 @@ class DeviceSignal(models.Model):
     incident_record = models.CharField(max_length=256, verbose_name='事故顺序记录')
 
     class Meta:
-        db_table = 'device_signal'
+        db_table = 'device_dio_signal'
+
+
+class DeviceAioSignal(models.Model):
+    code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='测点编码')
+    figure_number = models.SlugField(max_length=16, verbose_name='图号')
+    for_device = models.ForeignKey(to=Device, related_name='aio_belong_to_device', verbose_name='所属设备')
+    name = models.CharField(max_length=128, verbose_name='测点名称')
+    io_type = models.SlugField(max_length=16, verbose_name='I/O 类型')
+    signal_type = models.CharField(max_length=16, verbose_name='信号类型')
+    isolation = models.CharField(max_length=1, verbose_name='隔离')
+    unit = models.CharField(max_length=16, verbose_name='量程单位')
+    min_range = models.FloatField(verbose_name='量程下限')
+    max_range = models.FloatField(verbose_name='量程上限')
+    remark = models.CharField(max_length=128, verbose_name='备注')
+    power_supply = models.SlugField(max_length=16, verbose_name='供电方')
+    connect_to_system = models.SlugField(max_length=16, verbose_name='连接系统')
+    lll = models.BooleanField(verbose_name='LLL')
+    ll = models.BooleanField(verbose_name='LL')
+    l = models.BooleanField(verbose_name='L')
+    hhh = models.BooleanField(verbose_name='HHH')
+    hh = models.BooleanField(verbose_name='HH')
+    h = models.BooleanField(verbose_name='H')
+    tendency = models.BooleanField(verbose_name='趋势')
+    class Meta:
+        db_table = 'device_aio_signal'
 
 
 class DeviceLinkInfo(models.Model):
@@ -63,3 +88,27 @@ class DeviceLinkInfo(models.Model):
 
     class Meta:
         db_table = 'device_link_info'
+
+
+class DCSConnection(models.Model):
+    code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='测点名')
+    belong_to_system = models.SlugField(max_length=16, verbose_name='系统')
+    description = models.CharField(max_length=128, verbose_name='中文描述')
+    dcs_cabinet_number = models.SlugField(max_length=8, verbose_name='机柜号')
+    id_type = models.CharField(max_length=8, verbose_name='I/O类型')
+    signal_type = models.CharField(max_length=16, verbose_name='信号类型')
+    face_name = models.CharField(max_length=1, verbose_name='正反面')
+    clamp = models.CharField(max_length=4, verbose_name='卡件')
+    channel = models.CharField(max_length=4, verbose_name='通道')
+    terminal_a = models.CharField(max_length=4, verbose_name='接线端子A')
+    terminal_b = models.CharField(max_length=4, verbose_name='接线端子B')
+    terminal_c = models.CharField(max_length=4, verbose_name='接线端子C')
+    cable_number_1 = models.CharField(max_length=16, verbose_name='线号1')
+    cable_number_2 = models.CharField(max_length=16, verbose_name='线号2')
+    cable_number_3 = models.CharField(max_length=16, verbose_name='线号3')
+    cable_code = models.CharField(max_length=16, verbose_name='电缆编号')
+    cable_model = models.CharField(max_length=16, verbose_name='电缆型号及规范')
+    cabel_backup_core = models.CharField(max_length=5, verbose_name='备用芯数')
+    cable_direction = models.CharField(max_length=128, verbose_name='备用芯数')
+    remarks = models.CharField(max_length=16, verbose_name='备用芯数')
+

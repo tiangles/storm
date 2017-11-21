@@ -109,10 +109,12 @@ def handle_sync_device(socket, message):
 
 
 def handle_get_signal_parameter_record(socket, message):
-    value = -12 + (0.5-random.random())*2
+    values = {}
+    for connection in message['connections']:
+        values[connection]=get_signal_parameter_record(connection)
     j_record = {
-        'device_code': 'HNC10AN001',
-        'value': '%2.2f K Pa'%(value,),
+        'device_code': message['device_code'],
+        'values': values,
         'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S %f')}
     return 0, j_record
 
@@ -120,5 +122,9 @@ def handle_get_signal_parameter_record(socket, message):
 def handle_sync_database(socket, message):
     return 0, {
         'url': 'http://192.168.3.11:8128/static/storm_device.sqlite3',
-        'db_version': '1.0'
+        'db_version': '3.0'
     }
+
+
+def get_signal_parameter_record(connection):
+    return -12 + (0.5 - random.random()) * 2

@@ -61,3 +61,9 @@ def import_device_link_info(request):
 def import_signal(request):
     db_importer.import_signal_data('/media/btian/workspace/Storm_Doc/V2.0/02-signals.xlsx')
     return HttpResponseRedirect("/view/devices/")
+
+
+@login_required
+def import_dcs_connection(request):
+    db_importer.import_dcs_connection_data('/media/btian/workspace/Storm_Doc/V2.0/03-dcs_connection.xlsx')
+    return HttpResponseRedirect("/view/devices/")
