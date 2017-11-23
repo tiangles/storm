@@ -18,14 +18,14 @@ import java.util.Map;
 public class GetSignalParameterRecordRequest extends Request{
     private static String COMMAND = "get_signal_parameter_record";
     String deviceCode;
-    List<DCSConnection> connections;
+    Map<String, DCSConnection> connections;
     private OnSignalParameterRecordListener listener;
 
     public interface OnSignalParameterRecordListener{
         void onRecord(String deviceCode, Map<String, Double> values, String time);
     }
 
-    public GetSignalParameterRecordRequest(String deviceCode, List<DCSConnection> connections, OnSignalParameterRecordListener listener){
+    public GetSignalParameterRecordRequest(String deviceCode, Map<String, DCSConnection> connections, OnSignalParameterRecordListener listener){
         this.deviceCode = deviceCode;
         this.connections = connections;
         this.listener = listener;
@@ -41,8 +41,8 @@ public class GetSignalParameterRecordRequest extends Request{
         jObject.put("device_code", deviceCode);
 
         JSONArray jConnArray = new JSONArray();
-        for(DCSConnection conn: connections){
-            jConnArray.put(conn.getCode());
+        for(String code: connections.keySet()){
+            jConnArray.put(connections.get(code).getCode());
         }
         jObject.put("connections", jConnArray);
         jObject.put("time", "now");

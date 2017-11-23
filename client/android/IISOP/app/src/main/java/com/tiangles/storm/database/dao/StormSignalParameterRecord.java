@@ -12,7 +12,7 @@ import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.greendao.gen.StormSignalParameterRecordDao;
 
 @Entity(
-        nameInDb = "storm_workshop",
+        nameInDb = "device_signal_parameter_records",
         // Flag if the DAO should create the database table (default is true).
         // Set this to false, if you have multiple entities mapping to one table,
         // or the table creation is done outside of greenDAO.

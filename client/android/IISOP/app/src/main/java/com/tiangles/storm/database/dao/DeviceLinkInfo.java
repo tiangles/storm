@@ -8,10 +8,7 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
 
 @Entity(
-        nameInDb = "device_link_info",
-        // Flag if the DAO should create the database table (default is true).
-        // Set this to false, if you have multiple entities mapping to one table,
-        // or the table creation is done outside of greenDAO.
+        nameInDb = "device_link_information",
         createInDb = false
 )
 public class DeviceLinkInfo {

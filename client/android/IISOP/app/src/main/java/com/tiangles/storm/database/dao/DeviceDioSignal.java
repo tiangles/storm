@@ -5,7 +5,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity(
-        nameInDb = "device_dio_signal",
+        nameInDb = "device_dio_signals",
         createInDb = false
 )
 public class DeviceDioSignal {

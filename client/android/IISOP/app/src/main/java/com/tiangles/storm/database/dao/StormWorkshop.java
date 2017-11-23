@@ -5,10 +5,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity(
-        nameInDb = "storm_workshop",
-        // Flag if the DAO should create the database table (default is true).
-        // Set this to false, if you have multiple entities mapping to one table,
-        // or the table creation is done outside of greenDAO.
+        nameInDb = "storm_workshops",
         createInDb = false
 )
 public class StormWorkshop {
