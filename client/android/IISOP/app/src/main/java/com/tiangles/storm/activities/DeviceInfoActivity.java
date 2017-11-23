@@ -17,8 +17,11 @@ import com.tiangles.storm.panel.PanelActivity;
 import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.request.GetSignalParameterRecordRequest;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,9 +41,9 @@ public class DeviceInfoActivity extends AppCompatActivity {
     @BindView(R.id.device_dcs_cabinet) TextView mDeviceDcsCabinetView;
 
     private String mDeviceCode;
-    List<DeviceDioSignal> mDioSignals;
-    List<DeviceAioSignal> mAioSignals;
-    List<DCSConnection> mDCSConnections;
+    Map<String, DeviceDioSignal> mDioSignals;
+    Map<String, DeviceAioSignal> mAioSignals;
+    Map<String, DCSConnection> mDCSConnections;
     private Timer mTimer;
 
     @Override
@@ -55,18 +58,43 @@ public class DeviceInfoActivity extends AppCompatActivity {
     }
 
     private void showDevice(StormDevice device) {
+        List<DeviceDioSignal> dioSignals = StormApp.getDBManager().getDioSignalsForDevice(device.getCode());
+        mDioSignals = new HashMap<>(dioSignals.size());
+        for(DeviceDioSignal signal: dioSignals){
+            mDioSignals.put(signal.getCode(), signal);
+        }
+
+        List<DeviceAioSignal> aioSignals = StormApp.getDBManager().getAioSignalsForDevice(device.getCode());
+        mAioSignals = new HashMap<>(aioSignals.size());
+        for(DeviceAioSignal signal: aioSignals){
+            mAioSignals.put(signal.getCode(), signal);
+        }
+
+        List<DCSConnection> connections = StormApp.getDBManager().getDCSConnectionsFromSignals(dioSignals, aioSignals);
+        mDCSConnections = new HashMap<>(connections.size());
+
+        Set<String> allDcs = new HashSet<>();
+        for(DCSConnection connection: connections){
+            mDCSConnections.put(connection.getCode(), connection);
+            allDcs.add(connection.getDcs_cabinet_number());
+        }
+
+        StringBuilder dcsSB = new StringBuilder();
+        for(String dcs: allDcs) {
+            dcsSB.append(dcs);
+            dcsSB.append("  ");
+        }
+        mDeviceDcsCabinetView.setText(dcsSB.toString());
+
         mDeviceModelView.setText(device.getModel());
         mDeviceNameView.setText(device.getName());
         mDeviceCodeTextView.setText(device.getCode());
         mDeviceSystemView.setText(device.getSystem());
         mDeviceParameterView.setText("--");
         mDeviceDistributionCabinetView.setText(device.getDistribution_cabinet());
-        mDeviceLocalControlPanelView.setText(device.getLocal_control_panel());
-        mDeviceDcsCabinetView.setText(device.getDcs_cabinet());
+        mDeviceLocalControlPanelView.setText("--");
 
-        mDioSignals = StormApp.getDBManager().getDioSignalsForDevice(device.getCode());
-        mAioSignals = StormApp.getDBManager().getAioSignalsForDevice(device.getCode());
-        mDCSConnections = StormApp.getDBManager().getDCSConnectionsFromSignals(mDioSignals, mAioSignals);
+
     }
 
     public void showSystemInfo(View view) {
@@ -91,7 +119,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
                 });
                 StormApp.getNetwork().sendRequest(request);
             }
-        }, refreshInterval, refreshInterval);
+        }, 0, refreshInterval);
     }
 
     @OnClick(R.id.device_dcs_cabinet)
@@ -109,23 +137,40 @@ public class DeviceInfoActivity extends AppCompatActivity {
     }
 
     private void updateParameters(Map<String, Double> parameters){
-        StringBuilder sb = new StringBuilder();
+        StringBuilder aioSB = new StringBuilder();
+        StringBuilder dioSB = new StringBuilder();
         for(String code: parameters.keySet()){
-            DCSConnection connection = StormApp.getDBManager().getDCSConnection(code);
-            DeviceDioSignal dioSignal = StormApp.getDBManager().getDeviceDioSignal(code);
-            if(dioSignal != null && connection != null && parameters.get(code)>-12){
-                mDeviceStatusView.setText(dioSignal.getStatus_when_io_is_1());
-            }
-            DeviceAioSignal aioSignal = StormApp.getDBManager().getDeviceAioSignal(code);
-            if(aioSignal!=null && connection!=null) {
-                sb.append(parameters.get(code));
-                sb.append("\t");
-                sb.append(aioSignal.getUnit());
-                sb.append("\t");
-                sb.append(aioSignal.getName());
-                sb.append("\n");
+            DCSConnection connection = mDCSConnections.get(code);
+            if(connection != null) {
+                DeviceDioSignal dioSignal = mDioSignals.get(code);
+                if(dioSignal != null) {
+                    if(dioSignal != null ){
+                        if(parameters.get(code)>-12) {
+                            dioSB.append(dioSignal.getStatus_when_io_is_1());
+                        } else {
+                            dioSB.append("--");
+                        }
+//                        mDeviceStatusView.setText(dioSignal.getStatus_when_io_is_1());
+                        dioSB.append("  ");
+                        dioSB.append(dioSignal.getName());
+                        dioSB.append("\n");
+                    }
+                    continue;
+                }
+                DeviceAioSignal aioSignal = mAioSignals.get(code);
+                if(aioSignal!=null) {
+                    double val = parameters.get(code);
+                    float formatedVal = (float)(Math.round(val*100))/100;
+                    aioSB.append(formatedVal);
+                    aioSB.append("  ");
+                    aioSB.append(aioSignal.getUnit());
+                    aioSB.append("  ");
+                    aioSB.append(aioSignal.getName());
+                    aioSB.append("\n");
+                }
             }
         }
-        mDeviceParameterView.setText(sb.toString());
+        mDeviceStatusView.setText(dioSB.toString());
+        mDeviceParameterView.setText(aioSB.toString());
     }
 }
