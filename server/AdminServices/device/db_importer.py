@@ -2,7 +2,7 @@ from .models import Device as StormDevice
 from .models import Workshop as StormWorkshop
 from .models import DeviceLinkInfo
 from .models import DeviceDioSignal
-from .models import DCSConnection, DeviceAioSignal
+from .models import DCSConnection, DeviceAioSignal, LocalControlConnection
 import xlrd
 import time
 
@@ -74,7 +74,7 @@ def import_workshop(sheet, row_index):
 def import_dio_signal(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('C'))
     figure_number = load_cell(sheet, row_index, column('B'))
-    for_device_code = load_cell(sheet, row_index, column('D'))
+    for_device_code = load_null_blank_cell(sheet, row_index, column('D'))
     for_device = StormDevice.objects.get(code=for_device_code)
     name = load_cell(sheet, row_index, column('E'))
     io_type = load_cell(sheet, row_index, column('F'))
@@ -88,25 +88,25 @@ def import_dio_signal(sheet, row_index):
     control_signal_type = load_cell(sheet, row_index, column('N'))
     incident_record = load_cell(sheet, row_index, column('O'))
     DeviceDioSignal.objects.update_or_create(code=code,
-                                          figure_number=figure_number,
-                                          for_device=for_device,
-                                          name=name,
-                                          io_type=io_type,
-                                          signal_type=signal_type,
-                                          remark=remark,
-                                          power_supply=power_supply,
-                                          connect_to_system=connect_to_system,
-                                          status_when_io_is_1=status_when_io_is_1,
-                                          status_when_io_is_0=status_when_io_is_0,
-                                          interface_type=interface_type,
-                                          control_signal_type=control_signal_type,
-                                          incident_record=incident_record)
+                                             figure_number=figure_number,
+                                             for_device=for_device,
+                                             name=name,
+                                             io_type=io_type,
+                                             signal_type=signal_type,
+                                             remark=remark,
+                                             power_supply=power_supply,
+                                             connect_to_system=connect_to_system,
+                                             status_when_io_is_1=status_when_io_is_1,
+                                             status_when_io_is_0=status_when_io_is_0,
+                                             interface_type=interface_type,
+                                             control_signal_type=control_signal_type,
+                                             incident_record=incident_record)
 
 
 def import_aio_signal(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('C'))
     figure_number = load_cell(sheet, row_index, column('B'))
-    for_device_code = load_cell(sheet, row_index, column('D'))
+    for_device_code = load_null_blank_cell(sheet, row_index, column('D'))
     for_device = StormDevice.objects.get(code=for_device_code)
     name = load_cell(sheet, row_index, column('E'))
     io_type = load_cell(sheet, row_index, column('F'))
@@ -191,6 +191,32 @@ def import_dcs_connection(sheet, row_index):
         remarks=remarks,)
 
 
+def import_local_control_connection(sheet, row_index):
+    code = load_null_blank_cell(sheet, row_index, column('B'))
+    figure_number = load_cell(sheet, row_index, column('A'))
+    name = load_cell(sheet, row_index, column('C'))
+    instrument_type = load_cell(sheet, row_index, column('D'))
+    cable_wire_model = load_cell(sheet, row_index, column('E'))
+    cable_pipe_model = load_cell(sheet, row_index, column('F'))
+    cable_index = load_cell(sheet, row_index, column('L'))
+    cable_model = load_cell(sheet, row_index, column('M'))
+    cable_backup_core = load_cell(sheet, row_index, column('N'))
+    cable_direction = load_cell(sheet, row_index, column('O'))
+    remark = load_cell(sheet, row_index, column('P'))
+    LocalControlConnection.objects.update_or_create(
+        code=code,
+        figure_number=figure_number,
+        name=name,
+        instrument_type=instrument_type,
+        cable_wire_model=cable_wire_model,
+        cable_pipe_model=cable_pipe_model,
+        cable_index=cable_index,
+        cable_model=cable_model,
+        cable_backup_core=cable_backup_core,
+        cable_direction=cable_direction,
+        remark=remark,)
+
+
 
 def import_device_link_info(sheet, row_index):
     left_device_code = load_null_blank_cell(sheet, row_index, column('B'))
@@ -239,9 +265,30 @@ def import_workshop_data(file_path):
 
 
 def import_signal_data(file_path):
-    do_import_data(file_path, 0, 1, import_dio_signal)
-    do_import_data(file_path, 1, 1, import_aio_signal)
+    do_import_data(file_path, 0, 1, import_aio_signal)
+    do_import_data(file_path, 1, 1, import_dio_signal)
 
 
 def import_dcs_connection_data(file_path):
     do_import_data(file_path, 0, 2, import_dcs_connection)
+
+
+def import_local_control_connection_data(file_path):
+    begin_time = time.time()
+    imported_count = 0
+
+    with xlrd.open_workbook(file_path) as file_data:
+        sheet = file_data.sheet_by_index(0)
+        for merged_cell in sheet.merged_cells:
+            try:
+                rs, re, cs, ce = merged_cell
+                if cs == 0 and ce == 1 and re-rs > 1:
+                    import_local_control_connection(sheet, rs)
+                    imported_count += 1
+            except Exception as e:
+                print('Import error, row: %d, msg: "%s"' % (rs, e))
+
+    print ('Done, imported %d entries from %d rows, used time: %d seconds' %
+           (imported_count, sheet.nrows, time.time() - begin_time))
+
+

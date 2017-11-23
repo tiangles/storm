@@ -41,29 +41,35 @@ def view_workshop_list(request):
 
 @login_required
 def import_workshops(request):
-    db_importer.import_workshop_data('/media/btian/workspace/Storm_Doc/V2.0/04-workshop.xlsx')
+    db_importer.import_workshop_data('/media/btian/workspace/Storm_Doc/V3.0/04-workshops.xlsx')
     return HttpResponseRedirect("/view/workshops/")
 
 
 @login_required
 def import_devices(request):
-    db_importer.import_device_data('/media/btian/workspace/Storm_Doc/V2.0/01-devices-1.xlsx')
+    db_importer.import_device_data('/media/btian/workspace/Storm_Doc/V3.0/01-devices-1.xlsx')
     return HttpResponseRedirect("/view/devices/")
 
 
 @login_required
 def import_device_link_info(request):
-    db_importer.import_device_link_info_data('/media/btian/workspace/Storm_Doc/V2.0/01-devices-1.xlsx')
+    db_importer.import_device_link_info_data('/media/btian/workspace/Storm_Doc/V3.0/01-devices-1.xlsx')
     return HttpResponseRedirect("/view/devices/")
 
 
 @login_required
 def import_signal(request):
-    db_importer.import_signal_data('/media/btian/workspace/Storm_Doc/V2.0/02-signals.xlsx')
+    db_importer.import_signal_data('/media/btian/workspace/Storm_Doc/V3.0/02-signals.xlsx')
     return HttpResponseRedirect("/view/devices/")
 
 
 @login_required
 def import_dcs_connection(request):
-    db_importer.import_dcs_connection_data('/media/btian/workspace/Storm_Doc/V2.0/03-dcs_connection.xlsx')
+    db_importer.import_dcs_connection_data('/media/btian/workspace/Storm_Doc/V3.0/03-connections-DCS.xlsx')
+    return HttpResponseRedirect("/view/devices/")
+
+
+@login_required
+def import_local_control_connection(request):
+    db_importer.import_local_control_connection_data('/media/btian/workspace/Storm_Doc/V3.0/03-connections-local.xlsx')
     return HttpResponseRedirect("/view/devices/")

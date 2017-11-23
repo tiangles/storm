@@ -10,7 +10,7 @@ class Workshop(models.Model):
     name = models.CharField(max_length=128, verbose_name='名称')
 
     class Meta:
-        db_table = 'storm_workshop'
+        db_table = 'storm_workshops'
 
 
 class Device(models.Model):
@@ -34,7 +34,7 @@ class DeviceSignalParameterRecord(models.Model):
     device = models.ForeignKey(Device, related_name='signal_parameter_of_device')
 
     class Meta:
-        db_table = 'device_signal_parameter_record'
+        db_table = 'device_signal_parameter_records'
 
 
 class DeviceDioSignal(models.Model):
@@ -54,7 +54,7 @@ class DeviceDioSignal(models.Model):
     incident_record = models.CharField(max_length=256, verbose_name='事故顺序记录')
 
     class Meta:
-        db_table = 'device_dio_signal'
+        db_table = 'device_dio_signals'
 
 
 class DeviceAioSignal(models.Model):
@@ -79,7 +79,7 @@ class DeviceAioSignal(models.Model):
     h = models.BooleanField(verbose_name='H')
     tendency = models.BooleanField(verbose_name='趋势')
     class Meta:
-        db_table = 'device_aio_signal'
+        db_table = 'device_aio_signals'
 
 
 class DeviceLinkInfo(models.Model):
@@ -87,7 +87,7 @@ class DeviceLinkInfo(models.Model):
     right_device = models.ForeignKey(Device, related_name='backward_device', verbose_name='后向设备')
 
     class Meta:
-        db_table = 'device_link_info'
+        db_table = 'device_link_information'
 
 
 class DCSConnection(models.Model):
@@ -109,6 +109,25 @@ class DCSConnection(models.Model):
     cable_code = models.CharField(max_length=16, verbose_name='电缆编号')
     cable_model = models.CharField(max_length=16, verbose_name='电缆型号及规范')
     cabel_backup_core = models.CharField(max_length=5, verbose_name='备用芯数')
-    cable_direction = models.CharField(max_length=128, verbose_name='备用芯数')
-    remarks = models.CharField(max_length=16, verbose_name='备用芯数')
+    cable_direction = models.CharField(max_length=128, verbose_name='电缆去向')
+    remarks = models.CharField(max_length=16, verbose_name='备注')
 
+    class Meta:
+        db_table = 'device_dcs_connections'
+
+
+class LocalControlConnection(models.Model):
+    code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='测点名')
+    figure_number = models.SlugField(max_length=16, verbose_name='P&ID 图号')
+    name = models.CharField(max_length=128, verbose_name='测点名称')
+    instrument_type = models.CharField(max_length=32, verbose_name='仪表形式')
+    cable_wire_model = models.CharField(max_length=32, verbose_name='导线型号及规范')
+    cable_pipe_model = models.CharField(max_length=32, verbose_name='电线管形式')
+    cable_index = models.CharField(max_length=32, verbose_name='电缆编号')
+    cable_model = models.CharField(max_length=32, verbose_name='电缆型号规范')
+    cable_backup_core = models.CharField(max_length=32, verbose_name='备用芯数')
+    cable_direction = models.CharField(max_length=128, verbose_name='电缆去向')
+    remark = models.CharField(max_length=128, verbose_name='备注')
+
+    class Meta:
+        db_table = 'device_local_control_connections'
