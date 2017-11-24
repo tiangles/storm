@@ -12,6 +12,7 @@ import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
+import com.tiangles.storm.database.dao.PowerDevice;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.panel.PanelActivity;
 import com.tiangles.storm.preference.PreferenceEngine;
@@ -37,8 +38,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
     @BindView(R.id.device_status) TextView mDeviceStatusView;
     @BindView(R.id.device_parameters) TextView mDeviceParameterView;
     @BindView(R.id.device_distribution_cabinet) TextView mDeviceDistributionCabinetView;
-    @BindView(R.id.device_local_control_panel) TextView mDeviceLocalControlPanelView;
-    @BindView(R.id.device_dcs_cabinet) TextView mDeviceDcsCabinetView;
+    @BindView(R.id.device_inspection_records) TextView mDeviceInspectionRecordsView;
 
     private String mDeviceCode;
     Map<String, DeviceDioSignal> mDioSignals;
@@ -72,29 +72,23 @@ public class DeviceInfoActivity extends AppCompatActivity {
 
         List<DCSConnection> connections = StormApp.getDBManager().getDCSConnectionsFromSignals(dioSignals, aioSignals);
         mDCSConnections = new HashMap<>(connections.size());
-
-        Set<String> allDcs = new HashSet<>();
-        for(DCSConnection connection: connections){
-            mDCSConnections.put(connection.getCode(), connection);
-            allDcs.add(connection.getDcs_cabinet_number());
+        for(DCSConnection dcsConnection: connections){
+            mDCSConnections.put(dcsConnection.getCode(), dcsConnection);
         }
-
-        StringBuilder dcsSB = new StringBuilder();
-        for(String dcs: allDcs) {
-            dcsSB.append(dcs);
-            dcsSB.append("  ");
-        }
-        mDeviceDcsCabinetView.setText(dcsSB.toString());
 
         mDeviceModelView.setText(device.getModel());
         mDeviceNameView.setText(device.getName());
         mDeviceCodeTextView.setText(device.getCode());
         mDeviceSystemView.setText(device.getSystem());
         mDeviceParameterView.setText("--");
-        mDeviceDistributionCabinetView.setText(device.getDistribution_cabinet());
-        mDeviceLocalControlPanelView.setText("--");
 
-
+        PowerDevice powerDevice = StormApp.getDBManager().getPowerDevice(device.getPower_device_id());
+        if(powerDevice != null){
+            mDeviceDistributionCabinetView.setText(powerDevice.getName().replace('\n', ' '));
+        } else {
+            mDeviceDistributionCabinetView.setText("--");
+        }
+        mDeviceInspectionRecordsView.setText(device.getInspection_records());
     }
 
     public void showSystemInfo(View view) {
@@ -122,13 +116,6 @@ public class DeviceInfoActivity extends AppCompatActivity {
         }, 0, refreshInterval);
     }
 
-    @OnClick(R.id.device_dcs_cabinet)
-    public void showPanelInfo(){
-        Intent intent = new Intent(DeviceInfoActivity.this, PanelActivity.class);
-        intent.putExtra("device_code", mDeviceCode);
-        startActivity(intent);
-
-    }
 
     @Override
     public void onPause(){
@@ -150,7 +137,6 @@ public class DeviceInfoActivity extends AppCompatActivity {
                         } else {
                             dioSB.append("--");
                         }
-//                        mDeviceStatusView.setText(dioSignal.getStatus_when_io_is_1());
                         dioSB.append("  ");
                         dioSB.append(dioSignal.getName());
                         dioSB.append("\n");

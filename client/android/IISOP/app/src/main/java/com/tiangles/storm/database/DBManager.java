@@ -8,6 +8,7 @@ import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
 import com.tiangles.storm.database.dao.DeviceLinkInfo;
+import com.tiangles.storm.database.dao.PowerDevice;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.preference.PreferenceEngine;
@@ -92,6 +93,10 @@ public class DBManager {
 
     public List<StormDevice> getDeviceFromWorkshop(StormWorkshop workshop){
         return getStormDB().getDeviceFromWorkshop(workshop.getCode());
+    }
+
+    public PowerDevice getPowerDevice(String code){
+        return getStormDB().getPowerDevice(code);
     }
 
     public List<DCSConnection> getDCSConnectionsFromSignals(List<DeviceDioSignal> dioSignals, List<DeviceAioSignal> aioSignals){

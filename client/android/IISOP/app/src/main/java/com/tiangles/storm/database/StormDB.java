@@ -8,7 +8,7 @@ import com.tiangles.greendao.gen.DaoSession;
 import com.tiangles.greendao.gen.DeviceAioSignalDao;
 import com.tiangles.greendao.gen.DeviceDioSignalDao;
 import com.tiangles.greendao.gen.DeviceLinkInfoDao;
-import com.tiangles.greendao.gen.DeviceDioSignalDao;
+import com.tiangles.greendao.gen.PowerDeviceDao;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.greendao.gen.StormWorkshopDao;
 import com.tiangles.storm.StormApp;
@@ -16,6 +16,7 @@ import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
 import com.tiangles.storm.database.dao.DeviceLinkInfo;
+import com.tiangles.storm.database.dao.PowerDevice;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 
@@ -30,7 +31,8 @@ public class StormDB {
     private DeviceLinkInfoDao deviceLinkInfoDao;
     private DeviceDioSignalDao deviceDioSignalDao;
     private DeviceAioSignalDao deviceAioSignalDao;
-    private DCSConnectionDao dcsConnection;
+    private DCSConnectionDao dcsConnectionDao;
+    private PowerDeviceDao powerDeviceDao;
     private String dbPath;
 
     public StormDB(Context context, String dbPath) {
@@ -95,7 +97,7 @@ public class StormDB {
     }
 
     public DCSConnection getDCSConnection(String connectionCode){
-        List<DCSConnection> connections = getDcsConnection().queryBuilder()
+        List<DCSConnection> connections = getDcsConnectionDao().queryBuilder()
                 .where(DCSConnectionDao.Properties.Code.eq(connectionCode))
                 .build()
                 .list();
@@ -146,6 +148,20 @@ public class StormDB {
             }
         }
     }
+
+    public PowerDevice getPowerDevice(String code){
+        if(code !=null) {
+            List<PowerDevice> powerDevices = getPowerDeviceDao().queryBuilder()
+                    .where(PowerDeviceDao.Properties.Code.eq(code))
+                    .build()
+                    .list();
+            if(powerDevices.size()>0){
+                return powerDevices.get(0);
+            }
+        }
+        return null;
+    }
+
 
     public List<StormWorkshop> getWorkshopList(String keyword, int offset, int limit){
         List<StormWorkshop> workshops;
@@ -215,11 +231,18 @@ public class StormDB {
             return deviceAioSignalDao;
         }
 
-    private DCSConnectionDao getDcsConnection(){
-        if(dcsConnection == null){
-            dcsConnection = getDaoSession().getDCSConnectionDao();
+    private DCSConnectionDao getDcsConnectionDao(){
+        if(dcsConnectionDao == null){
+            dcsConnectionDao = getDaoSession().getDCSConnectionDao();
         }
-        return dcsConnection;
+        return dcsConnectionDao;
+    }
+
+    private PowerDeviceDao getPowerDeviceDao(){
+        if(powerDeviceDao == null){
+            powerDeviceDao = getDaoSession().getPowerDeviceDao();
+        }
+        return powerDeviceDao;
     }
 
     private DaoSession getDaoSession(){

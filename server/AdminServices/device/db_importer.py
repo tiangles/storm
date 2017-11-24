@@ -1,4 +1,4 @@
-from .models import Device as StormDevice
+from .models import Device as StormDevice, PowerDevice
 from .models import Workshop as StormWorkshop
 from .models import DeviceLinkInfo
 from .models import DeviceDioSignal
@@ -45,21 +45,32 @@ def import_device(sheet, row_index):
     local_control_panel = ''
     dcs_cabinet = ''
     legend = load_cell(sheet, row_index, column('E')) + load_cell(sheet, row_index, column('D'))
+    inspection_records = load_cell(sheet, row_index, column('I'))
     workshop_name = load_cell(sheet, row_index, column('J'))
     if len(workshop_name)>0:
         workshop = StormWorkshop.objects.get(name=workshop_name)
     else:
         workshop = None
 
+    power_device_code = load_cell(sheet, row_index, column('O'))
+    power_device_name = load_cell(sheet, row_index, column('P'))
+    if power_device_code is not None and len(power_device_code)>0:
+        power_device, created = PowerDevice.objects.update_or_create(code=power_device_code,
+                                                         name=power_device_name)
+    else:
+        power_device = None
+
     StormDevice.objects.update_or_create(code=code,
-                         model=model,
-                         name=name,
-                         system=system,
-                         distribution_cabinet=distribution_cabinet,
-                         local_control_panel=local_control_panel,
-                         dcs_cabinet=dcs_cabinet,
-                         legend=legend,
-                         workshop=workshop)
+                                         model=model,
+                                         name=name,
+                                         system=system,
+                                         distribution_cabinet=distribution_cabinet,
+                                         local_control_panel=local_control_panel,
+                                         dcs_cabinet=dcs_cabinet,
+                                         legend=legend,
+                                         inspection_records=inspection_records,
+                                         workshop=workshop,
+                                         power_device = power_device)
 
 
 def import_workshop(sheet, row_index):

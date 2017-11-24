@@ -13,6 +13,14 @@ class Workshop(models.Model):
         db_table = 'storm_workshops'
 
 
+class PowerDevice(models.Model):
+    code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='KKS编码')
+    name = models.CharField(max_length=128, null=True, verbose_name='设备名称')
+
+    class Meta:
+        db_table = 'power_devices'
+
+
 class Device(models.Model):
     code = models.SlugField(max_length=128, primary_key=True, verbose_name='编码')
     model = models.CharField(max_length=128, verbose_name='型号', null=True)
@@ -22,7 +30,9 @@ class Device(models.Model):
     local_control_panel = models.CharField(max_length=128, verbose_name='就地控制柜', null=True)
     dcs_cabinet = models.CharField(max_length=128, verbose_name='DCS控制柜', null=True)
     legend = models.CharField(max_length=128, verbose_name='图例', null=True)
+    inspection_records = models.CharField(max_length=1024, verbose_name='图例', null=True)
     workshop = models.ForeignKey(Workshop, related_name='belong_to_workshop', on_delete=models.SET_NULL, null=True)
+    power_device = models.ForeignKey(PowerDevice, related_name='power_device', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         db_table = 'storm_devices'
@@ -131,3 +141,5 @@ class LocalControlConnection(models.Model):
 
     class Meta:
         db_table = 'device_local_control_connections'
+
+
