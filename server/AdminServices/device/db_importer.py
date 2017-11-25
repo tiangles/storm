@@ -3,6 +3,7 @@ from .models import Workshop as StormWorkshop
 from .models import DeviceLinkInfo
 from .models import DeviceDioSignal
 from .models import DCSConnection, DeviceAioSignal, LocalControlConnection
+from .models import Cabinet
 import xlrd
 import time
 
@@ -71,6 +72,25 @@ def import_device(sheet, row_index):
                                          inspection_records=inspection_records,
                                          workshop=workshop,
                                          power_device = power_device)
+
+
+def import_cabinet(sheet, row_index):
+    code = load_null_blank_cell(sheet, row_index, column('B'))
+    usage = load_cell(sheet, row_index, column('C'))
+    specification = load_cell(sheet, row_index, column('D'))
+    maintenance_record = load_cell(sheet, row_index, column('E'))
+    workshop_name = load_cell(sheet, row_index, column('F'))
+    if len(workshop_name)>0:
+        workshop = StormWorkshop.objects.get(name=workshop_name)
+    else:
+        workshop = None
+    remark = load_cell(sheet, row_index, column('G'))
+    Cabinet.objects.update_or_create(code=code,
+                                     usage=usage,
+                                     specification=specification,
+                                     maintenance_record=maintenance_record,
+                                     workshop=workshop,
+                                     remark=remark,)
 
 
 def import_workshop(sheet, row_index):
@@ -265,6 +285,10 @@ def do_import_data(file_path, sheet_index, row_offset, load_func):
 
 def import_device_data(file_path):
     do_import_data(file_path, 0, 2, import_device)
+
+
+def import_cabinets_data(file_path):
+    do_import_data(file_path, 0, 1, import_cabinet)
 
 
 def import_device_link_info_data(file_path):

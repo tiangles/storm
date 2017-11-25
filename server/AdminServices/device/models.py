@@ -143,3 +143,13 @@ class LocalControlConnection(models.Model):
         db_table = 'device_local_control_connections'
 
 
+class Cabinet(models.Model):
+    code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='设备编码')
+    usage = models.CharField(max_length=128, verbose_name='用途')
+    specification = models.CharField(max_length=128, verbose_name='型式规范')
+    maintenance_record = models.CharField(max_length=128, verbose_name='型式规范')
+    workshop = models.ForeignKey(Workshop, on_delete=models.SET_NULL, null=True)
+    remark = models.CharField(max_length=64, verbose_name='备注')
+
+    class Meta:
+        db_table = 'cabinets'

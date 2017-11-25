@@ -6,7 +6,7 @@ from models.event import UserEvent
 from models.device import Device
 from models.workshop import Workshop
 from datetime import *
-
+import socket
 from models.hashers import check_password
 
 
@@ -119,9 +119,19 @@ def handle_get_signal_parameter_record(socket, message):
     return 0, j_record
 
 
-def handle_sync_database(socket, message):
+def get_host_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
+    return ip
+
+
+def handle_sync_database(skt, message):
     return 0, {
-        'url': 'http://192.168.3.11:8128/static/storm_device.sqlite3',
+        'url': 'http://%s:8128/static/storm_device.sqlite3'%(get_host_ip(), ),
         'db_version': '18.0'
     }
 

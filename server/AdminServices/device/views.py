@@ -52,6 +52,12 @@ def import_devices(request):
 
 
 @login_required
+def import_cabinets(request):
+    db_importer.import_cabinets_data('/media/btian/workspace/Storm_Doc/V3.0/01-devices-2.xlsx')
+    return HttpResponseRedirect("/view/devices/")
+
+
+@login_required
 def import_device_link_info(request):
     db_importer.import_device_link_info_data('/media/btian/workspace/Storm_Doc/V3.0/01-devices-1.xlsx')
     return HttpResponseRedirect("/view/devices/")
