@@ -29,7 +29,6 @@
                 android:textSize="18sp"
                 android:id="@+id/device_code"/>
         </LinearLayout>
-
         <Space
             android:layout_width="match_parent"
             android:layout_height="10dp" />

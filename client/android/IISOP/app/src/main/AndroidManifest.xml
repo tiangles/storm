@@ -22,13 +22,13 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.QRCodeActivity" />
         <activity android:name=".activities.ChartActivity" />
-        <activity android:name=".activities.DeviceInfoActivity" />
         <activity
             android:name=".activities.WorkshopActivity"
             android:label="@string/title_activity_workshop" />
@@ -39,12 +39,14 @@
         <activity android:name=".activities.WorkshopDeviceListActivity" />
         <activity
             android:name=".activities.SettingsActivity"
-            android:label="@string/title_activity_settings">
-        </activity>
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".panel.PanelActivity"
-            android:label="柜柜柜">
-        </activity>
+            android:label="柜柜柜" />
+        <activity
+            android:name=".device.DeviceActivity"
+            android:label="@string/title_activity_device"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
