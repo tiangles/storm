@@ -77,16 +77,18 @@ def import_device(sheet, row_index):
 def import_cabinet(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('B'))
     usage = load_cell(sheet, row_index, column('C'))
-    specification = load_cell(sheet, row_index, column('D'))
-    maintenance_record = load_cell(sheet, row_index, column('E'))
-    workshop_name = load_cell(sheet, row_index, column('F'))
-    if len(workshop_name)>0:
-        workshop = StormWorkshop.objects.get(name=workshop_name)
+    dcs_controller = load_cell(sheet, row_index, column('D'))
+    specification = load_cell(sheet, row_index, column('F'))
+    maintenance_record = load_cell(sheet, row_index, column('G'))
+    workshop_code = load_cell(sheet, row_index, column('H'))
+    if len(workshop_code)>0:
+        workshop = StormWorkshop.objects.get(code=workshop_code)
     else:
         workshop = None
     remark = load_cell(sheet, row_index, column('G'))
     Cabinet.objects.update_or_create(code=code,
                                      usage=usage,
+                                     dcs_controller=dcs_controller,
                                      specification=specification,
                                      maintenance_record=maintenance_record,
                                      workshop=workshop,

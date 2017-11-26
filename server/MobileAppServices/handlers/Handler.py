@@ -132,7 +132,7 @@ def get_host_ip():
 def handle_sync_database(skt, message):
     return 0, {
         'url': 'http://%s:8128/static/storm_device.sqlite3'%(get_host_ip(), ),
-        'db_version': '18.0'
+        'db_version': '21.0'
     }
 
 

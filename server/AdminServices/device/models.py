@@ -108,7 +108,7 @@ class DCSConnection(models.Model):
     id_type = models.CharField(max_length=8, verbose_name='I/O类型')
     signal_type = models.CharField(max_length=16, verbose_name='信号类型')
     face_name = models.CharField(max_length=1, verbose_name='正反面')
-    clamp = models.CharField(max_length=4, verbose_name='卡件')
+    clamp = models.IntegerField(verbose_name='卡件')
     channel = models.CharField(max_length=4, verbose_name='通道')
     terminal_a = models.CharField(max_length=4, verbose_name='接线端子A')
     terminal_b = models.CharField(max_length=4, verbose_name='接线端子B')
@@ -146,6 +146,7 @@ class LocalControlConnection(models.Model):
 class Cabinet(models.Model):
     code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='设备编码')
     usage = models.CharField(max_length=128, verbose_name='用途')
+    dcs_controller = models.CharField(max_length=12, verbose_name='DCS控制器')
     specification = models.CharField(max_length=128, verbose_name='型式规范')
     maintenance_record = models.CharField(max_length=128, verbose_name='型式规范')
     workshop = models.ForeignKey(Workshop, on_delete=models.SET_NULL, null=True)
