@@ -8,20 +8,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.database.DBManager;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +65,10 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
     }
 
     private class DeviceListAdaptor extends BaseAdapter{
+        class ViewHolder {
+            TextView codeView;
+            TextView nameView;
+        }
         @Override
         public int getCount() {
             return listItems.size();
@@ -85,13 +84,19 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View  view;
+            ViewHolder viewHolder = null;
             if(convertView != null) {
                 view = convertView;
+                viewHolder = (ViewHolder)view.getTag();
             } else {
                 view = getLayoutInflater().inflate(R.layout.list_item_workshop_device, null);
+                viewHolder = new ViewHolder();
+                viewHolder.codeView = (TextView)view.findViewById(R.id.device_code);
+                viewHolder.nameView = (TextView)view.findViewById(R.id.device_name);
+                view.setTag(viewHolder);
             }
-            ((TextView)view.findViewById(R.id.device_code)).setText(listItems.get(position).getCode());
-            ((TextView)view.findViewById(R.id.device_name)).setText(listItems.get(position).getName());
+            viewHolder.codeView.setText(listItems.get(position).getCode());
+            viewHolder.nameView.setText(listItems.get(position).getName());
             return view;
         }
     }
