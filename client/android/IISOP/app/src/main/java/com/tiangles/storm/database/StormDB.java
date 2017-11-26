@@ -2,6 +2,7 @@ package com.tiangles.storm.database;
 
 import android.content.Context;
 
+import com.tiangles.greendao.gen.CabinetDao;
 import com.tiangles.greendao.gen.DCSConnectionDao;
 import com.tiangles.greendao.gen.DaoMaster;
 import com.tiangles.greendao.gen.DaoSession;
@@ -12,6 +13,7 @@ import com.tiangles.greendao.gen.PowerDeviceDao;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.greendao.gen.StormWorkshopDao;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.dao.Cabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
@@ -33,6 +35,7 @@ public class StormDB {
     private DeviceAioSignalDao deviceAioSignalDao;
     private DCSConnectionDao dcsConnectionDao;
     private PowerDeviceDao powerDeviceDao;
+    CabinetDao cabinetDao;
     private String dbPath;
 
     public StormDB(Context context, String dbPath) {
@@ -128,6 +131,34 @@ public class StormDB {
         }
         return null;
     }
+
+    public List<DCSConnection> getDCSConnectionsFromCabinetFace(Cabinet cabinet, String face) {
+        return getDcsConnectionDao().queryBuilder()
+                .where(DCSConnectionDao.Properties.Dcs_cabinet_number.eq(cabinet.getCode()),
+                       DCSConnectionDao.Properties.Face_name.eq(face))
+                .build()
+                .list();
+    }
+
+    public List<Cabinet> getCabinetsForWorkshop(String workshopCode) {
+        return getCabinetDao().queryBuilder()
+                .where(CabinetDao.Properties.Workshop_id.eq(workshopCode))
+                .build()
+                .list();
+
+    }
+
+    public Cabinet getCabinet(String code) {
+        List<Cabinet>  cabinets = getCabinetDao().queryBuilder()
+                .where(CabinetDao.Properties.Code.eq(code))
+                .build()
+                .list();
+        if(cabinets.size()>0) {
+            return cabinets.get(0);
+        }
+        return null;
+    }
+
 
     public void commitDeviceChange(StormDevice device){
         if(device != null){
@@ -245,6 +276,12 @@ public class StormDB {
         return powerDeviceDao;
     }
 
+    private CabinetDao getCabinetDao(){
+        if(cabinetDao == null) {
+            cabinetDao = getDaoSession().getCabinetDao();
+        }
+        return cabinetDao;
+    }
     private DaoSession getDaoSession(){
         if(daoSession == null) {
             DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(StormApp.getContext(),

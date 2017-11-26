@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.dao.Cabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
@@ -51,6 +52,10 @@ public class DBManager {
         return getStormDB().getDevice(code);
     }
 
+    public Cabinet getCabinet(String code) {
+        return getStormDB().getCabinet(code);
+    }
+
     public List<StormDevice> getLeftDevice(StormDevice device) {
         ArrayList<StormDevice> result = new ArrayList<>();
         if(device != null) {
@@ -87,7 +92,11 @@ public class DBManager {
         return getStormDB().getWorkshopList(keyword, offset, limit);
     }
 
-    public StormWorkshop getWorkshop(String code){
+    public List<Cabinet> getCabinetsForWorkshop(StormWorkshop workshop) {
+        return getStormDB().getCabinetsForWorkshop(workshop.getCode());
+    }
+
+        public StormWorkshop getWorkshop(String code){
         return getStormDB().getWorkshop(code);
     }
 
@@ -127,6 +136,10 @@ public class DBManager {
 
     public DCSConnection getDCSConnection(String connectionCode){
         return getStormDB().getDCSConnection(connectionCode);
+    }
+
+    public List<DCSConnection> getDCSConnectionsFromCabinetFace(Cabinet cabinet, String face) {
+        return getStormDB().getDCSConnectionsFromCabinetFace(cabinet, face);
     }
 
     public DeviceDioSignal getDeviceDioSignal(String code){

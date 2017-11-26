@@ -12,11 +12,15 @@ import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.dao.Cabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
+import com.tiangles.storm.device.DeviceActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +28,7 @@ import butterknife.ButterKnife;
 public class WorkshopDeviceListActivity extends AppCompatActivity {
     @BindView(R.id.workshop_device_list)
     ListView mDeviceListView;
-    private List<StormDevice> listItems = new ArrayList<>();
+    private List<ListItemContent> listItems = new ArrayList<>();
     private DeviceListAdaptor listAdaptor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +39,8 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
         mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(WorkshopDeviceListActivity.this, DeviceInfoActivity.class);
-                intent.putExtra("code", listItems.get(position).getCode());
+                Intent intent = new Intent(WorkshopDeviceListActivity.this, DeviceActivity.class);
+                intent.putExtra("code", listItems.get(position).code);
                 startActivity(intent);
             }
         });
@@ -49,15 +53,20 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
 
     private void init(StormWorkshop workshop){
         List<StormDevice> devices = StormApp.getDBManager().getDeviceFromWorkshop(workshop);
-        createDeviceListAdaptor(devices);
+        List<Cabinet> cabinets = StormApp.getDBManager().getCabinetsForWorkshop(workshop);
+
+        createDeviceListAdaptor(devices, cabinets);
     }
 
-    private void createDeviceListAdaptor(List<StormDevice> devices) {
+    private void createDeviceListAdaptor(List<StormDevice> devices, List<Cabinet> cabinets) {
         listItems.clear();
         for(StormDevice device: devices) {
             if(device != null) {
-                listItems.add(device);
+                listItems.add(new ListItemContent(device.getCode(), device.getName()));
             }
+        }
+        for(Cabinet cabinet: cabinets) {
+            listItems.add(new ListItemContent(cabinet.getCode(), cabinet.getUsage()));
         }
 
         listAdaptor = new DeviceListAdaptor();
@@ -95,9 +104,16 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
                 viewHolder.nameView = (TextView)view.findViewById(R.id.device_name);
                 view.setTag(viewHolder);
             }
-            viewHolder.codeView.setText(listItems.get(position).getCode());
-            viewHolder.nameView.setText(listItems.get(position).getName());
+            viewHolder.codeView.setText(listItems.get(position).code);
+            viewHolder.nameView.setText(listItems.get(position).name);
             return view;
         }
     }
-}
+    private class ListItemContent {
+        ListItemContent(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+        String code;
+        String name;
+    }}

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 
 import com.tiangles.storm.R;
+import com.tiangles.storm.device.DeviceActivity;
 import com.tiangles.storm.utilities.DES3Utils;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -78,7 +79,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
     public void showDevice(View v) {
         if(!mScanResult.isEmpty()) {
-            Intent intent = new Intent(this, DeviceInfoActivity.class);
+            Intent intent = new Intent(this, DeviceActivity.class);
             intent.putExtra("code", mScanResult);
             startActivity(intent);
         }

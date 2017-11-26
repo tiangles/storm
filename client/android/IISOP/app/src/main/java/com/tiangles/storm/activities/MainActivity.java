@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.tiangles.storm.R;
+import com.tiangles.storm.device.DeviceActivity;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showDeviceDetailView(String scanResult) {
-        Intent intent = new Intent(this, DeviceInfoActivity.class);
+        Intent intent = new Intent(this, DeviceActivity.class);
         intent.putExtra("code", scanResult);
         startActivity(intent);
     }

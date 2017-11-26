@@ -17,7 +17,7 @@ public class DCSConnection {
     private String id_type;
     private String signal_type;
     private String face_name;
-    private String clamp;
+    private int clamp;
     private String channel;
     private String terminal_a;
     private String terminal_b;
@@ -30,10 +30,10 @@ public class DCSConnection {
     private String cabel_backup_core;
     private String cable_direction;
     private String remarks;
-@Generated(hash = 1376396547)
+@Generated(hash = 242489178)
 public DCSConnection(String code, String belong_to_system, String description,
         String dcs_cabinet_number, String id_type, String signal_type,
-        String face_name, String clamp, String channel, String terminal_a,
+        String face_name, int clamp, String channel, String terminal_a,
         String terminal_b, String terminal_c, String cable_number_1,
         String cable_number_2, String cable_number_3, String cable_code,
         String cable_model, String cabel_backup_core, String cable_direction,
@@ -104,10 +104,10 @@ public String getFace_name() {
 public void setFace_name(String face_name) {
     this.face_name = face_name;
 }
-public String getClamp() {
+public int getClamp() {
     return this.clamp;
 }
-public void setClamp(String clamp) {
+public void setClamp(int clamp) {
     this.clamp = clamp;
 }
 public String getChannel() {
