@@ -1,9 +1,7 @@
-from .models import Device as StormDevice, PowerDevice
 from .models import Workshop as StormWorkshop
-from .models import DeviceLinkInfo
-from .models import DeviceDioSignal
-from .models import DCSConnection, DeviceAioSignal, LocalControlConnection
-from .models import Cabinet
+from .models import Device as StormDevice, PowerDevice, DeviceLinkInfo
+from .models import DCSCabinet,DCSConnection, DeviceDioSignal, DeviceAioSignal
+from .models import LocalControlCabinet, LocalControlCabinetConnection, LocalControlCabinetTerminal
 import xlrd
 import time
 
@@ -27,6 +25,13 @@ def load_int_cell(sheet, row, col):
     cell = sheet.cell(row, col)
     if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
         return ''
+    return int(cell.value)
+
+
+def load_null_blank_int_cell(sheet, row, col):
+    cell = sheet.cell(row, col)
+    if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
+        raise ValueError('Blank cell, col:%s' % (chr(col + ord('A'))))
     return int(cell.value)
 
 
@@ -86,7 +91,7 @@ def import_cabinet(sheet, row_index):
     else:
         workshop = None
     remark = load_cell(sheet, row_index, column('G'))
-    Cabinet.objects.update_or_create(code=code,
+    DCSCabinet.objects.update_or_create(code=code,
                                      usage=usage,
                                      dcs_controller=dcs_controller,
                                      specification=specification,
@@ -224,8 +229,26 @@ def import_dcs_connection(sheet, row_index):
         remarks=remarks,)
 
 
-def import_local_control_connection(sheet, row_index):
+def import_local_control_cabinet(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('B'))
+    name = load_cell(sheet, row_index, column('C'))
+    specification = load_cell(sheet, row_index, column('D'))
+    deployed_to = load_cell(sheet, row_index, column('E'))
+    terminal_count = load_cell(sheet, row_index, column('F'))
+    remark = load_cell(sheet, row_index, column('G'))
+    LocalControlCabinet.objects.update_or_create(
+        code=code,
+        name=name,
+        specification=specification,
+        deployed_to=deployed_to,
+        terminal_count=terminal_count,
+        remark=remark,)
+
+
+def import_local_control_connection(sheet, row_index):
+    code = load_cell(sheet, row_index, column('B'))
+    if code is None or len(code)==0:
+        return
     figure_number = load_cell(sheet, row_index, column('A'))
     name = load_cell(sheet, row_index, column('C'))
     instrument_type = load_cell(sheet, row_index, column('D'))
@@ -236,7 +259,7 @@ def import_local_control_connection(sheet, row_index):
     cable_backup_core = load_cell(sheet, row_index, column('N'))
     cable_direction = load_cell(sheet, row_index, column('O'))
     remark = load_cell(sheet, row_index, column('P'))
-    LocalControlConnection.objects.update_or_create(
+    LocalControlCabinetConnection.objects.update_or_create(
         code=code,
         figure_number=figure_number,
         name=name,
@@ -249,6 +272,32 @@ def import_local_control_connection(sheet, row_index):
         cable_direction=cable_direction,
         remark=remark,)
 
+
+current_local_control_connection = None
+
+
+def import_local_control_cabinet_terminal(sheet, row_index):
+    global current_local_control_connection
+    for_connection_code = load_cell(sheet, row_index, column('B'))
+    if len(for_connection_code)>0:
+        current_local_control_connection = LocalControlCabinetConnection.objects.get(code=for_connection_code)
+
+    cabinet_code = load_null_blank_cell(sheet, row_index, column('I'))
+    if len(cabinet_code)>0:
+        cabinet = LocalControlCabinet.objects.get(code=cabinet_code)
+    else:
+        cabinet = None
+    cabinet_terminal = load_null_blank_int_cell(sheet, row_index, column('J'))
+    cabinet_cable_number = load_cell(sheet, row_index, column('K'))
+    instrument_terminal = load_cell(sheet, row_index, column('G'))
+    instrument_cable_number = load_cell(sheet, row_index, column('H'))
+
+    LocalControlCabinetTerminal.objects.update_or_create(cabinet=cabinet,
+                                                         cabinet_terminal=cabinet_terminal,
+                                                         cabinet_cable_number=cabinet_cable_number,
+                                                         instrument_terminal=instrument_terminal,
+                                                         instrument_cable_number=instrument_cable_number,
+                                                         for_connection=current_local_control_connection)
 
 
 def import_device_link_info(sheet, row_index):
@@ -274,6 +323,7 @@ def do_import_data(file_path, sheet_index, row_offset, load_func):
 
     with xlrd.open_workbook(file_path) as file_data:
         sheet = file_data.sheet_by_index(sheet_index)
+        print sheet.name
         nrows = sheet.nrows
         for row_index in range(row_offset, nrows):
             try:
@@ -287,14 +337,11 @@ def do_import_data(file_path, sheet_index, row_offset, load_func):
 
 def import_device_data(file_path):
     do_import_data(file_path, 0, 2, import_device)
+    do_import_data(file_path, 0, 2, import_device_link_info)
 
 
 def import_cabinets_data(file_path):
     do_import_data(file_path, 0, 1, import_cabinet)
-
-
-def import_device_link_info_data(file_path):
-    do_import_data(file_path, 0, 2, import_device_link_info)
 
 
 def import_workshop_data(file_path):
@@ -310,22 +357,8 @@ def import_dcs_connection_data(file_path):
     do_import_data(file_path, 0, 2, import_dcs_connection)
 
 
-def import_local_control_connection_data(file_path):
-    begin_time = time.time()
-    imported_count = 0
-
-    with xlrd.open_workbook(file_path) as file_data:
-        sheet = file_data.sheet_by_index(0)
-        for merged_cell in sheet.merged_cells:
-            try:
-                rs, re, cs, ce = merged_cell
-                if cs == 0 and ce == 1 and re-rs > 1:
-                    import_local_control_connection(sheet, rs)
-                    imported_count += 1
-            except Exception as e:
-                print('Import error, row: %d, msg: "%s"' % (rs, e))
-
-    print ('Done, imported %d entries from %d rows, used time: %d seconds' %
-           (imported_count, sheet.nrows, time.time() - begin_time))
-
+def import_local_control_cabinet_data(file_path):
+    do_import_data(file_path, 0, 1, import_local_control_cabinet)
+    do_import_data(file_path, 1, 2, import_local_control_connection)
+    do_import_data(file_path, 1, 2, import_local_control_cabinet_terminal)
 

@@ -34,14 +34,12 @@ urlpatterns = [
     url(r'^logout/', staff.views.logout, name='logout'),
 
     url(r'^view/workshops/$', device.views.view_workshop_list, name='view_workshop_list'),
-    url(r'^view/workshops/import_workshops/$', device.views.import_workshops, name='import_workshops'),
-
     url(r'^view/devices/$', device.views.view_device_list, name='view_device_list_of_workshop'),
+
+    url(r'^view/workshops/import_workshops/$', device.views.import_workshops, name='import_workshops'),
     url(r'^view/devices/import_devices/$', device.views.import_devices, name='import_devices'),
-    url(r'^view/devices/import_import_cabinets/$', device.views.import_cabinets, name='import_devices'),
-    url(r'^view/devices/import_device_link_info/$', device.views.import_device_link_info, name='mport_device_link_info'),
-    url(r'^view/devices/import_signal/$', device.views.import_signal, name='import_signal'),
-    url(r'^view/devices/import_dcs_connection/$', device.views.import_dcs_connection, name='import_signal'),
-    url(r'^view/devices/import_local_control_connection/$', device.views.import_local_control_connection, name='import_signal'),
+    url(r'^view/devices/import_dcs_cabinets/$', device.views.import_dcs_cabinets, name='import_dcs_cabinets'),
+    url(r'^view/devices/import_local_control_cabinet/$', device.views.import_local_control_cabinet, name='import_local_control_cabinet'),
+
     url(r'^view/device/detail/', device.views.view_device, name='view_specified_device'),
 ]

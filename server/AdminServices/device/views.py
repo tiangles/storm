@@ -52,30 +52,14 @@ def import_devices(request):
 
 
 @login_required
-def import_cabinets(request):
+def import_dcs_cabinets(request):
     db_importer.import_cabinets_data('/media/btian/workspace/Storm_Doc/V3.0/01-devices-2.xlsx')
-    return HttpResponseRedirect("/view/devices/")
-
-
-@login_required
-def import_device_link_info(request):
-    db_importer.import_device_link_info_data('/media/btian/workspace/Storm_Doc/V3.0/01-devices-1.xlsx')
-    return HttpResponseRedirect("/view/devices/")
-
-
-@login_required
-def import_signal(request):
+    db_importer.import_dcs_connection_data('/media/btian/workspace/Storm_Doc/V3.0/03-connections-DCS.xlsx')
     db_importer.import_signal_data('/media/btian/workspace/Storm_Doc/V3.0/02-signals.xlsx')
     return HttpResponseRedirect("/view/devices/")
 
 
 @login_required
-def import_dcs_connection(request):
-    db_importer.import_dcs_connection_data('/media/btian/workspace/Storm_Doc/V3.0/03-connections-DCS.xlsx')
-    return HttpResponseRedirect("/view/devices/")
-
-
-@login_required
-def import_local_control_connection(request):
-    db_importer.import_local_control_connection_data('/media/btian/workspace/Storm_Doc/V3.0/03-connections-local.xlsx')
+def import_local_control_cabinet(request):
+    db_importer.import_local_control_cabinet_data('/media/btian/workspace/Storm_Doc/V3.0/03-connections-local.xlsx')
     return HttpResponseRedirect("/view/devices/")
