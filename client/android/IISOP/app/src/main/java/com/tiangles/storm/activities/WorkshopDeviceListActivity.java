@@ -3,33 +3,36 @@ package com.tiangles.storm.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.database.dao.Cabinet;
+import com.tiangles.storm.database.dao.DCSCabinet;
+import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.device.DeviceActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class WorkshopDeviceListActivity extends AppCompatActivity {
-    @BindView(R.id.workshop_device_list)
-    ListView mDeviceListView;
+    @BindView(R.id.find_keyword) EditText mInputBox;
+    @BindView(R.id.workshop_device_list) ListView mDeviceListView;
     private List<ListItemContent> listItems = new ArrayList<>();
     private DeviceListAdaptor listAdaptor;
+    StormWorkshop workshop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,26 +50,53 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         String workshopCode = intent.getStringExtra("workshop_code");
-        StormWorkshop workshop = StormApp.getDBManager().getWorkshop(workshopCode);
-        init(workshop);
+        workshop = StormApp.getDBManager().getWorkshop(workshopCode);
+        init(null);
+
+        mInputBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String keyword = s.toString();
+                if(keyword.isEmpty()){
+                    init(null);
+                } else {
+                    init("%"+keyword+"%");
+                }
+            }
+        });
+
     }
 
-    private void init(StormWorkshop workshop){
-        List<StormDevice> devices = StormApp.getDBManager().getDeviceFromWorkshop(workshop);
-        List<Cabinet> cabinets = StormApp.getDBManager().getCabinetsForWorkshop(workshop);
+    private void init(String keyword){
+        List<StormDevice> devices = StormApp.getDBManager().getDeviceFromWorkshop(workshop, keyword);
+        List<DCSCabinet> dcsCabinets = StormApp.getDBManager().getDCSCabinetsForWorkshop(workshop, keyword);
+        List<LocalControlCabinet> localControlCabinets = StormApp.getDBManager().getStormDB().getLocalControlCabinetForWorkshop(workshop, keyword);
 
-        createDeviceListAdaptor(devices, cabinets);
+        createDeviceListAdaptor(devices, dcsCabinets, localControlCabinets);
     }
 
-    private void createDeviceListAdaptor(List<StormDevice> devices, List<Cabinet> cabinets) {
+    private void createDeviceListAdaptor(List<StormDevice> devices, List<DCSCabinet> dcsCabinets, List<LocalControlCabinet> localControlCabinets) {
         listItems.clear();
         for(StormDevice device: devices) {
             if(device != null) {
                 listItems.add(new ListItemContent(device.getCode(), device.getName()));
             }
         }
-        for(Cabinet cabinet: cabinets) {
-            listItems.add(new ListItemContent(cabinet.getCode(), cabinet.getUsage()));
+
+        for(DCSCabinet dcsCabinet : dcsCabinets) {
+            listItems.add(new ListItemContent(dcsCabinet.getCode(), dcsCabinet.getUsage()));
+        }
+
+        for(LocalControlCabinet localControlCabinet: localControlCabinets){
+            listItems.add(new ListItemContent(localControlCabinet.getCode(), localControlCabinet.getName()));
         }
 
         listAdaptor = new DeviceListAdaptor();

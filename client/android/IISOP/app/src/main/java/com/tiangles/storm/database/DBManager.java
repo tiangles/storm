@@ -1,10 +1,9 @@
 package com.tiangles.storm.database;
 
-import android.os.Environment;
 import android.util.Log;
 
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.database.dao.Cabinet;
+import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
@@ -52,8 +51,8 @@ public class DBManager {
         return getStormDB().getDevice(code);
     }
 
-    public Cabinet getCabinet(String code) {
-        return getStormDB().getCabinet(code);
+    public DCSCabinet getDCSCabinet(String code) {
+        return getStormDB().getDCSCabinet(code);
     }
 
     public List<StormDevice> getLeftDevice(StormDevice device) {
@@ -92,16 +91,16 @@ public class DBManager {
         return getStormDB().getWorkshopList(keyword, offset, limit);
     }
 
-    public List<Cabinet> getCabinetsForWorkshop(StormWorkshop workshop) {
-        return getStormDB().getCabinetsForWorkshop(workshop.getCode());
+    public List<DCSCabinet> getDCSCabinetsForWorkshop(StormWorkshop workshop, String keyword) {
+        return getStormDB().getDCSCabinetsForWorkshop(workshop.getCode(), keyword);
     }
 
-        public StormWorkshop getWorkshop(String code){
+    public StormWorkshop getWorkshop(String code){
         return getStormDB().getWorkshop(code);
     }
 
-    public List<StormDevice> getDeviceFromWorkshop(StormWorkshop workshop){
-        return getStormDB().getDeviceFromWorkshop(workshop.getCode());
+    public List<StormDevice> getDeviceFromWorkshop(StormWorkshop workshop, String keyword){
+        return getStormDB().getDeviceFromWorkshop(workshop.getCode(), keyword);
     }
 
     public PowerDevice getPowerDevice(String code){
@@ -138,8 +137,8 @@ public class DBManager {
         return getStormDB().getDCSConnection(connectionCode);
     }
 
-    public List<DCSConnection> getDCSConnectionsFromCabinetFace(Cabinet cabinet, String face) {
-        return getStormDB().getDCSConnectionsFromCabinetFace(cabinet, face);
+    public List<DCSConnection> getDCSConnectionsFromCabinetFace(DCSCabinet dcsCabinet, String face) {
+        return getStormDB().getDCSConnectionsFromCabinetFace(dcsCabinet, face);
     }
 
     public DeviceDioSignal getDeviceDioSignal(String code){
@@ -149,6 +148,7 @@ public class DBManager {
     public DeviceAioSignal getDeviceAioSignal(String code){
         return getStormDB().getDeviceAioSignal(code);
     }
+
 
     public void addObserver(DBManager.DBManagerObserver observer) {
         mDeviceManagerObservers.add(observer);
@@ -207,10 +207,9 @@ public class DBManager {
     }
 
     private String databaseFilePath( ) {
-//        File dir = StormApp.getContext().getFilesDir();
-        File dir =  Environment.getExternalStorageDirectory();
-        String path = dir.getAbsolutePath() + "/storm.db";
-        return path;
+        File dir = StormApp.getContext().getFilesDir();
+//        File dir =  Environment.getExternalStorageDirectory();
+        return dir.getAbsolutePath() + "/storm.db";
     }
 
     private void runHttpRequest(final String version, final String url) {

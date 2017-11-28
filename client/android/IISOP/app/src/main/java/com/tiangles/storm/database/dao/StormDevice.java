@@ -10,9 +10,6 @@ import com.tiangles.greendao.gen.StormDeviceDao;
 
 @Entity(
         nameInDb = "storm_devices",
-        // Flag if the DAO should create the database table (default is true).
-        // Set this to false, if you have multiple entities mapping to one table,
-        // or the table creation is done outside of greenDAO.
         createInDb = false
 )
 public class StormDevice {

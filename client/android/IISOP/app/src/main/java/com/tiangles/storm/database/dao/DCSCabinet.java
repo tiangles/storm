@@ -9,10 +9,10 @@ import com.tiangles.greendao.gen.StormWorkshopDao;
 import com.tiangles.greendao.gen.StormDeviceDao;
 
 @Entity(
-        nameInDb = "cabinets",
+        nameInDb = "dcs_cabinets",
         createInDb = false
 )
-public class Cabinet {
+public class DCSCabinet {
     @Id
     String code;
     String usage;
@@ -20,8 +20,8 @@ public class Cabinet {
     String maintenance_record;
     String workshop_id;
     String remark;
-@Generated(hash = 1350906189)
-public Cabinet(String code, String usage, String specification,
+@Generated(hash = 1689908628)
+public DCSCabinet(String code, String usage, String specification,
         String maintenance_record, String workshop_id, String remark) {
     this.code = code;
     this.usage = usage;
@@ -30,8 +30,8 @@ public Cabinet(String code, String usage, String specification,
     this.workshop_id = workshop_id;
     this.remark = remark;
 }
-@Generated(hash = 456667810)
-public Cabinet() {
+@Generated(hash = 128211835)
+public DCSCabinet() {
 }
 public String getCode() {
     return this.code;

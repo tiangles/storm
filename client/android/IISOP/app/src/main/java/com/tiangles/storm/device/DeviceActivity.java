@@ -8,14 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.database.dao.Cabinet;
+import com.tiangles.storm.database.dao.DCSCabinet;
+import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 
 public class DeviceActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     private String mDeviceCode;
     private DeviceInfoFragment mDeviceFragment;
-    private CabinetFragment mCabinetFragment;
+    private DCSCabinetFragment mDCSCabinetFragment;
+    private LocalControlCabinetFragment mLocalControlCabinetFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +34,15 @@ public class DeviceActivity extends AppCompatActivity {
             return;
         }
 
-        Cabinet cabinet = StormApp.getDBManager().getCabinet(mDeviceCode);
-        if(cabinet != null) {
-            showCabinet(cabinet);
+        DCSCabinet dcsCabinet = StormApp.getDBManager().getDCSCabinet(mDeviceCode);
+        if(dcsCabinet != null) {
+            showDCSCabinet(dcsCabinet);
+            return;
+        }
+
+        LocalControlCabinet localControlCabinet = StormApp.getDBManager().getStormDB().getLocalControlCabinet(mDeviceCode);
+        if(localControlCabinet != null) {
+            showLocalControlCabinet(localControlCabinet);
             return;
         }
     }
@@ -54,17 +62,32 @@ public class DeviceActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private void showCabinet(Cabinet cabinet){
+    private void showDCSCabinet(DCSCabinet dcsCabinet){
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        if (mCabinetFragment == null) {
-            mCabinetFragment = new CabinetFragment();
+        if (mDCSCabinetFragment == null) {
+            mDCSCabinetFragment = new DCSCabinetFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("device_code", dcsCabinet.getCode());
+            mDCSCabinetFragment.setArguments(bundle);
+            mDCSCabinetFragment.setCabinet(dcsCabinet);
+            transaction.add(R.id.content, mDCSCabinetFragment);
+        } else {
+            transaction.show(mDCSCabinetFragment);
+        }
+        transaction.commit();
+    }
+
+    private void showLocalControlCabinet(LocalControlCabinet cabinet){
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        if (mLocalControlCabinetFragment == null) {
+            mLocalControlCabinetFragment = new LocalControlCabinetFragment();
             Bundle bundle = new Bundle();
             bundle.putString("device_code", cabinet.getCode());
-            mCabinetFragment.setArguments(bundle);
-            mCabinetFragment.setCabinet(cabinet);
-            transaction.add(R.id.content, mCabinetFragment);
+            mLocalControlCabinetFragment.setArguments(bundle);
+            mLocalControlCabinetFragment.setCabinet(cabinet);
+            transaction.add(R.id.content, mLocalControlCabinetFragment);
         } else {
-            transaction.show(mCabinetFragment);
+            transaction.show(mLocalControlCabinetFragment);
         }
         transaction.commit();
     }

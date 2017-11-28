@@ -45,8 +45,7 @@
             android:label="柜柜柜" />
         <activity
             android:name=".device.DeviceActivity"
-            android:label="@string/title_activity_device"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_device"/>
     </application>
 
 </manifest>

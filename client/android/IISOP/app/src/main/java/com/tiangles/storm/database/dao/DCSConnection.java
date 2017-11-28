@@ -5,7 +5,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity(
-        nameInDb = "device_dcs_connections",
+        nameInDb = "dcs_connections",
         createInDb = false
 )
 public class DCSConnection {

@@ -2,22 +2,24 @@ package com.tiangles.storm.database;
 
 import android.content.Context;
 
-import com.tiangles.greendao.gen.CabinetDao;
+import com.tiangles.greendao.gen.DCSCabinetDao;
 import com.tiangles.greendao.gen.DCSConnectionDao;
 import com.tiangles.greendao.gen.DaoMaster;
 import com.tiangles.greendao.gen.DaoSession;
 import com.tiangles.greendao.gen.DeviceAioSignalDao;
 import com.tiangles.greendao.gen.DeviceDioSignalDao;
 import com.tiangles.greendao.gen.DeviceLinkInfoDao;
+import com.tiangles.greendao.gen.LocalControlCabinetDao;
 import com.tiangles.greendao.gen.PowerDeviceDao;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.greendao.gen.StormWorkshopDao;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.database.dao.Cabinet;
+import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
 import com.tiangles.storm.database.dao.DeviceLinkInfo;
+import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.PowerDevice;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
@@ -35,7 +37,8 @@ public class StormDB {
     private DeviceAioSignalDao deviceAioSignalDao;
     private DCSConnectionDao dcsConnectionDao;
     private PowerDeviceDao powerDeviceDao;
-    CabinetDao cabinetDao;
+    private DCSCabinetDao dcsCabinetDao;
+    private LocalControlCabinetDao localControlCabinetDao;
     private String dbPath;
 
     public StormDB(Context context, String dbPath) {
@@ -72,15 +75,22 @@ public class StormDB {
 
     }
 
-    public List<StormDevice> getDeviceFromWorkshop(String workshopCode){
+    public List<StormDevice> getDeviceFromWorkshop(String workshopCode, String keyword){
+        List<StormDevice> devices = null;
         if(workshopCode != null) {
-            List<StormDevice> devices = getStormDeviceDao().queryBuilder()
-                    .where(StormDeviceDao.Properties.Workshop_id.eq(workshopCode))
-                    .build()
-                    .list();
-            return devices;
+            if(keyword == null || keyword.isEmpty()){
+                devices = getStormDeviceDao().queryBuilder()
+                        .where(StormDeviceDao.Properties.Workshop_id.eq(workshopCode))
+                        .build()
+                        .list();
+            } else {
+                QueryBuilder qb = getStormDeviceDao().queryBuilder();
+                qb = qb.where(StormDeviceDao.Properties.Workshop_id.eq(workshopCode),
+                        qb.or(StormDeviceDao.Properties.Code.like(keyword), StormDeviceDao.Properties.Name.like(keyword)));
+                devices = qb.build().list();
+            }
         }
-        return null;
+        return devices;
     }
 
     public List<DeviceDioSignal> getDioSignalsForDevice(String deviceCode){
@@ -132,33 +142,73 @@ public class StormDB {
         return null;
     }
 
-    public List<DCSConnection> getDCSConnectionsFromCabinetFace(Cabinet cabinet, String face) {
+    public List<DCSConnection> getDCSConnectionsFromCabinetFace(DCSCabinet dcsCabinet, String face) {
         return getDcsConnectionDao().queryBuilder()
-                .where(DCSConnectionDao.Properties.Dcs_cabinet_number.eq(cabinet.getCode()),
+                .where(DCSConnectionDao.Properties.Dcs_cabinet_number.eq(dcsCabinet.getCode()),
                        DCSConnectionDao.Properties.Face_name.eq(face))
                 .build()
                 .list();
     }
 
-    public List<Cabinet> getCabinetsForWorkshop(String workshopCode) {
-        return getCabinetDao().queryBuilder()
-                .where(CabinetDao.Properties.Workshop_id.eq(workshopCode))
-                .build()
-                .list();
-
+    public List<DCSCabinet> getDCSCabinetsForWorkshop(String workshopCode, String keyword) {
+        List<DCSCabinet> result = null;
+        if(workshopCode != null && !workshopCode.isEmpty()) {
+            if(keyword == null || keyword.isEmpty()){
+                result = getDCSCabinetDao().queryBuilder()
+                        .where(DCSCabinetDao.Properties.Workshop_id.eq(workshopCode))
+                        .build()
+                        .list();
+            } else {
+                QueryBuilder qb = getDCSCabinetDao().queryBuilder();
+                qb = qb.where(DCSCabinetDao.Properties.Workshop_id.eq(workshopCode), qb.or(DCSCabinetDao.Properties.Code.like(keyword), DCSCabinetDao.Properties.Usage.like(keyword)));
+                result = qb.build().list();
+            }
+        }
+        return result;
     }
 
-    public Cabinet getCabinet(String code) {
-        List<Cabinet>  cabinets = getCabinetDao().queryBuilder()
-                .where(CabinetDao.Properties.Code.eq(code))
-                .build()
-                .list();
-        if(cabinets.size()>0) {
-            return cabinets.get(0);
+    public DCSCabinet getDCSCabinet(String code) {
+        if(code != null && !code.isEmpty()) {
+            List<DCSCabinet> dcsCabinets = getDCSCabinetDao().queryBuilder()
+                    .where(DCSCabinetDao.Properties.Code.eq(code))
+                    .build()
+                    .list();
+            if(dcsCabinets.size()>0) {
+                return dcsCabinets.get(0);
+            }
         }
         return null;
     }
 
+
+    public LocalControlCabinet getLocalControlCabinet(String code){
+        if(code != null && !code.isEmpty()) {
+            List<LocalControlCabinet> localControlCabinets = getLocalControlCabinetDao().queryBuilder()
+                    .where(LocalControlCabinetDao.Properties.Code.eq(code))
+                    .build()
+                    .list();
+            if(localControlCabinets.size()>0) {
+                return localControlCabinets.get(0);
+            }
+        }
+        return null;
+    }
+
+    public List<LocalControlCabinet> getLocalControlCabinetForWorkshop(StormWorkshop workshop, String keyword){
+        List<LocalControlCabinet> result = null;
+        if(workshop!=null){
+            if(keyword == null || keyword.isEmpty()){
+                result = getLocalControlCabinetDao().queryBuilder()
+                        .build()
+                        .list();
+            } else {
+                QueryBuilder qb = getLocalControlCabinetDao().queryBuilder();
+                qb = qb.where(qb.or(LocalControlCabinetDao.Properties.Code.like(keyword), LocalControlCabinetDao.Properties.Name.like(keyword)));
+                result = qb.build().list();
+            }
+        }
+        return result;
+    }
 
     public void commitDeviceChange(StormDevice device){
         if(device != null){
@@ -276,11 +326,18 @@ public class StormDB {
         return powerDeviceDao;
     }
 
-    private CabinetDao getCabinetDao(){
-        if(cabinetDao == null) {
-            cabinetDao = getDaoSession().getCabinetDao();
+    private DCSCabinetDao getDCSCabinetDao(){
+        if(dcsCabinetDao == null) {
+            dcsCabinetDao = getDaoSession().getDCSCabinetDao();
         }
-        return cabinetDao;
+        return dcsCabinetDao;
+    }
+
+    private LocalControlCabinetDao getLocalControlCabinetDao(){
+        if(localControlCabinetDao == null) {
+            localControlCabinetDao = getDaoSession().getLocalControlCabinetDao();
+        }
+        return localControlCabinetDao;
     }
     private DaoSession getDaoSession(){
         if(daoSession == null) {
