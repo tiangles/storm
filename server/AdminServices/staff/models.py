@@ -10,3 +10,10 @@ class StaffProfile(models.Model) :
     password = models.CharField(max_length=255)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+
+
+class DatabaseMeta(models.Model):
+    version = models.IntegerField(verbose_name='版本')
+
+    class Meta:
+        db_table = 'database_meta'

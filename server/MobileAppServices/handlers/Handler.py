@@ -3,7 +3,7 @@ import random
 import time
 from models.user import User
 from models.event import UserEvent
-from models.device import Device
+from models.device import Device, DatabaseMeta
 from models.workshop import Workshop
 from datetime import *
 import socket
@@ -130,9 +130,11 @@ def get_host_ip():
 
 
 def handle_sync_database(skt, message):
+    metas = DatabaseMeta.select()
+    assert len(metas)>0
     return 0, {
         'url': 'http://%s:8128/static/storm_device.sqlite3'%(get_host_ip(), ),
-        'db_version': '21.0'
+        'db_version': str(metas[0].version)
     }
 
 

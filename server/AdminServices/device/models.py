@@ -178,3 +178,4 @@ class LocalControlCabinetTerminal(models.Model):
 
     class Meta:
         db_table = 'local_control_cabinet_terminals'
+

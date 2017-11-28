@@ -22,3 +22,11 @@ class Device(Model):
     class Meta:
         database = db
         db_table = 'storm_devices'
+
+
+class DatabaseMeta(Model):
+    version = IntegerField(verbose_name='版本')
+
+    class Meta:
+        database = db
+        db_table = 'database_meta'

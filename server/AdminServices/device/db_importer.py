@@ -2,6 +2,7 @@ from .models import Workshop as StormWorkshop
 from .models import Device as StormDevice, PowerDevice, DeviceLinkInfo
 from .models import DCSCabinet,DCSConnection, DeviceDioSignal, DeviceAioSignal
 from .models import LocalControlCabinet, LocalControlCabinetConnection, LocalControlCabinetTerminal
+from staff.models import DatabaseMeta
 import xlrd
 import time
 
@@ -338,27 +339,44 @@ def do_import_data(file_path, sheet_index, row_offset, load_func):
 def import_device_data(file_path):
     do_import_data(file_path, 0, 2, import_device)
     do_import_data(file_path, 0, 2, import_device_link_info)
+    update_db_meta()
 
 
 def import_cabinets_data(file_path):
     do_import_data(file_path, 0, 1, import_cabinet)
+    update_db_meta()
 
 
 def import_workshop_data(file_path):
     do_import_data(file_path, 0, 1, import_workshop)
+    update_db_meta()
 
 
 def import_signal_data(file_path):
     do_import_data(file_path, 0, 1, import_aio_signal)
     do_import_data(file_path, 1, 1, import_dio_signal)
+    update_db_meta()
 
 
 def import_dcs_connection_data(file_path):
     do_import_data(file_path, 0, 2, import_dcs_connection)
+    update_db_meta()
 
 
 def import_local_control_cabinet_data(file_path):
     do_import_data(file_path, 0, 1, import_local_control_cabinet)
     do_import_data(file_path, 1, 2, import_local_control_connection)
     do_import_data(file_path, 1, 2, import_local_control_cabinet_terminal)
+    update_db_meta()
 
+
+def update_db_meta():
+    db_metas = DatabaseMeta.objects.all()
+    if len(db_metas) == 0:
+        meta = DatabaseMeta()
+        meta.version = 1
+    else:
+        meta = db_metas[0]
+        meta.version = meta.version+1
+
+    meta.save();
