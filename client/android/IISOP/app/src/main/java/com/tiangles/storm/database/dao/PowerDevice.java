@@ -7,7 +7,7 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
 
 @Entity(
-        nameInDb = "power_devices",
+        nameInDb = "storm_power_devices",
         createInDb = false
 )
 public class PowerDevice {

@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
+import com.tiangles.storm.database.dao.LocalControlCabinetConnection;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,5 +72,14 @@ public class LocalControlCabinetFragment extends Fragment {
     private void showCabinet(LocalControlCabinet cabinet){
         mCabinetCodeTextView.setText(cabinet.getCode());
         mCabinetNameView.setText(cabinet.getName());
+        List<LocalControlCabinetConnection> connections = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnectionForCabinet(cabinet);
+        StringBuilder sb = new StringBuilder();
+        for(LocalControlCabinetConnection connection: connections) {
+            sb.append(connection.getCode());
+            sb.append(" ");
+            sb.append(connection.getName());
+            sb.append("\n");
+        }
+        mCabinetSignalsView.setText(sb.toString());
     }
 }

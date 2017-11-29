@@ -16,15 +16,20 @@ public class LocalControlCabinet {
     String deployed_to;
     int terminal_count;
     String remark;
-@Generated(hash = 1079570527)
+    String maintenance_record;
+    String workshop_id;
+@Generated(hash = 25385683)
 public LocalControlCabinet(String code, String name, String specification,
-        String deployed_to, int terminal_count, String remark) {
+        String deployed_to, int terminal_count, String remark,
+        String maintenance_record, String workshop_id) {
     this.code = code;
     this.name = name;
     this.specification = specification;
     this.deployed_to = deployed_to;
     this.terminal_count = terminal_count;
     this.remark = remark;
+    this.maintenance_record = maintenance_record;
+    this.workshop_id = workshop_id;
 }
 @Generated(hash = 2076969631)
 public LocalControlCabinet() {
@@ -64,5 +69,17 @@ public String getRemark() {
 }
 public void setRemark(String remark) {
     this.remark = remark;
+}
+public String getMaintenance_record() {
+    return this.maintenance_record;
+}
+public void setMaintenance_record(String maintenance_record) {
+    this.maintenance_record = maintenance_record;
+}
+public String getWorkshop_id() {
+    return this.workshop_id;
+}
+public void setWorkshop_id(String workshop_id) {
+    this.workshop_id = workshop_id;
 }
 }

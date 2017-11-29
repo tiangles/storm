@@ -25,7 +25,7 @@ def load_cell(sheet, row, col):
 def load_int_cell(sheet, row, col):
     cell = sheet.cell(row, col)
     if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
-        return ''
+        return None
     return int(cell.value)
 
 
@@ -234,16 +234,25 @@ def import_local_control_cabinet(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('B'))
     name = load_cell(sheet, row_index, column('C'))
     specification = load_cell(sheet, row_index, column('D'))
-    deployed_to = load_cell(sheet, row_index, column('E'))
-    terminal_count = load_cell(sheet, row_index, column('F'))
-    remark = load_cell(sheet, row_index, column('G'))
+    maintenance_record = load_cell(sheet, row_index, column('E'))
+    workshop_code = load_cell(sheet, row_index, column('F'))
+    terminal_count = load_int_cell(sheet, row_index, column('H'))
+    remark = load_cell(sheet, row_index, column('I'))
+    deployed_to = load_cell(sheet, row_index, column('J'))
+    if len(workshop_code) > 0:
+        workshop = StormWorkshop.objects.get(code=workshop_code)
+    else:
+        workshop = None
+
     LocalControlCabinet.objects.update_or_create(
         code=code,
         name=name,
         specification=specification,
         deployed_to=deployed_to,
         terminal_count=terminal_count,
-        remark=remark,)
+        remark=remark,
+        maintenance_record=maintenance_record,
+        workshop=workshop)
 
 
 def import_local_control_connection(sheet, row_index):
@@ -260,6 +269,12 @@ def import_local_control_connection(sheet, row_index):
     cable_backup_core = load_cell(sheet, row_index, column('N'))
     cable_direction = load_cell(sheet, row_index, column('O'))
     remark = load_cell(sheet, row_index, column('P'))
+    cabinet_code = load_cell(sheet, row_index, column('I'))
+    if len(cabinet_code)>0:
+        cabinet = LocalControlCabinet.objects.get(code=cabinet_code)
+    else:
+        cabinet = None
+
     LocalControlCabinetConnection.objects.update_or_create(
         code=code,
         figure_number=figure_number,
@@ -271,7 +286,8 @@ def import_local_control_connection(sheet, row_index):
         cable_model=cable_model,
         cable_backup_core=cable_backup_core,
         cable_direction=cable_direction,
-        remark=remark,)
+        remark=remark,
+        cabinet=cabinet,)
 
 
 current_local_control_connection = None
@@ -283,12 +299,12 @@ def import_local_control_cabinet_terminal(sheet, row_index):
     if len(for_connection_code)>0:
         current_local_control_connection = LocalControlCabinetConnection.objects.get(code=for_connection_code)
 
-    cabinet_code = load_null_blank_cell(sheet, row_index, column('I'))
+    cabinet_code = load_cell(sheet, row_index, column('I'))
     if len(cabinet_code)>0:
         cabinet = LocalControlCabinet.objects.get(code=cabinet_code)
     else:
         cabinet = None
-    cabinet_terminal = load_null_blank_int_cell(sheet, row_index, column('J'))
+    cabinet_terminal = load_null_blank_cell(sheet, row_index, column('J'))
     cabinet_cable_number = load_cell(sheet, row_index, column('K'))
     instrument_terminal = load_cell(sheet, row_index, column('G'))
     instrument_cable_number = load_cell(sheet, row_index, column('H'))
@@ -324,14 +340,13 @@ def do_import_data(file_path, sheet_index, row_offset, load_func):
 
     with xlrd.open_workbook(file_path) as file_data:
         sheet = file_data.sheet_by_index(sheet_index)
-        print sheet.name
         nrows = sheet.nrows
         for row_index in range(row_offset, nrows):
             try:
                 load_func(sheet, row_index)
                 imported_count += 1
             except Exception as e:
-                print('Import error, row: %d, msg: "%s"' % (row_index, e))
+                print('Import error, file:%s, sheet:%s, row: %d, msg: "%s"' % (file_path, sheet.name, row_index+1, e))
     print ('Done, imported %d entries from %d rows, used time: %d seconds' %
            (imported_count, nrows-row_offset, time.time()-begin_time))
 

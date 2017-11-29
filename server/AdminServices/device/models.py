@@ -60,7 +60,7 @@ class DCSCabinet(models.Model):
     usage = models.CharField(max_length=128, verbose_name='用途')
     dcs_controller = models.CharField(max_length=12, verbose_name='DCS控制器')
     specification = models.CharField(max_length=128, verbose_name='型式规范')
-    maintenance_record = models.CharField(max_length=128, verbose_name='型式规范')
+    maintenance_record = models.CharField(max_length=128, verbose_name='维护记录')
     workshop = models.ForeignKey(Workshop, on_delete=models.SET_NULL, null=True)
     remark = models.CharField(max_length=64, verbose_name='备注')
 
@@ -143,8 +143,10 @@ class LocalControlCabinet(models.Model):
     code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='就地柜盒编码')
     name = models.CharField(max_length=128, verbose_name='就地柜盒名称')
     specification = models.CharField(max_length=128, verbose_name='就地柜盒型式规范')
+    maintenance_record = models.CharField(max_length=128, verbose_name='维护记录')
+    workshop = models.ForeignKey(to=Workshop, on_delete=models.SET_NULL, null=True, verbose_name='所在车间')
     deployed_to = models.CharField(max_length=128, verbose_name='安装单位名称')
-    terminal_count = models.IntegerField(verbose_name='柜内端子数量')
+    terminal_count = models.IntegerField(null=True, verbose_name='柜内端子数量')
     remark = models.CharField(max_length=128, verbose_name='备注')
 
     class Meta:
@@ -163,19 +165,18 @@ class LocalControlCabinetConnection(models.Model):
     cable_backup_core = models.CharField(max_length=32, verbose_name='备用芯数')
     cable_direction = models.CharField(max_length=128, verbose_name='电缆去向')
     remark = models.CharField(max_length=128, verbose_name='备注')
-
+    cabinet = models.ForeignKey(LocalControlCabinet, on_delete=models.SET_NULL, null=True, verbose_name='接线盒')
     class Meta:
         db_table = 'local_control_cabinet_connections'
 
 
 class LocalControlCabinetTerminal(models.Model):
     cabinet = models.ForeignKey(LocalControlCabinet, on_delete=models.SET_NULL, null=True,  verbose_name='接线盒设备代号')
-    cabinet_terminal = models.IntegerField(verbose_name='接线盒端子')
+    cabinet_terminal = models.CharField(max_length=12, verbose_name='接线盒端子')
     cabinet_cable_number = models.CharField(max_length=16, verbose_name='线号')
     instrument_terminal = models.CharField(max_length=2, verbose_name='仪表端子')
     instrument_cable_number = models.CharField(max_length=2, verbose_name='线号')
     for_connection = models.ForeignKey(to=LocalControlCabinetConnection, on_delete=models.SET_NULL, null=True,  verbose_name='测点编号')
-
     class Meta:
         db_table = 'local_control_cabinet_terminals'
 
