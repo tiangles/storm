@@ -1,12 +1,10 @@
 package com.tiangles.storm.legend.model;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 
-/**
- * Created by btian on 11/15/17.
- */
-
-public class Ellipse {
+public class Ellipse extends Model{
     public Ellipse(int cx, int cy, int rx, int ry){
         this.cx = cx;
         this.cy = cy;
@@ -17,4 +15,9 @@ public class Ellipse {
     public int cy;
     public int rx;
     public int ry;
+
+    @Override
+    public void draw(Canvas canvas, Paint paint) {
+        canvas.drawOval(cx-rx/2, cy-ry/2, cx+ry/2, cy+ry/2, paint);
+    }
 }

@@ -2,9 +2,7 @@
 <device_legend>
     <device name="电动风机">
         <meta>
-            <offset x="160" y="160" />
             <size width="320" height="320"/>
-            <base_length>340</base_length>
             <name_offset>90</name_offset>
             <code_offset>130</code_offset>
         </meta>
@@ -23,9 +21,7 @@
     </device>
     <device name="电动阀门">
         <meta>
-            <offset x="160" y="160" />
-            <size width="80" height="60"/>
-            <base_length>60</base_length>
+            <size width="128" height="128"/>
             <name_offset>90</name_offset>
             <code_offset>130</code_offset>
         </meta>
@@ -38,28 +34,43 @@
         <line y2="68" x2="32" y1="40" x1="32" />
     </device>
     <device name="电动调节阀门">
+        <meta>
+            <size width="128" height="128"/>
+            <name_offset>90</name_offset>
+            <code_offset>130</code_offset>
+        </meta>
         <rect height="32" width="64" y="52" x="0" STROKE-WIDTH="1.5" STROKE="#000" FILL="#fff" id="svg_1"/>
         <line y2="52" x2="64" y1="84" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_2"/>
         <line y2="84" x2="64" y1="52" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_3"/>
         <ellipse ry="20" rx="20" cy="20" cx="32" STROKE-WIDTH="1.5" STROKE="#000" FILL="#fff" id="svg_4"/>
-        <text xml:space="preserve" y="31.5037" x="18.8518" TEXT-ANCHOR="start" STROKE-WIDTH="0" STROKE="#000" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_5">M</text>
+        <text y="31.5037" x="18.8518" TEXT-ANCHOR="start" STROKE-WIDTH="0" STROKE="#000" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_5">M</text>
         <line y2="52" x2="32" y1="40" x1="32" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_6"/>
     </device>
     <device name="电动蝶阀">
+        <meta>
+            <size width="128" height="128"/>
+            <name_offset>90</name_offset>
+            <code_offset>130</code_offset>
+        </meta>
         <rect height="32" width="64" y="52" x="0" STROKE-WIDTH="1.5" STROKE="#000" FILL="#fff" id="svg_1"/>
         <line y2="52" x2="64" y1="84" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_2"/>
         <ellipse ry="20" rx="20" cy="20" cx="32" STROKE-WIDTH="1.5" STROKE="#000" FILL="#fff" id="svg_4"/>
-        <text xml:space="preserve" y="31.5037" x="18.8518" TEXT-ANCHOR="start" STROKE-WIDTH="0" STROKE="#000" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_5">M</text>
+        <text y="31.5037" x="18.8518" TEXT-ANCHOR="start" STROKE-WIDTH="0" STROKE="#000" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_5">M</text>
         <line y2="52" x2="32" y1="40" x1="32" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_6"/>
         <ellipse ry="2" rx="2" cy="68" cx="32" STROKE-WIDTH="1.5" stroke-opacity="null" STROKE="#000" fill-opacity="null" FILL="#fff" id="svg_9"/>
     </device>
     <device name="电磁阀">
+        <meta>
+            <size width="128" height="128"/>
+            <name_offset>90</name_offset>
+            <code_offset>130</code_offset>
+        </meta>
         <line y2="52" x2="64" y1="84" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_1"/>
         <line y2="84" x2="64" y1="52" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_2"/>
         <line y2="84" x2="0" y1="52" x1="0" STROKE-WIDTH="1.5" stroke-opacity="null" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" fill-opacity="null" FILL="none" id="svg_3"/>
         <line y2="84" x2="64" y1="52" x1="64" STROKE-WIDTH="1.5" stroke-opacity="null" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" fill-opacity="null" FILL="none" id="svg_4"/>
         <rect height="38" width="28" y="0" x="18" STROKE-WIDTH="1.5" stroke-opacity="null" STROKE="#000" fill-opacity="null" FILL="none" id="svg_5"/>
-        <text xml:space="preserve" y="30.1383" x="21.5" TEXT-ANCHOR="start" STROKE-WIDTH="0" stroke-opacity="null" STROKE="#000" fill-opacity="null" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_6">S</text>
+        <text y="30.1383" x="21.5" TEXT-ANCHOR="start" STROKE-WIDTH="0" stroke-opacity="null" STROKE="#000" fill-opacity="null" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_6">S</text>
         <line y2="68" x2="32" y1="38" x1="32" STROKE-WIDTH="1.5" stroke-opacity="null" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" fill-opacity="null" FILL="none" id="svg_7"/>
     </device>
 </device_legend>

@@ -1,6 +1,7 @@
 package com.tiangles.storm.legend;
 
 import android.content.Context;
+import android.util.Size;
 
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
@@ -37,23 +38,25 @@ public class LegendFactory {
         return instance;
     }
 
-    public DeviceLink createLegend(StormDevice device) {
+    public DeviceLink createLegend(StormDevice device, boolean recursive) {
         DeviceLink link = null;
         DeviceLinkLegend legend = allLegends.get(device.getLegend().trim());
         if (legend != null) {
             link = new DeviceLink(legend);
             link.setCode(device.getCode());
             link.setName(device.getName());
-            for(StormDevice leftDevice: StormApp.getDBManager().getLeftDevice(device)){
-                DeviceLink leftLink = createLegend(leftDevice);
-                if(leftLink != null){
-                    link.addLeftDevice(leftLink);
+            if(recursive) {
+                for(StormDevice leftDevice: StormApp.getDBManager().getLeftDevice(device)){
+                    DeviceLink leftLink = createLegend(leftDevice, false);
+                    if(leftLink != null){
+                        link.addLeftDevice(leftLink);
+                    }
                 }
-            }
-            for(StormDevice rightDevice: StormApp.getDBManager().getRightDevice(device)){
-                DeviceLink rightLink = createLegend(rightDevice);
-                if(rightLink != null){
-                    link.addRightDevice(rightLink);
+                for(StormDevice rightDevice: StormApp.getDBManager().getRightDevice(device)){
+                    DeviceLink rightLink = createLegend(rightDevice, false);
+                    if(rightLink != null){
+                        link.addRightDevice(rightLink);
+                    }
                 }
             }
         }
@@ -102,15 +105,11 @@ public class LegendFactory {
     private void loadMeta(DeviceLinkLegend legend, Node item){
         for(Node node=item.getFirstChild();node!=null;node=node.getNextSibling()) {
             if(node.getNodeType()==Node.ELEMENT_NODE && node != null) {
-                if(node.getNodeName().equals("offset")) {
-                    String x=node.getAttributes().getNamedItem("x").getNodeValue();
-                    String y=node.getAttributes().getNamedItem("y").getNodeValue();
-                } else if(node.getNodeName().equals("size")) {
+                if(node.getNodeName().equals("size")) {
                     String width=node.getAttributes().getNamedItem("width").getNodeValue();
                     String height=node.getAttributes().getNamedItem("height").getNodeValue();
-                } else if(node.getNodeName().equals("base_length")) {
-                    String baseLength=node.getFirstChild().getNodeValue();
-                    legend.baseLength = Float.valueOf(baseLength);
+                    legend.width = Integer.parseInt(width);
+                    legend.height = Integer.parseInt(height);
                 } else if(node.getNodeName().equals("name_offset")) {
                     String nameOffset = node.getFirstChild().getNodeValue();
                     legend.nameOffset = Integer.valueOf(nameOffset);
@@ -130,7 +129,7 @@ public class LegendFactory {
                     String y1=node.getAttributes().getNamedItem("y1").getNodeValue();
                     String x2=node.getAttributes().getNamedItem("x2").getNodeValue();
                     String y2=node.getAttributes().getNamedItem("y2").getNodeValue();
-                    legend.lines.add(new Line(Integer.parseInt(x1),
+                    legend.models.add(new Line(Integer.parseInt(x1),
                             Integer.parseInt(y1),
                             Integer.parseInt(x2),
                             Integer.parseInt(y2)));
@@ -138,20 +137,20 @@ public class LegendFactory {
                     String cx=node.getAttributes().getNamedItem("cx").getNodeValue();
                     String cy=node.getAttributes().getNamedItem("cy").getNodeValue();
                     String r=node.getAttributes().getNamedItem("r").getNodeValue();
-                    legend.circles.add(new Circle(Integer.parseInt(cx),
+                    legend.models.add(new Circle(Integer.parseInt(cx),
                             Integer.parseInt(cy),
                             Integer.parseInt(r)));
                 } else if(node.getNodeName().equals("text")) {
                     String x = node.getAttributes().getNamedItem("x").getNodeValue();
                     String y = node.getAttributes().getNamedItem("y").getNodeValue();
                     String text = node.getNodeValue();
-                    legend.texts.add(new Text(text, Integer.parseInt(x), Integer.parseInt(y)));
+                    legend.models.add(new Text(text, Integer.parseInt(x), Integer.parseInt(y)));
                 } else if(node.getNodeName().equals("ellipse")) {
                     String cx=node.getAttributes().getNamedItem("cx").getNodeValue();
                     String cy=node.getAttributes().getNamedItem("cy").getNodeValue();
                     String rx=node.getAttributes().getNamedItem("rx").getNodeValue();
                     String ry=node.getAttributes().getNamedItem("ry").getNodeValue();
-                    legend.ellipses.add(new Ellipse(Integer.parseInt(cx),
+                    legend.models.add(new Ellipse(Integer.parseInt(cx),
                             Integer.parseInt(cy),
                             Integer.parseInt(rx),
                             Integer.parseInt(ry)));

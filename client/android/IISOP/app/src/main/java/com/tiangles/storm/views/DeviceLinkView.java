@@ -61,7 +61,7 @@ public class DeviceLinkView extends View implements View.OnTouchListener{
 
     public void setDevice(StormDevice device){
         if(device != null) {
-            deviceLegend = LegendFactory.getInstance().createLegend(device);
+            deviceLegend = LegendFactory.getInstance().createLegend(device, true);
             updateLegendRect(viewWidth, viewHeight);
             invalidate();
         }
@@ -113,19 +113,19 @@ public class DeviceLinkView extends View implements View.OnTouchListener{
 
         deviceLegend.draw(canvas, paint);
 
-        Vector<DeviceLink> leftLegend = deviceLegend.getLeftDevices();
-        for(int i=0; i<leftLegend.size(); ++i){
-            DeviceLink leftDevice = leftLegend.get(i);
-            leftDevice.draw(canvas, paint);
-            linkDrawer.draw(canvas, paint, deviceLegend.getLeftDockPoint(), leftDevice.getRightDockPoint());
-        }
-
-        Vector<DeviceLink> rightDevices = deviceLegend.getRightDevices();
-        for(int i=0; i<rightDevices.size(); ++i){
-            DeviceLink rightDevice = rightDevices.get(i);
-            rightDevice.draw(canvas, paint);
-            linkDrawer.draw(canvas, paint, deviceLegend.getRightDockPoint(), rightDevice.getLeftDockPoint());
-        }
+//        Vector<DeviceLink> leftLegend = deviceLegend.getLeftDevices();
+//        for(int i=0; i<leftLegend.size(); ++i){
+//            DeviceLink leftDevice = leftLegend.get(i);
+//            leftDevice.draw(canvas, paint);
+//            linkDrawer.draw(canvas, paint, deviceLegend.getLeftDockPoint(), leftDevice.getRightDockPoint());
+//        }
+//
+//        Vector<DeviceLink> rightDevices = deviceLegend.getRightDevices();
+//        for(int i=0; i<rightDevices.size(); ++i){
+//            DeviceLink rightDevice = rightDevices.get(i);
+//            rightDevice.draw(canvas, paint);
+//            linkDrawer.draw(canvas, paint, deviceLegend.getRightDockPoint(), rightDevice.getLeftDockPoint());
+//        }
     }
 
     @Override

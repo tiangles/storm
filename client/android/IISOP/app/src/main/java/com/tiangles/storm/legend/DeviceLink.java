@@ -8,6 +8,7 @@ import android.graphics.Rect;
 
 import com.tiangles.storm.legend.model.Circle;
 import com.tiangles.storm.legend.model.Line;
+import com.tiangles.storm.legend.model.Model;
 import com.tiangles.storm.legend.model.Text;
 
 import java.util.Vector;
@@ -90,34 +91,32 @@ public class DeviceLink {
         paint.setStrokeWidth(3);
 
 
-        float radio = legend.baseLength /(float) rect.width();
         canvas.translate(rect.centerX(), rect.centerY());
-        canvas.scale(radio, radio);
+        float xRadio = legend.width/(float)rect.width();
+        float yRadio = legend.height/(float)rect.height();
+        canvas.scale(xRadio, yRadio);
 
         paint.setTextSize(legend.textFontSize);
         paint.setStyle(Paint.Style.STROKE);
-        for(Line line: legend.lines) {
-            canvas.drawLine(line.p1.x, line.p1.y, line.p2.x, line.p2.y, paint);
-        }
-        for(Circle circle: legend.circles) {
-            canvas.drawCircle(circle.center.x, circle.center.y, circle.radius, paint);
+        for(Model model: legend.models) {
+            model.draw(canvas, paint);
         }
         paint.setStyle(Paint.Style.FILL);
 
-        Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
-        int baseline = (fontMetrics.bottom - fontMetrics.top) / 2 ;
-        for(Text text: legend.texts) {
-            Rect bounds = new Rect();
-            paint.getTextBounds(text.c, 0, 1, bounds);
-            canvas.drawText(text.c,
-                    text.center.x - bounds.width()/2 - bounds.left/2,
-                    text.center.y - bounds.height()/2 + baseline,
-                    paint);
-        }
+//        Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
+//        int baseline = (fontMetrics.bottom - fontMetrics.top) / 2 ;
+//        for(Text text: legend.texts) {
+//            Rect bounds = new Rect();
+//            paint.getTextBounds(text.c, 0, 1, bounds);
+//            canvas.drawText(text.c,
+//                    text.center.x - bounds.width()/2 - bounds.left/2,
+//                    text.center.y - bounds.height()/2 + baseline,
+//                    paint);
+//        }
         drawCode(canvas, paint);
         drawName(canvas, paint);
 
-        canvas.scale(1/radio, 1/radio);
+        canvas.scale(1.0f/xRadio, 1.0f/yRadio);
         canvas.translate(-rect.centerX(), -rect.centerY());
     }
 
