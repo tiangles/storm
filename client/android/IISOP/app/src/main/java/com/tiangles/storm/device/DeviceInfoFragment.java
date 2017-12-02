@@ -154,7 +154,7 @@ public class DeviceInfoFragment extends Fragment {
         } else {
             mDeviceDistributionCabinetView.setText("--");
         }
-        mDeviceInspectionRecordsView.setText(device.getInspection_records());
+        mDeviceInspectionRecordsView.setText(device.getMaintenance_record());
     }
 
     private void updateParameters(Map<String, Double> parameters){

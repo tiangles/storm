@@ -22,16 +22,16 @@ class PowerDevice(models.Model):
 
 
 class Device(models.Model):
-    code = models.SlugField(max_length=128, primary_key=True, verbose_name='编码')
-    model = models.CharField(max_length=128, verbose_name='型号', null=True)
-    name = models.CharField(max_length=128, verbose_name='名称')
-    system = models.CharField(max_length=128, verbose_name='所在系统', null=True)
-    distribution_cabinet = models.CharField(max_length=128, verbose_name='配电柜', null=True)
-    local_control_panel = models.CharField(max_length=128, verbose_name='就地控制柜', null=True)
-    dcs_cabinet = models.CharField(max_length=128, verbose_name='DCS控制柜', null=True)
-    legend = models.CharField(max_length=128, verbose_name='图例', null=True)
-    inspection_records = models.CharField(max_length=1024, verbose_name='图例', null=True)
+    code = models.SlugField(max_length=16, primary_key=True, verbose_name='设备编码')
+    name = models.CharField(max_length=128, verbose_name='描述')
+    type = models.CharField(max_length=32, verbose_name='类型', null=True)
+    driver_type = models.CharField(max_length=12, verbose_name='驱动方式', null=True)
+    power_circuit_voltage = models.CharField(max_length=12, verbose_name='动力回路电压', null=True)
+    control_circuit_voltage = models.CharField(max_length=12, verbose_name='控制回路电压', null=True)
+    model = models.CharField(max_length=256, verbose_name='型式规范', null=True)
+    maintenance_record = models.CharField(max_length=128, verbose_name='维护记录')
     workshop = models.ForeignKey(Workshop, related_name='belong_to_workshop', on_delete=models.SET_NULL, null=True)
+    system = models.CharField(max_length=64, verbose_name='所属系统', null=True)
     power_device = models.ForeignKey(PowerDevice, related_name='power_device', on_delete=models.SET_NULL, null=True)
 
     class Meta:

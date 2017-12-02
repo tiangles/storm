@@ -96,7 +96,7 @@ public class DeviceSignalPanelFragment extends Fragment {
         mCodeView.setText(mAioSignal.getCode());
         mNameView.setText(mAioSignal.getName());
 
-        mDeviceSummaryView.setText(mStormDevice.getCode() + mStormDevice.getName());
+        mDeviceSummaryView.setText(mStormDevice.getType());
 
         LocalControlCabinetConnection localControlCabinetConnection = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnection(mAioSignal.getCode());
         LocalControlCabinet  cabinet = StormApp.getDBManager().getStormDB().getLocalControlCabinet(localControlCabinetConnection.getCabinet_id());

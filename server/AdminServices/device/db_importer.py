@@ -24,9 +24,9 @@ def load_cell(sheet, row, col):
 
 def load_int_cell(sheet, row, col):
     cell = sheet.cell(row, col)
-    if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
-        return None
-    return int(cell.value)
+    if cell is not None and cell.ctype == xlrd.XL_CELL_NUMBER:
+        return int(cell.value)
+    return None
 
 
 def load_null_blank_int_cell(sheet, row, col):
@@ -44,20 +44,24 @@ def load_boolean_cell(sheet, row, col):
 
 
 def import_device(sheet, row_index):
+
     code = load_null_blank_cell(sheet, row_index, column('B'))
+    name = load_cell(sheet, row_index, column('C'))
+    type = load_cell(sheet, row_index, column('D'))
+    driver_type = load_cell(sheet, row_index, column('E'))
+    power_circuit_voltage = load_cell(sheet, row_index, column('F'))
+    control_circuit_voltage = load_cell(sheet, row_index, column('G'))
+
     model = load_cell(sheet, row_index, column('H'))
-    name = load_null_blank_cell(sheet, row_index, column('C'))
-    system = load_cell(sheet, row_index, column('K'))
-    distribution_cabinet = ''
-    local_control_panel = ''
-    dcs_cabinet = ''
-    legend = load_cell(sheet, row_index, column('E')) + load_cell(sheet, row_index, column('D'))
-    inspection_records = load_cell(sheet, row_index, column('I'))
+    maintenance_record = load_cell(sheet, row_index, column('I'))
+
     workshop_name = load_cell(sheet, row_index, column('J'))
     if len(workshop_name)>0:
         workshop = StormWorkshop.objects.get(name=workshop_name)
     else:
         workshop = None
+
+    system = load_cell(sheet, row_index, column('K'))
 
     power_device_code = load_cell(sheet, row_index, column('O'))
     power_device_name = load_cell(sheet, row_index, column('P'))
@@ -68,15 +72,15 @@ def import_device(sheet, row_index):
         power_device = None
 
     StormDevice.objects.update_or_create(code=code,
-                                         model=model,
                                          name=name,
-                                         system=system,
-                                         distribution_cabinet=distribution_cabinet,
-                                         local_control_panel=local_control_panel,
-                                         dcs_cabinet=dcs_cabinet,
-                                         legend=legend,
-                                         inspection_records=inspection_records,
+                                         type=type,
+                                         driver_type=driver_type,
+                                         power_circuit_voltage=power_circuit_voltage,
+                                         control_circuit_voltage=control_circuit_voltage,
+                                         model=model,
+                                         maintenance_record=maintenance_record,
                                          workshop=workshop,
+                                         system=system,
                                          power_device = power_device)
 
 
@@ -304,13 +308,15 @@ def import_local_control_cabinet_terminal(sheet, row_index):
         cabinet = LocalControlCabinet.objects.get(code=cabinet_code)
     else:
         cabinet = None
-    cabinet_terminal = load_null_blank_cell(sheet, row_index, column('J'))
+    cabinet_terminal = load_int_cell(sheet, row_index, column('J'))
+    if cabinet_terminal is None:
+        cabinet_terminal = load_null_blank_cell(sheet, row_index, column('J'))
     cabinet_cable_number = load_cell(sheet, row_index, column('K'))
     instrument_terminal = load_cell(sheet, row_index, column('G'))
     instrument_cable_number = load_cell(sheet, row_index, column('H'))
 
     LocalControlCabinetTerminal.objects.update_or_create(cabinet=cabinet,
-                                                         cabinet_terminal=cabinet_terminal,
+                                                         cabinet_terminal=str(cabinet_terminal),
                                                          cabinet_cable_number=cabinet_cable_number,
                                                          instrument_terminal=instrument_terminal,
                                                          instrument_cable_number=instrument_cable_number,
@@ -389,9 +395,8 @@ def update_db_meta():
     db_metas = DatabaseMeta.objects.all()
     if len(db_metas) == 0:
         meta = DatabaseMeta()
-        meta.version = 1
     else:
         meta = db_metas[0]
-        meta.version = meta.version+1
 
+    meta.version = int(round(time.time() * 1000))
     meta.save();
