@@ -91,7 +91,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:onClick="showSystemInfo"
                 android:id="@+id/device_system"/>
         </LinearLayout>
         <Space

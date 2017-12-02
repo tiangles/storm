@@ -45,7 +45,7 @@ public class DCSCabinetFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         if(mDCSCabinet == null) {
             String code = savedInstanceState.getString("device_code");
-            StormApp.getDBManager().getDCSCabinet(code);
+            mDCSCabinet = StormApp.getDBManager().getDCSCabinet(code);
         }
         showCabinet(mDCSCabinet);
         return view;

@@ -11,6 +11,7 @@ import com.tiangles.greendao.gen.DeviceDioSignalDao;
 import com.tiangles.greendao.gen.DeviceLinkInfoDao;
 import com.tiangles.greendao.gen.LocalControlCabinetConnectionDao;
 import com.tiangles.greendao.gen.LocalControlCabinetDao;
+import com.tiangles.greendao.gen.LocalControlCabinetTerminalDao;
 import com.tiangles.greendao.gen.PowerDeviceDao;
 import com.tiangles.greendao.gen.StormDeviceDao;
 import com.tiangles.greendao.gen.StormWorkshopDao;
@@ -22,6 +23,7 @@ import com.tiangles.storm.database.dao.DeviceDioSignal;
 import com.tiangles.storm.database.dao.DeviceLinkInfo;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.LocalControlCabinetConnection;
+import com.tiangles.storm.database.dao.LocalControlCabinetTerminal;
 import com.tiangles.storm.database.dao.PowerDevice;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
@@ -42,6 +44,7 @@ public class StormDB {
     private DCSCabinetDao dcsCabinetDao;
     private LocalControlCabinetDao localControlCabinetDao;
     private LocalControlCabinetConnectionDao localControlCabinetConnectionDao;
+    private LocalControlCabinetTerminalDao localControlCabinetTerminalDao;
     private String dbPath;
 
     public StormDB(Context context, String dbPath) {
@@ -202,6 +205,7 @@ public class StormDB {
         if(workshop!=null){
             if(keyword == null || keyword.isEmpty()){
                 result = getLocalControlCabinetDao().queryBuilder()
+                        .where(LocalControlCabinetDao.Properties.Workshop_id.eq(workshop.getCode()))
                         .build()
                         .list();
             } else {
@@ -212,6 +216,17 @@ public class StormDB {
             }
         }
         return result;
+    }
+
+    public LocalControlCabinetConnection getLocalControlCabinetConnection(String code){
+        List<LocalControlCabinetConnection> connections = getLocalControlCabinetConnectionDao().queryBuilder()
+                .where(LocalControlCabinetConnectionDao.Properties.Code.eq(code))
+                .build()
+                .list();
+        if(connections.size()>0) {
+            return connections.get(0);
+        }
+        return null;
     }
 
     public List<LocalControlCabinetConnection> getLocalControlCabinetConnectionForCabinet(LocalControlCabinet cabinet){
@@ -289,6 +304,17 @@ public class StormDB {
         return null;
     }
 
+    public List<LocalControlCabinetTerminal> getLocalControlCabinetTerminalForConnection(LocalControlCabinetConnection connection) {
+        List<LocalControlCabinetTerminal> terminals = null;
+        if(connection != null) {
+            terminals = getLocalControlCabinetTerminalDao().queryBuilder()
+                    .where(LocalControlCabinetTerminalDao.Properties.For_connection_id.eq(connection.getCode()))
+                    .build()
+                    .list();
+        }
+        return terminals;
+    }
+
     private StormDeviceDao getStormDeviceDao() {
         if(stormDeviceDao == null) {
             stormDeviceDao = getDaoSession().getStormDeviceDao();
@@ -359,6 +385,13 @@ public class StormDB {
             localControlCabinetConnectionDao = getDaoSession().getLocalControlCabinetConnectionDao();
         }
         return localControlCabinetConnectionDao;
+    }
+
+    private LocalControlCabinetTerminalDao getLocalControlCabinetTerminalDao(){
+        if(localControlCabinetTerminalDao == null) {
+            localControlCabinetTerminalDao = getDaoSession().getLocalControlCabinetTerminalDao();
+        }
+        return localControlCabinetTerminalDao;
     }
     private DaoSession getDaoSession(){
         if(daoSession == null) {

@@ -20,7 +20,7 @@ public class LocalControlCabinetConnection {
     String cable_backup_core;
     String cable_direction;
     String remark;
-    String cabinet_id;
+        String cabinet_id;
 @Generated(hash = 185593685)
 public LocalControlCabinetConnection(String code, String figure_number,
         String name, String instrument_type, String cable_wire_model,

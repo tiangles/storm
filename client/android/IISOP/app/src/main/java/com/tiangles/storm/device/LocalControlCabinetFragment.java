@@ -2,6 +2,7 @@ package com.tiangles.storm.device;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,7 @@ public class LocalControlCabinetFragment extends Fragment {
     private Unbinder unbinder;
     @BindView(R.id.cabinet_code) TextView mCabinetCodeTextView;
     @BindView(R.id.cabinet_name) TextView mCabinetNameView;
-    @BindView(R.id.cabinet_signals) TextView mCabinetSignalsView;
+    @BindView(R.id.cabinet_signals) LocalControlCabinetTerminalView mCabinetSignalsView;
 
     LocalControlCabinet mLocalControlCabinet;
     public LocalControlCabinetFragment() {
@@ -72,14 +73,15 @@ public class LocalControlCabinetFragment extends Fragment {
     private void showCabinet(LocalControlCabinet cabinet){
         mCabinetCodeTextView.setText(cabinet.getCode());
         mCabinetNameView.setText(cabinet.getName());
-        List<LocalControlCabinetConnection> connections = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnectionForCabinet(cabinet);
-        StringBuilder sb = new StringBuilder();
-        for(LocalControlCabinetConnection connection: connections) {
-            sb.append(connection.getCode());
-            sb.append(" ");
-            sb.append(connection.getName());
-            sb.append("\n");
-        }
-        mCabinetSignalsView.setText(sb.toString());
+        mCabinetSignalsView.setCabinet(cabinet);
+//        List<LocalControlCabinetConnection> connections = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnectionForCabinet(cabinet);
+//        StringBuilder sb = new StringBuilder();
+//        for(LocalControlCabinetConnection connection: connections) {
+//            sb.append(connection.getCode());
+//            sb.append(" ");
+//            sb.append(connection.getName());
+//            sb.append("\n");
+//        }
+//        mCabinetSignalsView.setText(sb.toString());
     }
 }

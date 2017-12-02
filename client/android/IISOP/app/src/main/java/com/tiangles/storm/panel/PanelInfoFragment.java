@@ -22,10 +22,9 @@ public class PanelInfoFragment extends Fragment{
     @BindView(R.id.device_model) TextView mControllerView;
     @BindView(R.id.fsurface) TextView mFSurfaceView;
     @BindView(R.id.bsurface) TextView mBSurfaceView;
-    private Panel mPanel;
 
     public PanelInfoFragment(){
-        mPanel = new Panel();
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,11 +36,6 @@ public class PanelInfoFragment extends Fragment{
     }
 
     private void setupViewContent(){
-        mCodeTextView.setText(mPanel.getCode());
-        mNameView.setText(mPanel.getName());
-        mControllerView.setText(mPanel.getController());
-        mFSurfaceView.setText(mPanel.getfSurface());
-        mBSurfaceView.setText(mPanel.getbSurface());
     }
 
     @Override

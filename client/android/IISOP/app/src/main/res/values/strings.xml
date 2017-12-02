@@ -86,4 +86,9 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="loading">正在加载...</string>
+
+    <string name="help">help</string>
+    <string name="need_external_storage_permission">应用程序需要读取文件系统来保存数据库</string>
+    <string name="quit">退出</string>
+    <string name="go_to_settings">去设置</string>
 </resources>

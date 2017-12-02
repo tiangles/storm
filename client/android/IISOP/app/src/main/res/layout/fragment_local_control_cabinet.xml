@@ -57,18 +57,17 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="vertical" >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="接线盒内信号："
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="18sp" />
-            <TextView
+            <com.tiangles.storm.device.LocalControlCabinetTerminalView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
+                android:layout_height="500dp"
+                android:textSize='18sp'
                 android:id="@+id/cabinet_signals"/>
         </LinearLayout>
     </LinearLayout>

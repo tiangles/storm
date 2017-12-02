@@ -1,6 +1,7 @@
 package com.tiangles.storm.device;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.activities.DeviceSystemInfoActivity;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
@@ -27,6 +29,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
@@ -189,6 +192,13 @@ public class DeviceInfoFragment extends Fragment {
         }
         mDeviceStatusView.setText(dioSB.toString());
         mDeviceParameterView.setText(aioSB.toString());
+    }
+
+    @OnClick(R.id.device_system)
+    void showSystemInfo(){
+        Intent intent = new Intent(this.getActivity(), DeviceSystemInfoActivity.class);
+        intent.putExtra("device_code", mDevice.getCode());
+        startActivity(intent);
     }
 
 }

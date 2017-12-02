@@ -4,13 +4,13 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.tiangles.storm.database.DBManager;
-import com.tiangles.storm.database.StormDB;
 import com.tiangles.storm.network.Configuration;
 import com.tiangles.storm.network.Delegate;
 import com.tiangles.storm.network.Network;
 import com.tiangles.storm.network.Response;
 import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.user.User;
+import com.tiangles.storm.utilities.PermissionsHelper;
 import com.uuzuche.lib_zxing.ZApplication;
 
 public class StormApp extends ZApplication {
@@ -20,11 +20,14 @@ public class StormApp extends ZApplication {
     private static Network network;
     private static User user;
     private static DBManager deviceManager;
+    private PermissionsHelper permissionsHelper;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
+
+        permissionsHelper = new PermissionsHelper(this);
 
         user = new User();
         handler = new Handler();
@@ -38,6 +41,10 @@ public class StormApp extends ZApplication {
 
     public static Context getContext() {
         return instance.getApplicationContext();
+    }
+
+    public static PermissionsHelper getPermissionsHelper(){
+        return instance.permissionsHelper;
     }
 
     public static void runMainThreadTask(Runnable runnable) {
