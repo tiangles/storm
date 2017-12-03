@@ -29,6 +29,33 @@ public class DeviceAioSignal {
     private boolean hh;
     private boolean hhh;
     private boolean tendency;
+
+    public static String createConnectionMethod(DeviceAioSignal signal){
+        String ioType = signal.getIo_type();
+        String signalType = signal.getSignal_type();
+        String isolation = signal.getIsolation();
+        String result = null;
+        if (ioType.equals("DI") || ioType.equals("DO")) {
+            result = "-1 -2 S";
+        } else if(ioType.equals("AO")) {
+            result = "+ - S";
+        } else if(ioType.equals("AI")) {
+            if(signalType.equals("K")) {
+                result = "+ - S";
+            } else if(signalType.equals("RTD")) {
+                result = "a b c S";
+            } else if(signalType.equals("4~20mA")) {
+                if(isolation.equals("Y")) {
+                    result = "- + S";
+                } else {
+                    result = "+ - S";
+                }
+            } else {
+                result = "+ -";
+            }
+        }
+        return result;
+    }
 @Generated(hash = 713882563)
 public DeviceAioSignal(String code, String figure_number, String for_device_id,
         String name, String io_type, String signal_type, String isolation,

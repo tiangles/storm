@@ -41,7 +41,7 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".panel.PanelActivity"
-            android:label="柜柜柜" />
+            android:label="接线面板" />
         <activity
             android:name=".device.DeviceActivity"
             android:label="@string/title_activity_device"/>

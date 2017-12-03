@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.LocalControlCabinetConnection;
+import com.tiangles.storm.panel.PanelActivity;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class LocalControlCabinetFragment extends Fragment {
     private Unbinder unbinder;
     @BindView(R.id.cabinet_code) TextView mCabinetCodeTextView;
     @BindView(R.id.cabinet_name) TextView mCabinetNameView;
-    @BindView(R.id.cabinet_signals) LocalControlCabinetTerminalView mCabinetSignalsView;
+    @BindView(R.id.cabinet_signals) LinearLayout mSignalsLayout;
 
     LocalControlCabinet mLocalControlCabinet;
     public LocalControlCabinetFragment() {
@@ -73,15 +75,21 @@ public class LocalControlCabinetFragment extends Fragment {
     private void showCabinet(LocalControlCabinet cabinet){
         mCabinetCodeTextView.setText(cabinet.getCode());
         mCabinetNameView.setText(cabinet.getName());
-        mCabinetSignalsView.setCabinet(cabinet);
-//        List<LocalControlCabinetConnection> connections = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnectionForCabinet(cabinet);
-//        StringBuilder sb = new StringBuilder();
-//        for(LocalControlCabinetConnection connection: connections) {
-//            sb.append(connection.getCode());
-//            sb.append(" ");
-//            sb.append(connection.getName());
-//            sb.append("\n");
-//        }
-//        mCabinetSignalsView.setText(sb.toString());
+
+        List<LocalControlCabinetConnection> connections = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnectionForCabinet(cabinet);
+        for(final LocalControlCabinetConnection connection: connections) {
+            TextView view = new TextView(this.getActivity());
+            view.setText(connection.getCode() + " " + connection.getName());
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), PanelActivity.class);
+                    intent.putExtra("connection_code", connection.getCode());
+                    intent.putExtra("content_type", "local_control_connection");
+                    startActivity(intent);
+                }
+            });
+            mSignalsLayout.addView(view);
+        }
     }
 }

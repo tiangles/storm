@@ -14,10 +14,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_blue_dark"
-            android:text="设备编码: "
+            android:text="信号编码: "
             android:textSize="@dimen/device_system_view_name" />
+
         <TextView
-            android:id="@+id/cabinet_code"
+            android:id="@+id/signal_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp" />
@@ -34,12 +35,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_blue_dark"
-            android:text="设备名称: "
+            android:text="信号名称: "
             android:textSize="@dimen/device_system_view_name"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/clamp_name"
+            android:id="@+id/signal_name"
             android:textSize="12sp"/>
     </LinearLayout>
     <Space
@@ -54,12 +55,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_blue_dark"
-            android:text="通道: "
+            android:text="设备: "
             android:textSize="@dimen/device_system_view_name"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/channel"
+            android:id="@+id/device_summary"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_blue_dark"
+            android:text="接线盒: "
+            android:textSize="@dimen/device_system_view_name"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cabinet_summary"
             android:textSize="12sp"/>
     </LinearLayout>
     <Space
@@ -74,52 +96,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_blue_dark"
-            android:text="信号: "
+            android:text="DCS机柜: "
             android:textSize="@dimen/device_system_view_name"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/signal_code"
-            android:textSize="12sp"/>
-    </LinearLayout>
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="5dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_blue_dark"
-            android:text="端子: "
-            android:textSize="@dimen/device_system_view_name"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/terminals"
-            android:textSize="12sp"/>
-    </LinearLayout>
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="5dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_blue_dark"
-            android:text="接线方式: "
-            android:textSize="@dimen/device_system_view_name"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/connection_method"
+            android:id="@+id/dcs_cabinet_summary"
             android:textSize="12sp"/>
     </LinearLayout>
     <Space
@@ -154,12 +136,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_blue_dark"
-            android:text="电缆去向: "
+            android:text="接线方式: "
             android:textSize="@dimen/device_system_view_name"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cabinet_direction"
+            android:id="@+id/cable_connection_method"
             android:textSize="12sp"/>
     </LinearLayout>
 </LinearLayout>

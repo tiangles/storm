@@ -1,17 +1,20 @@
 package com.tiangles.storm.device;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
+import com.tiangles.storm.panel.PanelActivity;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -27,7 +30,9 @@ public class DCSCabinetFragment extends Fragment {
     @BindView(R.id.cabinet_code) TextView mCabinetCodeTextView;
     @BindView(R.id.cabinet_name) TextView mCabinetNameView;
     @BindView(R.id.cabinet_controller) TextView mCabinetControllerView;
-    @BindView(R.id.cabinet_clamp) TextView mCabinetClampView;
+//    @BindView(R.id.cabinet_clamp) TextView mCabinetClampView;
+    @BindView(R.id.cabinet_f_clamp) LinearLayout mCabinetFClampLayout;
+    @BindView(R.id.cabinet_b_clamp) LinearLayout mCabinetBClampLayout;
 
     DCSCabinet mDCSCabinet;
     public DCSCabinetFragment() {
@@ -76,26 +81,39 @@ public class DCSCabinetFragment extends Fragment {
         mCabinetNameView.setText(dcsCabinet.getUsage());
         mCabinetControllerView.setText("DPU31");
 
-        String fFace = createFaceText(dcsCabinet, "F");
-        String bFace = createFaceText(dcsCabinet, "B");
-
-        mCabinetClampView.setText(fFace + "\n" + bFace);
+        createFaceText(mCabinetFClampLayout, dcsCabinet, "F");
+        createFaceText(mCabinetBClampLayout, dcsCabinet, "B");
     }
 
-    private String createFaceText(DCSCabinet dcsCabinet, String face){
+    private void createFaceText(LinearLayout layout, final DCSCabinet dcsCabinet, final String face){
         List<DCSConnection> dcsConnections = StormApp.getDBManager().getDCSConnectionsFromCabinetFace(dcsCabinet, face);
         SortedSet<Integer> clamps = new TreeSet<>();
         for(DCSConnection connection: dcsConnections){
             clamps.add(connection.getClamp());
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(face);
-        sb.append("面: ");
-        for(int clamp: clamps){
-            sb.append(clamp);
-            sb.append(", ");
+        layout.addView(newTextView(face + "面:   "));
+        for(final int clamp: clamps){
+            TextView view = newTextView("" + clamp + ",   ");
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), PanelActivity.class);
+                    intent.putExtra("face", face);
+                    intent.putExtra("clamp", clamp);
+                    intent.putExtra("cabinet", dcsCabinet.getCode());
+                    intent.putExtra("content_type", "dcs_clamp");
+                    startActivity(intent);
+
+                }
+            });
+            layout.addView(view);
         }
-        return sb.toString();
+    }
+
+    private TextView newTextView(String str){
+        TextView view = new TextView(getActivity());
+        view.setText(str);
+        return view;
     }
 }

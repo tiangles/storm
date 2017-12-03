@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DeviceSignalPanelFragment extends Fragment {
+public class LocalControlCabinetSignalPanelFragment extends Fragment {
     private Unbinder unbinder;
     @BindView(R.id.signal_code)TextView mCodeView;
     @BindView(R.id.signal_name) TextView mNameView;
@@ -38,14 +38,14 @@ public class DeviceSignalPanelFragment extends Fragment {
     private DeviceDioSignal mDioSignal;
     StormDevice mStormDevice;
 
-    public DeviceSignalPanelFragment(){
+    public LocalControlCabinetSignalPanelFragment(){
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.framgent_dcs_cabinet_connection_panel, container, false);
+        View view = inflater.inflate(R.layout.framgent_local_control_cabinet_connection_panel, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         if(mAioSignal == null && mDioSignal == null) {
@@ -58,7 +58,6 @@ public class DeviceSignalPanelFragment extends Fragment {
                     code = bundle.getString("connection_code");
                 }
             }
-            code = "HNA30CP101";
             getSignal(code);
         }
 
@@ -69,6 +68,12 @@ public class DeviceSignalPanelFragment extends Fragment {
             showAsDioPanal();
         }
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        this.getActivity().setTitle("信号");
     }
 
 
@@ -137,12 +142,8 @@ public class DeviceSignalPanelFragment extends Fragment {
         mCableView.setText(dcsConnection.getCable_model());
 
 
-        sb = new StringBuilder();
-        for(LocalControlCabinetTerminal terminal: terminals) {
-            sb.append(terminal.getInstrument_cable_number());
-            sb.append("\n");
-        }
-        mCableConnectionMethodView.setText(sb.toString());
+        String connectionMethod = DeviceAioSignal.createConnectionMethod(mAioSignal);
+        mCableConnectionMethodView.setText(connectionMethod);
     }
 
     @Override

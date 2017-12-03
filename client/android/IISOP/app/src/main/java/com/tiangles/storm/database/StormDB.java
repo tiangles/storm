@@ -156,6 +156,15 @@ public class StormDB {
                 .list();
     }
 
+    public List<DCSConnection> getDCSConnectionFromClamp(String cabinetCode, String face, int clamp) {
+        return getDcsConnectionDao().queryBuilder()
+                .where(DCSConnectionDao.Properties.Dcs_cabinet_number.eq(cabinetCode),
+                        DCSConnectionDao.Properties.Face_name.eq(face),
+                        DCSConnectionDao.Properties.Clamp.eq(clamp))
+                .build()
+                .list();
+    }
+
     public List<DCSCabinet> getDCSCabinetsForWorkshop(String workshopCode, String keyword) {
         List<DCSCabinet> result = null;
         if(workshopCode != null && !workshopCode.isEmpty()) {
