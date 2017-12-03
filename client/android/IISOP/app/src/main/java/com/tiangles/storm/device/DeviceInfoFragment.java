@@ -67,7 +67,8 @@ public class DeviceInfoFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
         if(mDevice == null) {
-            mDevice = StormApp.getDBManager().getDevice(savedInstanceState.getString("device_code"));
+            Bundle bundle = this.getArguments();
+            mDevice = StormApp.getDBManager().getDevice(bundle.getString("device_code"));
         }
         showDevice(mDevice);
         return view;
@@ -124,13 +125,13 @@ public class DeviceInfoFragment extends Fragment {
 
 
     private void showDevice(StormDevice device) {
-        List<DeviceDioSignal> dioSignals = StormApp.getDBManager().getDioSignalsForDevice(device.getCode());
+        List<DeviceDioSignal> dioSignals = StormApp.getDBManager().getStormDB().getDioSignalsForDevice(device.getCode());
         mDioSignals = new HashMap<>(dioSignals.size());
         for(DeviceDioSignal signal: dioSignals){
             mDioSignals.put(signal.getCode(), signal);
         }
 
-        List<DeviceAioSignal> aioSignals = StormApp.getDBManager().getAioSignalsForDevice(device.getCode());
+        List<DeviceAioSignal> aioSignals = StormApp.getDBManager().getStormDB().getAioSignalsForDevice(device.getCode());
         mAioSignals = new HashMap<>(aioSignals.size());
         for(DeviceAioSignal signal: aioSignals){
             mAioSignals.put(signal.getCode(), signal);

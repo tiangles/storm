@@ -3,74 +3,105 @@
     <device name="电动风机">
         <meta>
             <size width="320" height="320"/>
-            <name_offset>90</name_offset>
-            <code_offset>130</code_offset>
+            <name_offset>250</name_offset>
+            <code_offset>290</code_offset>
         </meta>
         <draw type="svg">
-            <line x1="-80" y1="-40" x2="80"  y2="40" stroke="black" stroke-width="2" />
-            <line x1="-80" y1="40"  x2="80"  y2="-40" stroke="black" stroke-width="2" />
-            <line x1="-80" y1="-40" x2="-80" y2="40" stroke="black" stroke-width="2" />
-            <line x1="80"  y1="40"  x2="80"  y2="-40" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="240"  y2="200" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
 
-            <line x1="0" y1="0" x2="0" y2="-40"/>
-            <circle cx="0" cy="-80" r="40" stroke="black" stroke-width="2" fill="red"/>
+            <line x1="160" y1="160" x2="160" y2="100"/>
+            <circle cx="160" cy="60" r="40" stroke="black" stroke-width="2" fill="red"/>
 
-            <line x1="-80"  y1="0"  x2="-160"  y2="0" stroke="black" stroke-width="2" />
-            <line x1="80"  y1="0"  x2="160"  y2="0" stroke="black" stroke-width="2" />
+            <line x1="80"  y1="160"  x2="0"  y2="160" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="160"  x2="320"  y2="160" stroke="black" stroke-width="2" />
         </draw>
     </device>
     <device name="电动阀门">
         <meta>
-            <size width="128" height="128"/>
-            <name_offset>90</name_offset>
-            <code_offset>130</code_offset>
+            <size width="320" height="320"/>
+            <name_offset>250</name_offset>
+            <code_offset>290</code_offset>
         </meta>
-        <line y2="52" x2="64" y1="84" x1="0" stroke="black" stroke-width="2" />
-        <line y2="84" x2="64" y1="52" x1="0" stroke="black" stroke-width="2" />
-        <line y2="84" x2="0" y1="52" x1="0" stroke="black" stroke-width="2" />
-        <line y2="84" x2="64" y1="52" x1="64" stroke="black" stroke-width="2" />
-        <ellipse ry="20" rx="20" cy="20" cx="32" />
-        <text y="31.5037" x="18.8518">M</text>
-        <line y2="68" x2="32" y1="40" x1="32" />
+        <draw type="svg">
+            <line x1="80" y1="120" x2="240"  y2="200" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="80"  y1="120"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200" x2="240" y2="200" stroke="black" stroke-width="2" />
+
+            <line x1="160" y1="120" x2="160" y2="100"/>
+            <circle cx="160" cy="60" r="40" stroke="black" stroke-width="2" fill="red"/>
+
+            <line x1="80"  y1="160"  x2="0"  y2="160" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="160"  x2="320"  y2="160" stroke="black" stroke-width="2" />
+        </draw>
     </device>
     <device name="电动调节阀门">
         <meta>
-            <size width="128" height="128"/>
-            <name_offset>90</name_offset>
-            <code_offset>130</code_offset>
+            <size width="320" height="320"/>
+            <name_offset>250</name_offset>
+            <code_offset>290</code_offset>
         </meta>
-        <rect height="32" width="64" y="52" x="0" STROKE-WIDTH="1.5" STROKE="#000" FILL="#fff" id="svg_1"/>
-        <line y2="52" x2="64" y1="84" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_2"/>
-        <line y2="84" x2="64" y1="52" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_3"/>
-        <ellipse ry="20" rx="20" cy="20" cx="32" STROKE-WIDTH="1.5" STROKE="#000" FILL="#fff" id="svg_4"/>
-        <text y="31.5037" x="18.8518" TEXT-ANCHOR="start" STROKE-WIDTH="0" STROKE="#000" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_5">M</text>
-        <line y2="52" x2="32" y1="40" x1="32" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_6"/>
+        <draw type="svg">
+            <line x1="80" y1="120" x2="240"  y2="200" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="80"  y1="120"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200" x2="240" y2="200" stroke="black" stroke-width="2" />
+
+            <circle cx="160" cy="80" r="40" stroke="black" stroke-width="2" fill="red"/>
+
+            <line x1="80"  y1="160"  x2="0"  y2="160" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="160"  x2="320"  y2="160" stroke="black" stroke-width="2" />
+        </draw>
     </device>
     <device name="电动蝶阀">
         <meta>
-            <size width="128" height="128"/>
-            <name_offset>90</name_offset>
-            <code_offset>130</code_offset>
+            <size width="320" height="320"/>
+            <name_offset>250</name_offset>
+            <code_offset>290</code_offset>
         </meta>
-        <rect height="32" width="64" y="52" x="0" STROKE-WIDTH="1.5" STROKE="#000" FILL="#fff" id="svg_1"/>
-        <line y2="52" x2="64" y1="84" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_2"/>
-        <ellipse ry="20" rx="20" cy="20" cx="32" STROKE-WIDTH="1.5" STROKE="#000" FILL="#fff" id="svg_4"/>
-        <text y="31.5037" x="18.8518" TEXT-ANCHOR="start" STROKE-WIDTH="0" STROKE="#000" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_5">M</text>
-        <line y2="52" x2="32" y1="40" x1="32" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_6"/>
-        <ellipse ry="2" rx="2" cy="68" cx="32" STROKE-WIDTH="1.5" stroke-opacity="null" STROKE="#000" fill-opacity="null" FILL="#fff" id="svg_9"/>
+        <draw type="svg">
+            <line x1="80" y1="120" x2="240"  y2="200" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="80"  y1="120"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200" x2="240" y2="200" stroke="black" stroke-width="2" />
+
+            <circle cx="160" cy="80" r="40" stroke="black" stroke-width="2" fill="red"/>
+
+            <line x1="80"  y1="160"  x2="0"  y2="160" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="160"  x2="320"  y2="160" stroke="black" stroke-width="2" />
+        </draw>
     </device>
     <device name="电磁阀">
         <meta>
-            <size width="128" height="128"/>
-            <name_offset>90</name_offset>
-            <code_offset>130</code_offset>
+            <size width="320" height="320"/>
+            <name_offset>250</name_offset>
+            <code_offset>290</code_offset>
         </meta>
-        <line y2="52" x2="64" y1="84" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_1"/>
-        <line y2="84" x2="64" y1="52" x1="0" STROKE-WIDTH="1.5" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" FILL="none" id="svg_2"/>
-        <line y2="84" x2="0" y1="52" x1="0" STROKE-WIDTH="1.5" stroke-opacity="null" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" fill-opacity="null" FILL="none" id="svg_3"/>
-        <line y2="84" x2="64" y1="52" x1="64" STROKE-WIDTH="1.5" stroke-opacity="null" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" fill-opacity="null" FILL="none" id="svg_4"/>
-        <rect height="38" width="28" y="0" x="18" STROKE-WIDTH="1.5" stroke-opacity="null" STROKE="#000" fill-opacity="null" FILL="none" id="svg_5"/>
-        <text y="30.1383" x="21.5" TEXT-ANCHOR="start" STROKE-WIDTH="0" stroke-opacity="null" STROKE="#000" fill-opacity="null" FILL="#000000" style="cursor: move; pointer-events: inherit;" FONT-SIZE="32px" FONT-FAMILY="Helvetica,Arial,sans-serif" id="svg_6">S</text>
-        <line y2="68" x2="32" y1="38" x1="32" STROKE-WIDTH="1.5" stroke-opacity="null" stroke-linejoin="undefined" stroke-linecap="undefined" STROKE="#000" fill-opacity="null" FILL="none" id="svg_7"/>
+        <draw type="svg">
+            <line x1="80" y1="120" x2="240"  y2="200" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="200"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="120" x2="80" y2="200" stroke="black" stroke-width="2" />
+            <line x1="80"  y1="120"  x2="240"  y2="120" stroke="black" stroke-width="2" />
+            <line x1="80" y1="200" x2="240" y2="200" stroke="black" stroke-width="2" />
+
+            <circle cx="160" cy="80" r="40" stroke="black" stroke-width="2" fill="red"/>
+
+            <line x1="80"  y1="160"  x2="0"  y2="160" stroke="black" stroke-width="2" />
+            <line x1="240"  y1="160"  x2="320"  y2="160" stroke="black" stroke-width="2" />
+        </draw>
     </device>
 </device_legend>

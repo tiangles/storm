@@ -83,15 +83,19 @@ public class DeviceLink {
     }
 
     public void draw(Canvas canvas, Paint paint) {
+        paint.setAntiAlias(true);
         if(highlight) {
             paint.setColor(Color.rgb(0, 0, 255));
         } else {
             paint.setColor(Color.rgb(0, 0, 0));
         }
         paint.setStrokeWidth(3);
+        paint.setStyle(Paint.Style.STROKE);
+
+//        canvas.drawRect(getRect(), paint);
 
 
-        canvas.translate(rect.centerX(), rect.centerY());
+        canvas.translate(rect.left, rect.top);
         float xRadio = legend.width/(float)rect.width();
         float yRadio = legend.height/(float)rect.height();
         canvas.scale(xRadio, yRadio);
@@ -117,7 +121,7 @@ public class DeviceLink {
         drawName(canvas, paint);
 
         canvas.scale(1.0f/xRadio, 1.0f/yRadio);
-        canvas.translate(-rect.centerX(), -rect.centerY());
+        canvas.translate(-rect.left, -rect.top);
     }
 
     private void drawCode(Canvas canvas, Paint paint){
@@ -125,7 +129,7 @@ public class DeviceLink {
         Rect bounds = new Rect();
         paint.getTextBounds(code, 0, code.length(), bounds);
         canvas.drawText(code,
-                -bounds.width()/2,
+                (legend.width-bounds.width())/2,
                 legend.nameOffset,
                 paint);
     }
@@ -135,7 +139,7 @@ public class DeviceLink {
         Rect bounds = new Rect();
         paint.getTextBounds(name, 0, name.length(), bounds);
         canvas.drawText(name,
-                -bounds.width()/2,
+                (legend.width-bounds.width())/2,
                 legend.codeOffset,
                 paint);
     }

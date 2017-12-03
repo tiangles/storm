@@ -112,26 +112,23 @@ public class DBManager {
 
         if(dioSignals != null){
             for(DeviceDioSignal signal: dioSignals) {
-                connections.add(getDCSConnection(signal.getCode()));
+                DCSConnection connection = getDCSConnection(signal.getCode());
+                if(connection != null) {
+                    connections.add(connection);
+                }
             }
         }
 
         if(aioSignals != null){
             for(DeviceAioSignal signal: aioSignals) {
-                connections.add(getDCSConnection(signal.getCode()));
+                DCSConnection connection = getDCSConnection(signal.getCode());
+                if(connection != null) {
+                    connections.add(connection);
+                }
             }
         }
         return  connections;
     }
-
-    public List<DeviceDioSignal> getDioSignalsForDevice(String deviceCode){
-        return getStormDB().getDioSignalsForDevice(deviceCode);
-    }
-
-    public List<DeviceAioSignal> getAioSignalsForDevice(String deviceCode){
-        return getStormDB().getAioSignalsForDevice(deviceCode);
-    }
-
 
     public DCSConnection getDCSConnection(String connectionCode){
         return getStormDB().getDCSConnection(connectionCode);
@@ -140,15 +137,6 @@ public class DBManager {
     public List<DCSConnection> getDCSConnectionsFromCabinetFace(DCSCabinet dcsCabinet, String face) {
         return getStormDB().getDCSConnectionsFromCabinetFace(dcsCabinet, face);
     }
-
-    public DeviceDioSignal getDeviceDioSignal(String code){
-        return getStormDB().getDeviceDioSignal(code);
-    }
-
-    public DeviceAioSignal getDeviceAioSignal(String code){
-        return getStormDB().getDeviceAioSignal(code);
-    }
-
 
     public void addObserver(DBManager.DBManagerObserver observer) {
         mDeviceManagerObservers.add(observer);
