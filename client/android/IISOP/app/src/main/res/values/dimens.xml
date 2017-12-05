@@ -17,4 +17,6 @@
     <dimen name="padding_local_control_cabinet_terminals">5dp</dimen>
     <dimen name="local_control_cabinet_terminals_cell_height">25dp</dimen>
     <dimen name="local_control_cabinet_terminals_font_size">14sp</dimen>
+
+    <dimen name="signal_parameter_text_size">6sp</dimen>
 </resources>

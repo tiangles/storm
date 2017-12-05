@@ -19,12 +19,7 @@
             android:id="@+id/main_bluetooth"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="扫描蓝牙" />
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:onClick="showChartActivity"
-            android:text="报表" />
+            android:text="附近的蓝牙设备" />
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

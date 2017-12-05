@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.activities.ChartActivity;
 import com.tiangles.storm.activities.DeviceSystemInfoActivity;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
@@ -40,10 +42,9 @@ public class DeviceInfoFragment extends Fragment {
     @BindView(R.id.device_model) TextView mDeviceModelView;
     @BindView(R.id.device_system) Button mDeviceSystemView;
     @BindView(R.id.device_status) TextView mDeviceStatusView;
-    @BindView(R.id.device_parameters) TextView mDeviceParameterView;
     @BindView(R.id.device_distribution_cabinet) TextView mDeviceDistributionCabinetView;
     @BindView(R.id.device_inspection_records) TextView mDeviceInspectionRecordsView;
-
+    @BindView(R.id.device_parameters_layout) LinearLayout mDeviceParameterLayout;
     StormDevice mDevice;
     Map<String, DeviceDioSignal> mDioSignals;
     Map<String, DeviceAioSignal> mAioSignals;
@@ -147,7 +148,6 @@ public class DeviceInfoFragment extends Fragment {
         mDeviceNameView.setText(device.getName());
         mDeviceCodeTextView.setText(device.getCode());
         mDeviceSystemView.setText(device.getSystem());
-        mDeviceParameterView.setText("--");
 
         PowerDevice powerDevice = StormApp.getDBManager().getPowerDevice(device.getPower_device_id());
         if(powerDevice != null){
@@ -181,18 +181,34 @@ public class DeviceInfoFragment extends Fragment {
                 DeviceAioSignal aioSignal = mAioSignals.get(code);
                 if(aioSignal!=null) {
                     double val = parameters.get(code);
-                    float formatedVal = (float)(Math.round(val*100))/100;
-                    aioSB.append(formatedVal);
-                    aioSB.append("  ");
-                    aioSB.append(aioSignal.getUnit());
-                    aioSB.append("  ");
-                    aioSB.append(aioSignal.getName());
-                    aioSB.append("\n");
+                    updateTextViewForAioSignal(aioSignal, val);
                 }
             }
         }
         mDeviceStatusView.setText(dioSB.toString());
-        mDeviceParameterView.setText(aioSB.toString());
+    }
+
+    Map<String, TextView> mAioSignalViews = new HashMap<>();
+    void updateTextViewForAioSignal(final DeviceAioSignal aioSignal, double val){
+        TextView view = null;
+        if(mAioSignalViews.containsKey(aioSignal.getCode())) {
+            view = mAioSignalViews.get(aioSignal.getCode());
+        } else {
+            view = new TextView(getActivity());
+            view.setTextSize(getResources().getDimensionPixelSize(R.dimen.signal_parameter_text_size));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ChartActivity.class);
+                    intent.putExtra("signal_code", aioSignal.getCode());
+                    startActivity(intent);
+                }
+            });
+            mAioSignalViews.put(aioSignal.getCode(), view);
+            mDeviceParameterLayout.addView(view);
+        }
+        float formatedVal = (float)(Math.round(val*100))/100;
+        view.setText(formatedVal + "  " + aioSignal.getUnit() + "      " + aioSignal.getName());
     }
 
     @OnClick(R.id.device_system)
