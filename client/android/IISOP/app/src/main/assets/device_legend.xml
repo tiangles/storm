@@ -17,6 +17,8 @@
 
             <line x1="80"  y1="160"  x2="0"  y2="160" stroke="black" stroke-width="2" />
             <line x1="240"  y1="160"  x2="320"  y2="160" stroke="black" stroke-width="2" />
+
+            <text x="160" y="60" size="50">M</text>
         </draw>
     </device>
     <device name="电动阀门">
@@ -39,6 +41,8 @@
 
             <line x1="80"  y1="160"  x2="0"  y2="160" stroke="black" stroke-width="2" />
             <line x1="240"  y1="160"  x2="320"  y2="160" stroke="black" stroke-width="2" />
+
+            <text x="160" y="60" size="50">M</text>
         </draw>
     </device>
     <device name="电动调节阀门">
@@ -60,6 +64,19 @@
 
             <line x1="80"  y1="160"  x2="0"  y2="160" stroke="black" stroke-width="2" />
             <line x1="240"  y1="160"  x2="320"  y2="160" stroke="black" stroke-width="2" />
+        </draw>
+    </device>
+    <device name="压力变送器">
+        <meta>
+            <size width="320" height="320"/>
+            <name_offset>250</name_offset>
+            <code_offset>290</code_offset>
+        </meta>
+        <draw type="svg">
+            <line x1="160" y1="160" x2="160"  y2="120" stroke="black" stroke-width="2" />
+
+            <circle cx="160" cy="70" r="50" stroke="black" stroke-width="2" fill="red"/>
+            <text x="160" y="70" size="50">Pt</text>
         </draw>
     </device>
     <device name="电动蝶阀">

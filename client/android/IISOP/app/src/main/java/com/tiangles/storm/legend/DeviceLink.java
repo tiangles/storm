@@ -92,36 +92,22 @@ public class DeviceLink {
         paint.setStrokeWidth(3);
         paint.setStyle(Paint.Style.STROKE);
 
-//        canvas.drawRect(getRect(), paint);
-
-
+        canvas.save();
         canvas.translate(rect.left, rect.top);
-        float xRadio = legend.width/(float)rect.width();
-        float yRadio = legend.height/(float)rect.height();
+        float xRadio = rect.width()/(float)legend.width;
+        float yRadio = rect.height()/(float)legend.height;
         canvas.scale(xRadio, yRadio);
 
-        paint.setTextSize(legend.textFontSize);
         paint.setStyle(Paint.Style.STROKE);
         for(Model model: legend.models) {
             model.draw(canvas, paint);
         }
-        paint.setStyle(Paint.Style.FILL);
 
-//        Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
-//        int baseline = (fontMetrics.bottom - fontMetrics.top) / 2 ;
-//        for(Text text: legend.texts) {
-//            Rect bounds = new Rect();
-//            paint.getTextBounds(text.c, 0, 1, bounds);
-//            canvas.drawText(text.c,
-//                    text.center.x - bounds.width()/2 - bounds.left/2,
-//                    text.center.y - bounds.height()/2 + baseline,
-//                    paint);
-//        }
+        paint.setStyle(Paint.Style.FILL);
         drawCode(canvas, paint);
         drawName(canvas, paint);
 
-        canvas.scale(1.0f/xRadio, 1.0f/yRadio);
-        canvas.translate(-rect.left, -rect.top);
+        canvas.restore();
     }
 
     private void drawCode(Canvas canvas, Paint paint){

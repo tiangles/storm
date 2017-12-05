@@ -17,7 +17,6 @@ public class DeviceLinkLegend {
     protected int codeOffset = 0;
     protected Point leftLinkPoint = new Point();
     protected Point rightLinkPoint = new Point();
-    protected int textFontSize = 50;
     protected int codeFontSize = 35;
     protected int nameFontSize = 25;
     protected int height;

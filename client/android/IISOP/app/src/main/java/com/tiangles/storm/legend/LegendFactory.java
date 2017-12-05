@@ -1,6 +1,7 @@
 package com.tiangles.storm.legend;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Size;
 
 import com.tiangles.storm.StormApp;
@@ -59,6 +60,8 @@ public class LegendFactory {
                     }
                 }
             }
+        } else {
+            Log.e("Legend", "Not able to get legend for " + device.getLegend());
         }
         return link;
     }
@@ -143,8 +146,9 @@ public class LegendFactory {
                 } else if(node.getNodeName().equals("text")) {
                     String x = node.getAttributes().getNamedItem("x").getNodeValue();
                     String y = node.getAttributes().getNamedItem("y").getNodeValue();
-                    String text = node.getNodeValue();
-                    legend.models.add(new Text(text, Integer.parseInt(x), Integer.parseInt(y)));
+                    String text = node.getFirstChild().getNodeValue();
+                    String size = node.getAttributes().getNamedItem("size").getNodeValue();
+                    legend.models.add(new Text(text, Integer.parseInt(size), Integer.parseInt(x), Integer.parseInt(y)));
                 } else if(node.getNodeName().equals("ellipse")) {
                     String cx=node.getAttributes().getNamedItem("cx").getNodeValue();
                     String cy=node.getAttributes().getNamedItem("cy").getNodeValue();
