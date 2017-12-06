@@ -30,17 +30,18 @@ import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
 public class ChartActivity extends AppCompatActivity {
+    private final static int MAX_RECORD_COUNT = 60;
     @BindView(R.id.title_label) TextView mLabelView;
     @BindView(R.id.line_chart) LineChartView lineChart;
     DeviceAioSignal mSignal;
-    List<Float> mValues = new ArrayList<>(31);
+    List<Float> mValues = new ArrayList<>(MAX_RECORD_COUNT+1);
     Handler mHandler = new Handler();
     Runnable mRunnable  = new Runnable() {
         @Override
         public void run() {
             float val = generateData();
             mValues.add(val);
-            if(mValues.size()>30){
+            if(mValues.size()>MAX_RECORD_COUNT){
                 mValues.remove(0);
             }
             updateChart();
@@ -83,7 +84,7 @@ public class ChartActivity extends AppCompatActivity {
     Axis axisX;
     Axis axisY;
     private void setupChart(){
-        lineChart.setInteractive(true);
+        lineChart.setInteractive(false);
         lineChart.setZoomType(ZoomType.HORIZONTAL);
         lineChart.setZoomEnabled(false);
         lineChart.setMaxZoom(1.0f);
@@ -101,10 +102,10 @@ public class ChartActivity extends AppCompatActivity {
 
     private Axis createXAxis(){
         if(axisX == null) {
-            axisX = Axis.generateAxisFromRange(0, 30, 1);
+            axisX = Axis.generateAxisFromRange(0, MAX_RECORD_COUNT, 1);
             axisX.setHasTiltedLabels(false);
             axisX.setTextColor(Color.BLUE);
-            axisX.setMaxLabelChars(30);//max label length, for example 60
+            axisX.setMaxLabelChars(1);//max label length, for example 60
             axisX.setTextSize(10);
             List<AxisValue> axisValues = axisX.getValues();
             for(AxisValue value: axisValues){
@@ -123,7 +124,7 @@ public class ChartActivity extends AppCompatActivity {
             axisY = Axis.generateAxisFromRange(min, max, (max-min)/10);
             axisY.setHasTiltedLabels(false);
             axisY.setTextColor(Color.BLUE);
-            axisY.setMaxLabelChars(30);
+            axisY.setMaxLabelChars(1);
             axisY.setTextSize(10);
             axisY.setHasLines(true);
             axisY.setName(mSignal.getUnit());
@@ -159,6 +160,8 @@ public class ChartActivity extends AppCompatActivity {
             line.setHasLabels(false);
             line.setHasLines(true); //show lines or not
             line.setHasPoints(true); //show points or not
+            line.setPointRadius(2);
+            line.setStrokeWidth(1);
             lines.add(line);
         }
 
@@ -175,7 +178,7 @@ public class ChartActivity extends AppCompatActivity {
         float min = mSignal.getMin_range();
         Viewport v = new Viewport(lineChart.getMaximumViewport());
         v.left = 0;
-        v.right = 30;
+        v.right = MAX_RECORD_COUNT;
         v.top =  max;
         v.bottom = min;
         lineChart.setMaximumViewport(v);
