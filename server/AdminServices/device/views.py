@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 import models
 import db_importer
 from staff.login_required import login_required
-
+import json
 
 @login_required
 def view_device_list(request):
@@ -41,8 +41,13 @@ def view_workshop_list(request):
 
 @login_required
 def import_workshops(request):
-    db_importer.import_workshop_data('/media/btian/workspace/Storm_Doc/V3.0/04-workshops.xlsx')
-    return HttpResponseRedirect("/view/workshops/")
+    res = {'res':'invalid file'}
+    if request.method == "POST":
+        file = request.FILES.get("files[]", None)
+        if file is not None:
+            res = db_importer.import_data(str(file), file)
+
+    return HttpResponse(json.dumps(res), content_type="application/json")
 
 
 @login_required

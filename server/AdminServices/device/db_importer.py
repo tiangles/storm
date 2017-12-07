@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .models import Workshop as StormWorkshop
 from .models import Device as StormDevice, PowerDevice, DeviceLinkInfo
 from .models import DCSCabinet,DCSConnection, DeviceDioSignal, DeviceAioSignal
@@ -5,6 +6,7 @@ from .models import LocalControlCabinet, LocalControlCabinetConnection, LocalCon
 from staff.models import DatabaseMeta
 import xlrd
 import time
+import os
 
 
 def column(name):
@@ -279,7 +281,7 @@ def import_local_control_connection(sheet, row_index):
     else:
         cabinet = None
 
-    LocalControlCabinetConnection.objects.update_or_create(
+    obj, created = LocalControlCabinetConnection.objects.update_or_create(
         code=code,
         figure_number=figure_number,
         name=name,
@@ -293,6 +295,8 @@ def import_local_control_connection(sheet, row_index):
         remark=remark,
         cabinet=cabinet,)
 
+    return obj
+
 
 current_local_control_connection = None
 
@@ -301,7 +305,8 @@ def import_local_control_cabinet_terminal(sheet, row_index):
     global current_local_control_connection
     for_connection_code = load_cell(sheet, row_index, column('B'))
     if len(for_connection_code)>0:
-        current_local_control_connection = LocalControlCabinetConnection.objects.get(code=for_connection_code)
+        # current_local_control_connection = LocalControlCabinetConnection.objects.get(code=for_connection_code)
+        current_local_control_connection = import_local_control_connection(sheet, row_index)
 
     cabinet_code = load_cell(sheet, row_index, column('I'))
     if len(cabinet_code)>0:
@@ -340,21 +345,57 @@ def import_device_link_info(sheet, row_index):
                                              right_device=right_device)
 
 
-def do_import_data(file_path, sheet_index, row_offset, load_func):
+# def do_import_data(file_path, sheet_index, row_offset, load_func):
+#     begin_time = time.time()
+#     imported_count = 0
+#
+#     with xlrd.open_workbook(file_path) as file_data:
+#         sheet = file_data.sheet_by_index(sheet_index)
+#         nrows = sheet.nrows
+#         for row_index in range(row_offset, nrows):
+#             try:
+#                 load_func(sheet, row_index)
+#                 imported_count += 1
+#             except Exception as e:
+#                 print('Import error, file:%s, sheet:%s, row: %d, msg: "%s"' % (file_path, sheet.name, row_index+1, e))
+#     print ('Done, imported %d entries from %d rows, used time: %d seconds' %
+#            (imported_count, nrows-row_offset, time.time()-begin_time))
+
+
+def do_import_data(file_path, sheet_name, row_offset, load_func):
     begin_time = time.time()
     imported_count = 0
 
+    errors = []
     with xlrd.open_workbook(file_path) as file_data:
-        sheet = file_data.sheet_by_index(sheet_index)
-        nrows = sheet.nrows
-        for row_index in range(row_offset, nrows):
-            try:
-                load_func(sheet, row_index)
-                imported_count += 1
-            except Exception as e:
-                print('Import error, file:%s, sheet:%s, row: %d, msg: "%s"' % (file_path, sheet.name, row_index+1, e))
-    print ('Done, imported %d entries from %d rows, used time: %d seconds' %
-           (imported_count, nrows-row_offset, time.time()-begin_time))
+        try:
+            sheet = file_data.sheet_by_name(sheet_name)
+        except xlrd.XLRDError as e:
+            return {
+                'res': 'NoSuchSheet',
+                'sheet_name': sheet_name,
+                'errors': errors
+            }
+
+        if sheet is not None:
+            nrows = sheet.nrows
+            for row_index in range(row_offset, nrows):
+                try:
+                    load_func(sheet, row_index)
+                    imported_count += 1
+                except Exception as e:
+                    errors.append({
+                        'row': row_index+1,
+                        'msg': str(e)
+                    })
+    return {
+        'res': 'OK',
+        'sheet_name': sheet_name,
+        'imported_count': imported_count,
+        'rows': nrows-row_offset,
+        'used_time': time.time()-begin_time,
+        'errors': errors
+    }
 
 
 def import_device_data(file_path):
@@ -399,4 +440,33 @@ def update_db_meta():
         meta = db_metas[0]
 
     meta.version = int(round(time.time() * 1000))
-    meta.save();
+    meta.save()
+
+
+sheet_info = [(u'车间列表', 1, import_workshop),
+              (u'设备库', 2, import_device),
+              (u'设备库', 2, import_device_link_info),
+              (u'盘台', 1, import_cabinet),
+              (u'接线库', 2, import_dcs_connection),
+              (u'AIO', 1, import_aio_signal),
+              (u'DIO', 1, import_dio_signal),
+              (u'就地柜盒一览表', 1, import_local_control_cabinet),
+              (u'就地柜盒接线', 2, import_local_control_cabinet_terminal)]
+
+
+def import_data(file_name, file_data):
+    folder = 'media/uploads/'
+    file_path = folder + file_name
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    with open(file_path, 'wb+')as destination:
+        for chunk in file_data.chunks():
+            destination.write(chunk)
+
+    res = []
+    for (sheet_name, row_offset, load_func) in sheet_info:
+        result = do_import_data(file_path, sheet_name, row_offset, load_func)
+        res.append(result)
+
+    update_db_meta()
+    return res

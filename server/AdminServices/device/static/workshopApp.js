@@ -2,6 +2,7 @@
 $(document).ready(function() {
     var oTable = new TableInit();
     oTable.Init();
+    $('#fileupload').hide();
 });
 
 var TableInit = function () {
@@ -63,3 +64,7 @@ var TableInit = function () {
     };
     return oTableInit;
 };
+
+$('#btn_upload').click(function(){
+    $('#fileupload').click();
+});
