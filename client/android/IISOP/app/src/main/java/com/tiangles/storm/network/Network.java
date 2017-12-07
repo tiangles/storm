@@ -36,6 +36,13 @@ public class Network {
         }
     }
 
+    public void close(){
+        sendingThread = null;
+        if(connection != null) {
+            connection.stopConnect();
+        }
+    }
+
     public void setOnServerPushedMessageListener(OnServerPushedMessageListener listener) {
         onServerPushedMessageListener = listener;
     }

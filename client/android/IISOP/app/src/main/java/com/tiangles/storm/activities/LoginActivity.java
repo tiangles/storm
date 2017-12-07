@@ -66,10 +66,24 @@ public class LoginActivity extends AppCompatActivity{
         attemptLogin();
     }
 
+
+    String serverAddr;
+    int serverPort;
     @OnClick(R.id.login_setting_button)
     public void onSetting(){
+        serverAddr =  PreferenceEngine.getInstance().getServerAddress();
+        serverPort = PreferenceEngine.getInstance().getServerPort();
         Intent intent = new Intent(LoginActivity.this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String addr =  PreferenceEngine.getInstance().getServerAddress();
+        int port = PreferenceEngine.getInstance().getServerPort();
+        if(!addr.equals(serverAddr) || port != serverPort) {
+            StormApp.closeNetwork();
+        }
     }
 
 

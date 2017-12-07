@@ -37,7 +37,7 @@ public class StormApp extends ZApplication {
     }
 
     public static void setMainActivity(Activity activity) {
-        instance.mainActivity = activity;
+        mainActivity = activity;
     }
 
     public static StormApp getInstance() {
@@ -63,9 +63,16 @@ public class StormApp extends ZApplication {
         return network;
     }
 
+    public static void closeNetwork() {
+        if(network != null) {
+            network.close();
+        }
+        network = null;
+    }
+
     public static DBManager getDBManager(){
         if(dbManager == null) {
-            dbManager = new DBManager(instance.mainActivity);
+            dbManager = new DBManager(mainActivity);
         }
         return dbManager;
     }
