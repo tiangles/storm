@@ -103,7 +103,7 @@ public class WorkshopActivity extends AppCompatActivity{
     }
 
     public void updateWorkshopListByKeyword(String keyword){
-        List<StormWorkshop> workshops = StormApp.getDBManager().getWorkshopList(keyword, mCurrentRecordOffset,  PAGE_SIZE);
+        List<StormWorkshop> workshops = StormApp.getDBManager().getStormDB().getWorkshopList(keyword, mCurrentRecordOffset,  PAGE_SIZE);
         if(mListAdaptor == null) {
             mListAdaptor = new MyAdaptor(workshops);
             mDeviceListView.setAdapter(mListAdaptor);

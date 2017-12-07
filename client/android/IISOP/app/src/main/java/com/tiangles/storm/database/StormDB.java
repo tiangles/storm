@@ -30,6 +30,7 @@ import com.tiangles.storm.database.dao.StormWorkshop;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StormDB {
@@ -323,6 +324,63 @@ public class StormDB {
         }
         return terminals;
     }
+
+
+    public List<StormDevice> getLeftDevice(StormDevice device) {
+        ArrayList<StormDevice> result = new ArrayList<>();
+        if(device != null) {
+            List<DeviceLinkInfo> leftLink = getLeftLinkInfoForDevice(device);
+            if(leftLink != null) {
+                for(DeviceLinkInfo info: leftLink) {
+                    StormDevice leftDevice = getDevice(info.getLeft_device_id());
+                    if(leftDevice != null) {
+                        result.add(leftDevice);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<StormDevice> getRightDevice(StormDevice device) {
+        ArrayList<StormDevice> result = new ArrayList<>();
+        if(device != null) {
+            List<DeviceLinkInfo> rightLink = getRightLinkInfoForDevice(device);
+            if(rightLink != null) {
+                for(DeviceLinkInfo info: rightLink) {
+                    StormDevice rightDevice = getDevice(info.getRight_device_id());
+                    if(rightDevice != null) {
+                        result.add(rightDevice);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<DCSConnection> getDCSConnectionsFromSignals(List<DeviceDioSignal> dioSignals, List<DeviceAioSignal> aioSignals){
+        List<DCSConnection> connections = new ArrayList<>();
+
+        if(dioSignals != null){
+            for(DeviceDioSignal signal: dioSignals) {
+                DCSConnection connection = getDCSConnection(signal.getCode());
+                if(connection != null) {
+                    connections.add(connection);
+                }
+            }
+        }
+
+        if(aioSignals != null){
+            for(DeviceAioSignal signal: aioSignals) {
+                DCSConnection connection = getDCSConnection(signal.getCode());
+                if(connection != null) {
+                    connections.add(connection);
+                }
+            }
+        }
+        return  connections;
+    }
+
 
     private StormDeviceDao getStormDeviceDao() {
         if(stormDeviceDao == null) {

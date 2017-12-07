@@ -69,7 +69,7 @@ public class DeviceInfoFragment extends Fragment {
 
         if(mDevice == null) {
             Bundle bundle = this.getArguments();
-            mDevice = StormApp.getDBManager().getDevice(bundle.getString("device_code"));
+            mDevice = StormApp.getDBManager().getStormDB().getDevice(bundle.getString("device_code"));
         }
         showDevice(mDevice);
         return view;
@@ -138,7 +138,7 @@ public class DeviceInfoFragment extends Fragment {
             mAioSignals.put(signal.getCode(), signal);
         }
 
-        List<DCSConnection> connections = StormApp.getDBManager().getDCSConnectionsFromSignals(dioSignals, aioSignals);
+        List<DCSConnection> connections = StormApp.getDBManager().getStormDB().getDCSConnectionsFromSignals(dioSignals, aioSignals);
         mDCSConnections = new HashMap<>(connections.size());
         for(DCSConnection dcsConnection: connections){
             mDCSConnections.put(dcsConnection.getCode(), dcsConnection);
@@ -149,7 +149,7 @@ public class DeviceInfoFragment extends Fragment {
         mDeviceCodeTextView.setText(device.getCode());
         mDeviceSystemView.setText(device.getSystem());
 
-        PowerDevice powerDevice = StormApp.getDBManager().getPowerDevice(device.getPower_device_id());
+        PowerDevice powerDevice = StormApp.getDBManager().getStormDB().getPowerDevice(device.getPower_device_id());
         if(powerDevice != null){
             mDeviceDistributionCabinetView.setText(powerDevice.getName().replace('\n', ' '));
         } else {

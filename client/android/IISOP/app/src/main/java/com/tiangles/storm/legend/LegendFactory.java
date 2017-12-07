@@ -47,13 +47,13 @@ public class LegendFactory {
             link.setCode(device.getCode());
             link.setName(device.getName());
             if(recursive) {
-                for(StormDevice leftDevice: StormApp.getDBManager().getLeftDevice(device)){
+                for(StormDevice leftDevice: StormApp.getDBManager().getStormDB().getLeftDevice(device)){
                     DeviceLink leftLink = createLegend(leftDevice, false);
                     if(leftLink != null){
                         link.addLeftDevice(leftLink);
                     }
                 }
-                for(StormDevice rightDevice: StormApp.getDBManager().getRightDevice(device)){
+                for(StormDevice rightDevice: StormApp.getDBManager().getStormDB().getRightDevice(device)){
                     DeviceLink rightLink = createLegend(rightDevice, false);
                     if(rightLink != null){
                         link.addRightDevice(rightLink);

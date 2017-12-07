@@ -50,7 +50,7 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         String workshopCode = intent.getStringExtra("workshop_code");
-        workshop = StormApp.getDBManager().getWorkshop(workshopCode);
+        workshop = StormApp.getDBManager().getStormDB().getWorkshop(workshopCode);
         init(null);
 
         mInputBox.addTextChangedListener(new TextWatcher() {
@@ -76,8 +76,8 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
     }
 
     private void init(String keyword){
-        List<StormDevice> devices = StormApp.getDBManager().getDeviceFromWorkshop(workshop, keyword);
-        List<DCSCabinet> dcsCabinets = StormApp.getDBManager().getDCSCabinetsForWorkshop(workshop, keyword);
+        List<StormDevice> devices = StormApp.getDBManager().getStormDB().getDeviceFromWorkshop(workshop.getCode(), keyword);
+        List<DCSCabinet> dcsCabinets = StormApp.getDBManager().getStormDB().getDCSCabinetsForWorkshop(workshop.getCode(), keyword);
         List<LocalControlCabinet> localControlCabinets = StormApp.getDBManager().getStormDB().getLocalControlCabinetForWorkshop(workshop, keyword);
 
         createDeviceListAdaptor(devices, dcsCabinets, localControlCabinets);

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.tiangles.storm.R;
+import com.tiangles.storm.StormApp;
 import com.tiangles.storm.device.DeviceActivity;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -17,7 +18,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StormApp.setMainActivity(this);
         setContentView(R.layout.activity_main);
+        StormApp.getDBManager();
     }
 
     public void showQRCodeActivity(View v){

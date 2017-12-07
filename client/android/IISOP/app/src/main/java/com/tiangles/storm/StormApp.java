@@ -1,5 +1,6 @@
 package com.tiangles.storm;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 
@@ -19,7 +20,8 @@ public class StormApp extends ZApplication {
     private static Handler handler;
     private static Network network;
     private static User user;
-    private static DBManager deviceManager;
+    private static DBManager dbManager;
+    private static Activity mainActivity;
     private PermissionsHelper permissionsHelper;
 
     @Override
@@ -32,7 +34,10 @@ public class StormApp extends ZApplication {
         user = new User();
         handler = new Handler();
 //        network = createNetwork();
-        deviceManager = new DBManager();
+    }
+
+    public static void setMainActivity(Activity activity) {
+        instance.mainActivity = activity;
     }
 
     public static StormApp getInstance() {
@@ -59,7 +64,10 @@ public class StormApp extends ZApplication {
     }
 
     public static DBManager getDBManager(){
-        return deviceManager;
+        if(dbManager == null) {
+            dbManager = new DBManager(instance.mainActivity);
+        }
+        return dbManager;
     }
 
     public static User getCurrentUser() {

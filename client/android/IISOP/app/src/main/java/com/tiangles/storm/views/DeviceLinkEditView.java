@@ -72,7 +72,7 @@ public class DeviceLinkEditView extends LinearLayout {
     }
 
     public void setDevice(String deviceCode, DeviceSystemInfoActivity activity) {
-        mStormDevice = StormApp.getDBManager().getDevice(deviceCode);
+        mStormDevice = StormApp.getDBManager().getStormDB().getDevice(deviceCode);
         mDeviceSystemInfoActivity = activity;
         if(mStormDevice != null) {
             mDeviceCode.setText(mStormDevice.getCode());

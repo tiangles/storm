@@ -59,7 +59,6 @@ public class LoginActivity extends AppCompatActivity{
     @Override
     public void onPause(){
         super.onPause();
-//        AppManager.getAppManager().finishActivity(this);
     }
 
     @OnClick(R.id.login_sign_in_button)

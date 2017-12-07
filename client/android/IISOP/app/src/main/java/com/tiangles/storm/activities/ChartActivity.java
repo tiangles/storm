@@ -102,16 +102,11 @@ public class ChartActivity extends AppCompatActivity {
 
     private Axis createXAxis(){
         if(axisX == null) {
-            axisX = Axis.generateAxisFromRange(0, MAX_RECORD_COUNT, 1);
+            axisX = Axis.generateAxisFromRange(0, MAX_RECORD_COUNT, 5);
             axisX.setHasTiltedLabels(false);
             axisX.setTextColor(Color.BLUE);
             axisX.setMaxLabelChars(1);//max label length, for example 60
             axisX.setTextSize(10);
-            List<AxisValue> axisValues = axisX.getValues();
-            for(AxisValue value: axisValues){
-                value.setLabel(""+value.getValue());
-            }
-            axisX.setValues(axisValues);
         }
         return axisX;
     }

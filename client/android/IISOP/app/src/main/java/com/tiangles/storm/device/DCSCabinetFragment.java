@@ -50,7 +50,7 @@ public class DCSCabinetFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         if(mDCSCabinet == null) {
             String code = savedInstanceState.getString("device_code");
-            mDCSCabinet = StormApp.getDBManager().getDCSCabinet(code);
+            mDCSCabinet = StormApp.getDBManager().getStormDB().getDCSCabinet(code);
         }
         showCabinet(mDCSCabinet);
         return view;
@@ -86,7 +86,7 @@ public class DCSCabinetFragment extends Fragment {
     }
 
     private void createFaceText(LinearLayout layout, final DCSCabinet dcsCabinet, final String face){
-        List<DCSConnection> dcsConnections = StormApp.getDBManager().getDCSConnectionsFromCabinetFace(dcsCabinet, face);
+        List<DCSConnection> dcsConnections = StormApp.getDBManager().getStormDB().getDCSConnectionsFromCabinetFace(dcsCabinet, face);
         SortedSet<Integer> clamps = new TreeSet<>();
         for(DCSConnection connection: dcsConnections){
             clamps.add(connection.getClamp());

@@ -28,13 +28,13 @@ public class DeviceActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
         mDeviceCode = intent.getStringExtra("code");
 
-        StormDevice device = StormApp.getDBManager().getDevice(mDeviceCode);
+        StormDevice device = StormApp.getDBManager().getStormDB().getDevice(mDeviceCode);
         if(device != null) {
             showStormDevice(device);
             return;
         }
 
-        DCSCabinet dcsCabinet = StormApp.getDBManager().getDCSCabinet(mDeviceCode);
+        DCSCabinet dcsCabinet = StormApp.getDBManager().getStormDB().getDCSCabinet(mDeviceCode);
         if(dcsCabinet != null) {
             showDCSCabinet(dcsCabinet);
             return;
