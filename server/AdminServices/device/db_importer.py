@@ -345,22 +345,6 @@ def import_device_link_info(sheet, row_index):
                                              right_device=right_device)
 
 
-# def do_import_data(file_path, sheet_index, row_offset, load_func):
-#     begin_time = time.time()
-#     imported_count = 0
-#
-#     with xlrd.open_workbook(file_path) as file_data:
-#         sheet = file_data.sheet_by_index(sheet_index)
-#         nrows = sheet.nrows
-#         for row_index in range(row_offset, nrows):
-#             try:
-#                 load_func(sheet, row_index)
-#                 imported_count += 1
-#             except Exception as e:
-#                 print('Import error, file:%s, sheet:%s, row: %d, msg: "%s"' % (file_path, sheet.name, row_index+1, e))
-#     print ('Done, imported %d entries from %d rows, used time: %d seconds' %
-#            (imported_count, nrows-row_offset, time.time()-begin_time))
-
 
 def do_import_data(file_path, sheet_name, row_offset, load_func):
     begin_time = time.time()
@@ -396,40 +380,6 @@ def do_import_data(file_path, sheet_name, row_offset, load_func):
         'used_time': time.time()-begin_time,
         'errors': errors
     }
-
-
-def import_device_data(file_path):
-    do_import_data(file_path, 0, 2, import_device)
-    do_import_data(file_path, 0, 2, import_device_link_info)
-    update_db_meta()
-
-
-def import_cabinets_data(file_path):
-    do_import_data(file_path, 0, 1, import_cabinet)
-    update_db_meta()
-
-
-def import_workshop_data(file_path):
-    do_import_data(file_path, 0, 1, import_workshop)
-    update_db_meta()
-
-
-def import_signal_data(file_path):
-    do_import_data(file_path, 0, 1, import_aio_signal)
-    do_import_data(file_path, 1, 1, import_dio_signal)
-    update_db_meta()
-
-
-def import_dcs_connection_data(file_path):
-    do_import_data(file_path, 0, 2, import_dcs_connection)
-    update_db_meta()
-
-
-def import_local_control_cabinet_data(file_path):
-    do_import_data(file_path, 0, 1, import_local_control_cabinet)
-    do_import_data(file_path, 1, 2, import_local_control_connection)
-    do_import_data(file_path, 1, 2, import_local_control_cabinet_terminal)
-    update_db_meta()
 
 
 def update_db_meta():

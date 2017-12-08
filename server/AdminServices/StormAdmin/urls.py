@@ -28,18 +28,14 @@ router.register(r'devices', api.views.DeviceViewSet)
 
 
 urlpatterns = [
+    url(r'^api/v1/import_data/$', api.views.import_data, name='import_data'),
     url(r'^api/v1/', include(router.urls)),
+
     url(r'^admin/', admin.site.urls),
     url(r'^login/', staff.views.login, name='login'),
     url(r'^logout/', staff.views.logout, name='logout'),
 
     url(r'^view/workshops/$', device.views.view_workshop_list, name='view_workshop_list'),
     url(r'^view/devices/$', device.views.view_device_list, name='view_device_list_of_workshop'),
-
-    url(r'^view/workshops/import_workshops/$', device.views.import_workshops, name='import_workshops'),
-    url(r'^view/devices/import_devices/$', device.views.import_devices, name='import_devices'),
-    url(r'^view/devices/import_dcs_cabinets/$', device.views.import_dcs_cabinets, name='import_dcs_cabinets'),
-    url(r'^view/devices/import_local_control_cabinet/$', device.views.import_local_control_cabinet, name='import_local_control_cabinet'),
-
     url(r'^view/device/detail/', device.views.view_device, name='view_specified_device'),
 ]

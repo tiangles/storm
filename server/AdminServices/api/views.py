@@ -8,6 +8,10 @@ import device.serializers
 import device.models
 import event.models
 import event.serializers
+from staff.login_required import login_required
+from django.http import HttpResponse
+import json
+import device.db_importer as db_importer
 
 
 class WorkshopViewSet(rest_framework.viewsets.ModelViewSet):
@@ -66,3 +70,14 @@ class DeviceViewSet(rest_framework.viewsets.ModelViewSet):
 class UserEventViewSet(rest_framework.viewsets.ModelViewSet):
     queryset = event.models.UserEvent.objects.all()
     serializer_class = event.serializers.UserEventSerializer
+
+
+@login_required
+def import_data(request):
+    res = {'res': 'invalid file'}
+    if request.method == "POST":
+        file_data = request.FILES.get("files[]", None)
+        if file_data is not None:
+            res = db_importer.import_data(str(file_data), file_data)
+
+    return HttpResponse(json.dumps(res), content_type="application/json")

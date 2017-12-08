@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 import models
@@ -37,34 +36,3 @@ def view_device(request):
 @login_required
 def view_workshop_list(request):
     return render(request, 'view_workshop_list.html', {})
-
-
-@login_required
-def import_workshops(request):
-    res = {'res':'invalid file'}
-    if request.method == "POST":
-        file = request.FILES.get("files[]", None)
-        if file is not None:
-            res = db_importer.import_data(str(file), file)
-
-    return HttpResponse(json.dumps(res), content_type="application/json")
-
-
-@login_required
-def import_devices(request):
-    db_importer.import_device_data('/media/btian/workspace/Storm_Doc/V3.0/01-devices-1.xlsx')
-    return HttpResponseRedirect("/view/devices/")
-
-
-@login_required
-def import_dcs_cabinets(request):
-    db_importer.import_cabinets_data('/media/btian/workspace/Storm_Doc/V3.0/01-devices-2.xlsx')
-    db_importer.import_dcs_connection_data('/media/btian/workspace/Storm_Doc/V3.0/03-connections-DCS.xlsx')
-    db_importer.import_signal_data('/media/btian/workspace/Storm_Doc/V3.0/02-signals.xlsx')
-    return HttpResponseRedirect("/view/devices/")
-
-
-@login_required
-def import_local_control_cabinet(request):
-    db_importer.import_local_control_cabinet_data('/media/btian/workspace/Storm_Doc/V3.0/03-connections-local.xlsx')
-    return HttpResponseRedirect("/view/devices/")
