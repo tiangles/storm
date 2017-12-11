@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from .models import Workshop as StormWorkshop
 from .models import Device as StormDevice, PowerDevice, DeviceLinkInfo
-from .models import DCSCabinet,DCSConnection, DeviceDioSignal, DeviceAioSignal
+from .models import DCSCabinet, DCSConnection, DeviceDioSignal, DeviceAioSignal
 from .models import LocalControlCabinet, LocalControlCabinetConnection, LocalControlCabinetTerminal
 from staff.models import DatabaseMeta
 import xlrd
@@ -15,8 +15,8 @@ def column(name):
 
 def load_null_blank_cell(sheet, row, col):
     cell = sheet.cell(row, col)
-    if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
-        raise ValueError('Blank cell, col:%s'%(chr(col+ord('A'))))
+    if cell is None or cell.ctype == xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
+        raise ValueError('Blank cell, col:%s' % (chr(col+ord('A')), ))
     return cell.value
 
 
@@ -33,23 +33,22 @@ def load_int_cell(sheet, row, col):
 
 def load_null_blank_int_cell(sheet, row, col):
     cell = sheet.cell(row, col)
-    if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
+    if cell is None or cell.ctype == xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
         raise ValueError('Blank cell, col:%s' % (chr(col + ord('A'))))
     return int(cell.value)
 
 
 def load_boolean_cell(sheet, row, col):
     cell = sheet.cell(row, col)
-    if cell is None or cell.ctype ==xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
+    if cell is None or cell.ctype == xlrd.XL_CELL_EMPTY or cell.ctype == xlrd.XL_CELL_BLANK:
         return False
     return True
 
 
 def import_device(sheet, row_index):
-
     code = load_null_blank_cell(sheet, row_index, column('B'))
     name = load_cell(sheet, row_index, column('C'))
-    type = load_cell(sheet, row_index, column('D'))
+    device_type = load_cell(sheet, row_index, column('D'))
     driver_type = load_cell(sheet, row_index, column('E'))
     power_circuit_voltage = load_cell(sheet, row_index, column('F'))
     control_circuit_voltage = load_cell(sheet, row_index, column('G'))
@@ -58,7 +57,7 @@ def import_device(sheet, row_index):
     maintenance_record = load_cell(sheet, row_index, column('I'))
 
     workshop_name = load_cell(sheet, row_index, column('J'))
-    if len(workshop_name)>0:
+    if len(workshop_name) > 0:
         workshop = StormWorkshop.objects.get(name=workshop_name)
     else:
         workshop = None
@@ -67,15 +66,15 @@ def import_device(sheet, row_index):
 
     power_device_code = load_cell(sheet, row_index, column('O'))
     power_device_name = load_cell(sheet, row_index, column('P'))
-    if power_device_code is not None and len(power_device_code)>0:
+    if power_device_code is not None and len(power_device_code) > 0:
         power_device, created = PowerDevice.objects.update_or_create(code=power_device_code,
-                                                         name=power_device_name)
+                                                                     name=power_device_name)
     else:
         power_device = None
 
     StormDevice.objects.update_or_create(code=code,
                                          name=name,
-                                         type=type,
+                                         type=device_type,
                                          driver_type=driver_type,
                                          power_circuit_voltage=power_circuit_voltage,
                                          control_circuit_voltage=control_circuit_voltage,
@@ -83,7 +82,7 @@ def import_device(sheet, row_index):
                                          maintenance_record=maintenance_record,
                                          workshop=workshop,
                                          system=system,
-                                         power_device = power_device)
+                                         power_device=power_device)
 
 
 def import_cabinet(sheet, row_index):
@@ -93,18 +92,18 @@ def import_cabinet(sheet, row_index):
     specification = load_cell(sheet, row_index, column('F'))
     maintenance_record = load_cell(sheet, row_index, column('G'))
     workshop_code = load_cell(sheet, row_index, column('H'))
-    if len(workshop_code)>0:
+    if len(workshop_code) > 0:
         workshop = StormWorkshop.objects.get(code=workshop_code)
     else:
         workshop = None
     remark = load_cell(sheet, row_index, column('G'))
     DCSCabinet.objects.update_or_create(code=code,
-                                     usage=usage,
-                                     dcs_controller=dcs_controller,
-                                     specification=specification,
-                                     maintenance_record=maintenance_record,
-                                     workshop=workshop,
-                                     remark=remark,)
+                                        usage=usage,
+                                        dcs_controller=dcs_controller,
+                                        specification=specification,
+                                        maintenance_record=maintenance_record,
+                                        workshop=workshop,
+                                        remark=remark)
 
 
 def import_workshop(sheet, row_index):
@@ -112,8 +111,8 @@ def import_workshop(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('B'))
     name = load_null_blank_cell(sheet, row_index, column('C'))
     StormWorkshop.objects.update_or_create(workshop_index=workshop_index,
-                                            code=code,
-                                            name=name)
+                                           code=code,
+                                           name=name)
 
 
 def import_dio_signal(sheet, row_index):
@@ -263,7 +262,7 @@ def import_local_control_cabinet(sheet, row_index):
 
 def import_local_control_connection(sheet, row_index):
     code = load_cell(sheet, row_index, column('B'))
-    if code is None or len(code)==0:
+    if code is None or len(code) == 0:
         return
     figure_number = load_cell(sheet, row_index, column('A'))
     name = load_cell(sheet, row_index, column('C'))
@@ -276,7 +275,7 @@ def import_local_control_connection(sheet, row_index):
     cable_direction = load_cell(sheet, row_index, column('O'))
     remark = load_cell(sheet, row_index, column('P'))
     cabinet_code = load_cell(sheet, row_index, column('I'))
-    if len(cabinet_code)>0:
+    if len(cabinet_code) > 0:
         cabinet = LocalControlCabinet.objects.get(code=cabinet_code)
     else:
         cabinet = None
@@ -304,12 +303,12 @@ current_local_control_connection = None
 def import_local_control_cabinet_terminal(sheet, row_index):
     global current_local_control_connection
     for_connection_code = load_cell(sheet, row_index, column('B'))
-    if len(for_connection_code)>0:
+    if len(for_connection_code) > 0:
         # current_local_control_connection = LocalControlCabinetConnection.objects.get(code=for_connection_code)
         current_local_control_connection = import_local_control_connection(sheet, row_index)
 
     cabinet_code = load_cell(sheet, row_index, column('I'))
-    if len(cabinet_code)>0:
+    if len(cabinet_code) > 0:
         cabinet = LocalControlCabinet.objects.get(code=cabinet_code)
     else:
         cabinet = None
@@ -329,24 +328,31 @@ def import_local_control_cabinet_terminal(sheet, row_index):
 
 
 def import_device_link_info(sheet, row_index):
-    left_device_code = load_null_blank_cell(sheet, row_index, column('B'))
+    left_device_code = load_cell(sheet, row_index, column('B'))
+    right_device_codes = load_cell(sheet, row_index, column('M'))
+    if left_device_code is None \
+            or right_device_codes is None \
+            or len(left_device_code) == 0 \
+            or len(right_device_codes) == 0:
+        return
+
     left_device = StormDevice.objects.get(code=left_device_code)
-    right_device_codes = load_null_blank_cell(sheet, row_index, column('M'))
+
     for right_deice_code in right_device_codes.split():
         info = DeviceLinkInfo.objects.filter(left_device__code=left_device_code, right_device__code=right_deice_code)
-        if info is not None and len(info)>0:
-            raise ValueError('duplicated record with left_device_code:%s right_device_code:%s'% (left_device_code, right_deice_code))
+        if info is not None and len(info) > 0:
+            raise ValueError('duplicated record with left_device_code:%s right_device_code:%s'
+                             % (left_device_code, right_deice_code))
 
         try:
             right_device = StormDevice.objects.get(code=right_deice_code)
         except Exception:
-            raise ValueError('can not find specified device with code:%s'%right_deice_code)
+            raise ValueError('can not find specified device with code:%s' % (right_deice_code,))
         DeviceLinkInfo.objects.update_or_create(left_device=left_device,
-                                             right_device=right_device)
+                                                right_device=right_device)
 
 
-
-def do_import_data(file_path, sheet_name, row_offset, load_func):
+def do_import_data(file_path, sheet_name, row_offset, load_func, description):
     begin_time = time.time()
     imported_count = 0
 
@@ -354,9 +360,10 @@ def do_import_data(file_path, sheet_name, row_offset, load_func):
     with xlrd.open_workbook(file_path) as file_data:
         try:
             sheet = file_data.sheet_by_name(sheet_name)
-        except xlrd.XLRDError as e:
+        except xlrd.XLRDError:
             return {
                 'res': 'NoSuchSheet',
+                'description': description,
                 'sheet_name': sheet_name,
                 'errors': errors
             }
@@ -372,8 +379,12 @@ def do_import_data(file_path, sheet_name, row_offset, load_func):
                         'row': row_index+1,
                         'msg': str(e)
                     })
+        else:
+            nrows = 0
+
     return {
         'res': 'OK',
+        'description': description,
         'sheet_name': sheet_name,
         'imported_count': imported_count,
         'rows': nrows-row_offset,
@@ -393,15 +404,15 @@ def update_db_meta():
     meta.save()
 
 
-sheet_info = [(u'车间列表', 1, import_workshop),
-              (u'设备库', 2, import_device),
-              (u'设备库', 2, import_device_link_info),
-              (u'盘台', 1, import_cabinet),
-              (u'接线库', 2, import_dcs_connection),
-              (u'AIO', 1, import_aio_signal),
-              (u'DIO', 1, import_dio_signal),
-              (u'就地柜盒一览表', 1, import_local_control_cabinet),
-              (u'就地柜盒接线', 2, import_local_control_cabinet_terminal)]
+sheet_info = [(u'车间列表', u'导入车间信息', 1, import_workshop),
+              (u'设备库', u'导入设备库信息', 2, import_device),
+              (u'设备库', u'导入设备系统信息', 2, import_device_link_info),
+              (u'盘台', u'导入DCS控制柜信息', 1, import_cabinet),
+              (u'接线库', u'导入DCS接线库信息', 2, import_dcs_connection),
+              (u'AIO', u'导入AIO信息', 1, import_aio_signal),
+              (u'DIO', u'导入DIO信息', 1, import_dio_signal),
+              (u'就地柜盒一览表', u'导入就地柜盒信息', 1, import_local_control_cabinet),
+              (u'就地柜盒接线', u'导入就地柜盒接线信息', 2, import_local_control_cabinet_terminal)]
 
 
 def import_data(file_name, file_data):
@@ -414,9 +425,11 @@ def import_data(file_name, file_data):
             destination.write(chunk)
 
     res = []
-    for (sheet_name, row_offset, load_func) in sheet_info:
-        result = do_import_data(file_path, sheet_name, row_offset, load_func)
+    for (sheet_name, description, row_offset, load_func) in sheet_info:
+        result = do_import_data(file_path, sheet_name, row_offset, load_func, description)
         res.append(result)
 
     update_db_meta()
+
+    os.unlink(file_path)
     return res
