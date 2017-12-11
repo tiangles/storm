@@ -9,7 +9,7 @@
 <script src="{% static "bootstrap-table/locale/bootstrap-table-zh-CN.js"%}"></script>
 
 <div class=" container-fluid table-responsive">
-<h1 class="jumbotron masthead ">车间管理</h1>
+    <h1 class="jumbotron masthead ">车间管理</h1>
     <div class="tab-content" id="tabContent">
         <div id="toolbar" class="btn-group">
             <button id="btn_add" type="button" class="btn btn-info btn-sm rightSize">
@@ -28,41 +28,26 @@
         </div>
         <table id="tb_devices"></table>
     </div>
+    <pre id="result">
+
+    </pre>
     <form>
         {% csrf_token %}
         <input type="file" id="fileupload" data-url="/api/v1/import_data/"/>
     </form>
-
 </div>
  <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">提示</h4>
+        <h4 class="modal-title" id="myModalLabel">正在上传，请稍候</h4>
       </div>
       <div class="modal-body">
-        请稍候。。。
+        这个过程根据文件大小不同，大概需要几秒到几分钟...
       </div>
     </div>
   </div>
 </div>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="notify">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Modal title</h4>
-      </div>
-      <div class="modal-body">
-        <p>One fine body&hellip;</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 {% endblock %}
 
 {% block page_script %}
@@ -72,23 +57,47 @@
 <script src="{% static "jquery-file-upload/js/jquery.iframe-transport.js"%}"></script>
 <script src="{% static "jquery-file-upload/js/jquery.fileupload.js"%}"></script>
 <script src="{% static "bootstrap-dist/js/bootstrap.min.js"%}"></script>
+<script type="text/javascript">
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+        json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
 
-<script>
+$('#btn_upload').click(function(){
+    $('#fileupload').click();
+});
 
 $(function () {
     $('#fileupload').fileupload({
         dataType: 'json',
-        send: function (e, data) { $('#loading').modal('show'); },
+        send: function (e, data) {
+            $('#loading').modal('show');
+        },
         done: function (e, data) {
             $('#loading').modal('hide');
-            $('#notify').modal('show');
+            $('#result').html(syntaxHighlight(data.result));
+            $('#result').show();
         }
     });
+    $('#result').hide();
 });
-
-function start_upload()
-{
-    document.getElementById("btn_upload").click();
-}
 </script>
+
 {% endblock %}

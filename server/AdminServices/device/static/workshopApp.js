@@ -64,7 +64,3 @@ var TableInit = function () {
     };
     return oTableInit;
 };
-
-$('#btn_upload').click(function(){
-    $('#fileupload').click();
-});
