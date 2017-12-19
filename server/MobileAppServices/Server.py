@@ -1,6 +1,6 @@
 import threading
 from importlib import import_module
-
+import handlers.Handler
 import tornado.websocket
 import json
 import Config
@@ -125,4 +125,6 @@ if __name__ == '__main__':
     ws_app = Application()
     server = tornado.httpserver.HTTPServer(ws_app)
     server.listen(Config.SERVER_PORT)
+    print('Mobile server is running at %s:%d' % (handlers.Handler.get_host_ip(), Config.SERVER_PORT))
+    print('Quit the server with CONTROL-C')
     tornado.ioloop.IOLoop.instance().start()
