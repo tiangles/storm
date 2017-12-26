@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:iisop="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="vertical"
@@ -11,109 +12,35 @@
         android:padding="@dimen/activity_vertical_margin"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设备编码："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:id="@+id/cabinet_code"/>
-        </LinearLayout>
-        <Space
+        <com.tiangles.storm.views.TitleView
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
+            android:layout_height="match_parent"
+            android:id="@+id/title"/>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设备名称："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:id="@+id/cabinet_name"/>
-        </LinearLayout>
-        <Space
+        <com.tiangles.storm.views.NamedLabelView
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
+            android:layout_height="match_parent"
+            android:id="@+id/cabinet_name"
+            iisop:name = "设备名称"
+            iisop:label = "名称" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="控制器："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:id="@+id/cabinet_controller"/>
-        </LinearLayout>
-        <Space
+        <com.tiangles.storm.views.NamedLabelView
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
+            android:layout_height="match_parent"
+            android:id="@+id/cabinet_controller"
+            iisop:name = "控制器"
+            iisop:label = "控制器" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="bottom">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="柜内卡件："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-
-            <!--<TextView-->
-                <!--android:id="@+id/cabinet_clamp"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="@android:color/black"-->
-                <!--android:textSize="8sp" />-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="bottom">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="bottom"
-                    android:id="@+id/cabinet_f_clamp">
-                </LinearLayout>
-                <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="bottom"
-                        android:id="@+id/cabinet_b_clamp">
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
+        <com.tiangles.storm.views.NamedLabelView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/location"
+            iisop:name = "所在位置"
+            iisop:label = "-- 车间" />
+        <com.tiangles.storm.views.NamedLayoutView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/cabinet_clamps"
+            iisop:name = "柜内卡件" />
     </LinearLayout>
 </ScrollView>

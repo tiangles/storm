@@ -14,7 +14,11 @@ import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
+import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.panel.PanelActivity;
+import com.tiangles.storm.views.NamedLabelView;
+import com.tiangles.storm.views.NamedLayoutView;
+import com.tiangles.storm.views.TitleView;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -27,12 +31,11 @@ import butterknife.Unbinder;
 
 public class DCSCabinetFragment extends Fragment {
     private Unbinder unbinder;
-    @BindView(R.id.cabinet_code) TextView mCabinetCodeTextView;
-    @BindView(R.id.cabinet_name) TextView mCabinetNameView;
-    @BindView(R.id.cabinet_controller) TextView mCabinetControllerView;
-//    @BindView(R.id.cabinet_clamp) TextView mCabinetClampView;
-    @BindView(R.id.cabinet_f_clamp) LinearLayout mCabinetFClampLayout;
-    @BindView(R.id.cabinet_b_clamp) LinearLayout mCabinetBClampLayout;
+    @BindView(R.id.title)TitleView mTitleView;
+    @BindView(R.id.cabinet_name) NamedLabelView mCabinetNameView;
+    @BindView(R.id.cabinet_controller) NamedLabelView mCabinetControllerView;
+    @BindView(R.id.location) NamedLabelView mLocationView;
+    @BindView(R.id.cabinet_clamps) NamedLayoutView mCabinetClamps;
 
     DCSCabinet mDCSCabinet;
     public DCSCabinetFragment() {
@@ -77,15 +80,23 @@ public class DCSCabinetFragment extends Fragment {
     }
 
     private void showCabinet(DCSCabinet dcsCabinet){
-        mCabinetCodeTextView.setText(dcsCabinet.getCode());
-        mCabinetNameView.setText(dcsCabinet.getUsage());
-        mCabinetControllerView.setText("DPU31");
+        mTitleView.setTitle(dcsCabinet.getCode(), dcsCabinet.getUsage());
+        mCabinetNameView.setLabel(dcsCabinet.getUsage());
+        mCabinetControllerView.setLabel("DPU31");
 
-        createFaceText(mCabinetFClampLayout, dcsCabinet, "F");
-        createFaceText(mCabinetBClampLayout, dcsCabinet, "B");
+        StormWorkshop workshop = StormApp.getDBManager().getStormDB().getWorkshop(mDCSCabinet.getWorkshop_id());
+        if(workshop != null) {
+            mLocationView.setLabel(workshop.getCode() + "\n" + workshop.getName());
+        }
+
+        mCabinetClamps.addView(createFaceText(dcsCabinet, "F"));
+        mCabinetClamps.addView(createFaceText(dcsCabinet, "B"));
     }
 
-    private void createFaceText(LinearLayout layout, final DCSCabinet dcsCabinet, final String face){
+    private LinearLayout createFaceText(final DCSCabinet dcsCabinet, final String face){
+        LinearLayout layout = new LinearLayout(getActivity());
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+
         List<DCSConnection> dcsConnections = StormApp.getDBManager().getStormDB().getDCSConnectionsFromCabinetFace(dcsCabinet, face);
         SortedSet<Integer> clamps = new TreeSet<>();
         for(DCSConnection connection: dcsConnections){
@@ -109,6 +120,7 @@ public class DCSCabinetFragment extends Fragment {
             });
             layout.addView(view);
         }
+        return layout;
     }
 
     private TextView newTextView(String str){

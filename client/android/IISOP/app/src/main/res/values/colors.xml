@@ -7,4 +7,6 @@
     <color name="summary_black">#242428</color>
     <color name="summary_gray">#60646B</color>
 
+    <color name="named_label_title_background">#a0acea</color>
+
 </resources>

@@ -22,6 +22,9 @@ import com.tiangles.storm.database.dao.PowerDevice;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.request.GetSignalParameterRecordRequest;
+import com.tiangles.storm.views.NamedLabelView;
+import com.tiangles.storm.views.NamedLayoutView;
+import com.tiangles.storm.views.TitleView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,14 +40,11 @@ import butterknife.Unbinder;
 
 public class DeviceInfoFragment extends Fragment {
     private Unbinder unbinder;
-    @BindView(R.id.device_code) TextView mDeviceCodeTextView;
-    @BindView(R.id.device_name) TextView mDeviceNameView;
-    @BindView(R.id.device_model) TextView mDeviceModelView;
-    @BindView(R.id.device_system) Button mDeviceSystemView;
-    @BindView(R.id.device_status) TextView mDeviceStatusView;
-    @BindView(R.id.device_distribution_cabinet) TextView mDeviceDistributionCabinetView;
-    @BindView(R.id.device_inspection_records) TextView mDeviceInspectionRecordsView;
-    @BindView(R.id.device_parameters_layout) LinearLayout mDeviceParameterLayout;
+    @BindView(R.id.title) TitleView mTitleView;
+    @BindView(R.id.device_model) NamedLabelView mDeviceModelView;
+    @BindView(R.id.device_system) NamedLabelView mDeviceSystemView;
+    @BindView(R.id.device_status) NamedLayoutView mDeviceStatusView;
+    @BindView(R.id.device_parameter) NamedLayoutView mDeviceParameterLayout;
     StormDevice mDevice;
     Map<String, DeviceDioSignal> mDioSignals;
     Map<String, DeviceAioSignal> mAioSignals;
@@ -144,58 +144,66 @@ public class DeviceInfoFragment extends Fragment {
             mDCSConnections.put(dcsConnection.getCode(), dcsConnection);
         }
 
-        mDeviceModelView.setText(device.getModel());
-        mDeviceNameView.setText(device.getName());
-        mDeviceCodeTextView.setText(device.getCode());
-        mDeviceSystemView.setText(device.getSystem());
-
-        PowerDevice powerDevice = StormApp.getDBManager().getStormDB().getPowerDevice(device.getPower_device_id());
-        if(powerDevice != null){
-            mDeviceDistributionCabinetView.setText(powerDevice.getName().replace('\n', ' '));
-        } else {
-            mDeviceDistributionCabinetView.setText("--");
-        }
-        mDeviceInspectionRecordsView.setText(device.getMaintenance_record());
+        mTitleView.setTitle(device.getCode(), device.getName());
+        mDeviceModelView.setLabel(device.getModel());
+        mDeviceSystemView.setLabel(device.getSystem());
     }
 
     private void updateParameters(Map<String, Double> parameters){
-        StringBuilder aioSB = new StringBuilder();
-        StringBuilder dioSB = new StringBuilder();
         for(String code: parameters.keySet()){
             DCSConnection connection = mDCSConnections.get(code);
             if(connection != null) {
+                double val = parameters.get(code);
                 DeviceDioSignal dioSignal = mDioSignals.get(code);
                 if(dioSignal != null) {
-                    if(dioSignal != null ){
-                        if(parameters.get(code)>-12) {
-                            dioSB.append(dioSignal.getStatus_when_io_is_1());
-                        } else {
-                            dioSB.append("--");
-                        }
-                        dioSB.append("  ");
-                        dioSB.append(dioSignal.getName());
-                        dioSB.append("\n");
-                    }
+                    updateTextViewForDioSignal(dioSignal, val);
                     continue;
                 }
                 DeviceAioSignal aioSignal = mAioSignals.get(code);
                 if(aioSignal!=null) {
-                    double val = parameters.get(code);
                     updateTextViewForAioSignal(aioSignal, val);
                 }
             }
         }
-        mDeviceStatusView.setText(dioSB.toString());
     }
 
-    Map<String, TextView> mAioSignalViews = new HashMap<>();
-    void updateTextViewForAioSignal(final DeviceAioSignal aioSignal, double val){
-        TextView view = null;
-        if(mAioSignalViews.containsKey(aioSignal.getCode())) {
-            view = mAioSignalViews.get(aioSignal.getCode());
+    Map<String, DeviceStatusViewHolder> mDioSignalViews = new HashMap<>();
+    class DeviceStatusViewHolder {
+        TextView statusView;
+        TextView descriptionView;
+    }
+    void updateTextViewForDioSignal(final DeviceDioSignal dioSignal, double vaule){
+        DeviceStatusViewHolder viewHolder;
+        if(mDioSignalViews.containsKey(dioSignal.getCode())) {
+            viewHolder = mDioSignalViews.get(dioSignal.getCode());
         } else {
-            view = new TextView(getActivity());
-            view.setTextSize(getResources().getDimensionPixelSize(R.dimen.signal_parameter_text_size));
+            View view = getActivity().getLayoutInflater().inflate(R.layout.view_device_status, null);
+            viewHolder = new DeviceStatusViewHolder();
+            viewHolder.statusView = (TextView) view.findViewById(R.id.status);
+            viewHolder.descriptionView = (TextView) view.findViewById(R.id.description);
+            viewHolder.descriptionView.setText(dioSignal.getName());
+            mDeviceStatusView.addView(view);
+            mDioSignalViews.put(dioSignal.getCode(), viewHolder);
+        }
+        if(vaule>-12) {
+            viewHolder.statusView.setText(dioSignal.getStatus_when_io_is_1());
+        } else {
+            viewHolder.statusView.setText("--");
+        }
+
+    }
+    Map<String, DeviceParameterViewHolder> mAioSignalViews = new HashMap<>();
+    class DeviceParameterViewHolder {
+        TextView valueView;
+        TextView unitView;
+        TextView nameView;
+    }
+    void updateTextViewForAioSignal(final DeviceAioSignal aioSignal, double val){
+        DeviceParameterViewHolder viewHolder;
+        if(mAioSignalViews.containsKey(aioSignal.getCode())) {
+            viewHolder = mAioSignalViews.get(aioSignal.getCode());
+        } else {
+            View view = getActivity().getLayoutInflater().inflate(R.layout.view_device_parameter, null);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -204,11 +212,18 @@ public class DeviceInfoFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-            mAioSignalViews.put(aioSignal.getCode(), view);
+            viewHolder = new DeviceParameterViewHolder();
+            viewHolder.valueView = (TextView) view.findViewById(R.id.value);
+            viewHolder.unitView = (TextView) view.findViewById(R.id.unit);
+            viewHolder.nameView = (TextView) view.findViewById(R.id.name);
+
+            mAioSignalViews.put(aioSignal.getCode(), viewHolder);
             mDeviceParameterLayout.addView(view);
         }
         float formatedVal = (float)(Math.round(val*100))/100;
-        view.setText(formatedVal + "  " + aioSignal.getUnit() + "      " + aioSignal.getName());
+        viewHolder.valueView.setText(""+formatedVal);
+        viewHolder.unitView.setText(aioSignal.getUnit());
+        viewHolder.nameView.setText(aioSignal.getName());
     }
 
     @OnClick(R.id.device_system)

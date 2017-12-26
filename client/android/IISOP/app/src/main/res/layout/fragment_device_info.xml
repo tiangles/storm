@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:iisop="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="vertical"
@@ -11,181 +12,34 @@
         android:padding="@dimen/activity_vertical_margin"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设备编码："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:id="@+id/device_code"/>
-        </LinearLayout>
-        <Space
+        <com.tiangles.storm.views.TitleView
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设备名称："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:id="@+id/device_name"/>
-        </LinearLayout>
-        <Space
+            android:id="@+id/title"/>
+        <com.tiangles.storm.views.NamedLabelView
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="bottom" >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设备型号："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:id="@+id/device_model"/>
-        </LinearLayout>
-        <Space
+            android:id="@+id/device_model"
+            iisop:name = "设备型号"
+            iisop:label = "型号" />
+        <com.tiangles.storm.views.NamedLabelView
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="所在系统："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:id="@+id/device_system"/>
-        </LinearLayout>
-        <Space
+            android:id="@+id/device_system"
+            iisop:name = "所在系统"
+            iisop:label = "系统" />
+
+        <com.tiangles.storm.views.NamedLayoutView
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="bottom">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设备状态："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:id="@+id/device_status"/>
-        </LinearLayout>
-        <Space
+            android:id="@+id/device_status"
+            iisop:name = "设备状态"
+            iisop:label = "状态" />
+
+        <com.tiangles.storm.views.NamedLayoutView
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="bottom">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="工艺参数："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="20dp"
-                android:gravity="bottom"
-                android:id="@+id/device_parameters_layout">
-
-            </LinearLayout>
-
-        </LinearLayout>
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="bottom">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="巡检记录："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:id="@+id/device_inspection_records"/>
-        </LinearLayout>
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="bottom">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="配电柜："
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:id="@+id/device_distribution_cabinet"/>
-        </LinearLayout>
-
+            android:id="@+id/device_parameter"
+            iisop:name = "设备参数"/>
     </LinearLayout>
 </ScrollView>

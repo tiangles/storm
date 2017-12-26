@@ -30,12 +30,6 @@
     <string name="default_server_address">127.0.0.1</string>
     <string name="default_server_port">8129</string>
 
-    <!-- Example General settings -->
-
-    <!-- Example settings for Data & Sync -->
-
-    <!-- Example settings for Notifications -->
-
     <string name="loading">正在加载...</string>
 
     <string name="help">help</string>
