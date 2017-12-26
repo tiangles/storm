@@ -2,7 +2,7 @@
 from .models import Workshop as StormWorkshop
 from .models import Device as StormDevice, PowerDevice, DeviceLinkInfo
 from .models import DCSCabinet, DCSConnection, DeviceDioSignal, DeviceAioSignal
-from .models import LocalControlCabinet, LocalControlCabinetConnection, LocalControlCabinetTerminal
+from .models import LocalControlCabinet, LocalControlCabinetConnection, LocalControlCabinetTerminal, PowerDistributionCabinet
 from staff.models import DatabaseMeta
 import xlrd
 import time
@@ -352,6 +352,50 @@ def import_device_link_info(sheet, row_index):
                                                 right_device=right_device)
 
 
+def import_power_ddistribution_cabinet(sheet, row_index):
+    code = load_null_blank_cell(sheet, row_index, column('C'))
+    model = load_cell(sheet, row_index, column('B'))
+    name = load_cell(sheet, row_index, column('D'))
+    cable_mode = load_cell(sheet, row_index, column('E'))
+    circuit_index = load_cell(sheet, row_index, column('F'))
+    circuit_name = load_cell(sheet, row_index, column('G'))
+    circuit_electric_current = load_cell(sheet, row_index, column('H'))
+    vacuum_breaker = load_cell(sheet, row_index, column('I'))
+    fc_circuit = load_cell(sheet, row_index, column('J'))
+    voltage_transformer = load_cell(sheet, row_index, column('K'))
+    current_transformer = load_cell(sheet, row_index, column('L'))
+    earthing_switch = load_cell(sheet, row_index, column('M'))
+    arrester = load_cell(sheet, row_index, column('N'))
+    zero_sequence_current_transformer = load_cell(sheet, row_index, column('O'))
+    cable_code = load_cell(sheet, row_index, column('P'))
+    workshop_code = load_cell(sheet, row_index, column('R'))
+    remark = load_cell(sheet, row_index, column('T'))
+
+    if len(workshop_code) > 0:
+        workshop = StormWorkshop.objects.get(code=workshop_code)
+    else:
+        workshop = None
+
+    PowerDistributionCabinet.objects.update_or_create(
+        code=code,
+        model=model,
+        name=name,
+        cable_mode=cable_mode,
+        circuit_index=circuit_index,
+        circuit_name=circuit_name,
+        circuit_electric_current=circuit_electric_current,
+        vacuum_breaker=vacuum_breaker,
+        fc_circuit=fc_circuit,
+        voltage_transformer=voltage_transformer,
+        current_transformer=current_transformer,
+        earthing_switch=earthing_switch,
+        arrester=arrester,
+        zero_sequence_current_transformer=zero_sequence_current_transformer,
+        cable_code=cable_code,
+        workshop=workshop,
+        remark=remark)
+
+
 def do_import_data(file_path, sheet_name, row_offset, load_func, description):
     begin_time = time.time()
     imported_count = 0
@@ -412,7 +456,8 @@ sheet_info = [(u'车间列表', u'导入车间信息', 1, import_workshop),
               (u'AIO', u'导入AIO信息', 1, import_aio_signal),
               (u'DIO', u'导入DIO信息', 1, import_dio_signal),
               (u'就地柜盒一览表', u'导入就地柜盒信息', 1, import_local_control_cabinet),
-              (u'就地柜盒接线', u'导入就地柜盒接线信息', 2, import_local_control_cabinet_terminal)]
+              (u'就地柜盒接线', u'导入就地柜盒接线信息', 2, import_local_control_cabinet_terminal),
+              (u'配电柜', u'导入配电柜信息', 2, import_power_ddistribution_cabinet)]
 
 
 def import_data(file_name, file_data):

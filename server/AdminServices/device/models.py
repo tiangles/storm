@@ -180,3 +180,22 @@ class LocalControlCabinetTerminal(models.Model):
     class Meta:
         db_table = 'local_control_cabinet_terminals'
 
+
+class PowerDistributionCabinet(models.Model):
+    code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='配电柜KKS编码')
+    model = models.CharField(max_length=16, null=True, verbose_name='配电柜型号')
+    name = models.CharField(max_length=128, null=True, verbose_name='配电柜名称')
+    cable_mode = models.CharField(max_length=16, null=True, verbose_name='配线方式')
+    circuit_index = models.CharField(max_length=16, null=True, verbose_name='回路编号')
+    circuit_name = models.CharField(max_length=128, null=True, verbose_name='回路名称')
+    circuit_electric_current = models.CharField(max_length=16, null=True, verbose_name='回路工作电流')
+    vacuum_breaker = models.CharField(max_length=64, null=True, verbose_name='真空断路器')
+    fc_circuit = models.CharField(max_length=64, null=True, verbose_name='F-C回路')
+    voltage_transformer = models.CharField(max_length=64, null=True, verbose_name='电压互感器')
+    current_transformer = models.CharField(max_length=64, null=True, verbose_name='电流互感器')
+    earthing_switch = models.CharField(max_length=64, null=True, verbose_name='接地开关')
+    arrester = models.CharField(max_length=64, null=True, verbose_name='避雷器')
+    zero_sequence_current_transformer = models.CharField(max_length=16, null=True, verbose_name='零序电流互感器')
+    cable_code = models.CharField(max_length=16, null=True, verbose_name='电缆编号')
+    workshop = models.ForeignKey(to=Workshop, null=True, on_delete=models.SET_NULL, verbose_name='所在车间')
+    remark = models.CharField(max_length=64, verbose_name='备注')
