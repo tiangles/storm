@@ -20,6 +20,7 @@ import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.device.DeviceActivity;
+import com.tiangles.storm.views.ThreeColumsListAdaptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +31,8 @@ import butterknife.ButterKnife;
 public class WorkshopDeviceListActivity extends AppCompatActivity {
     @BindView(R.id.find_keyword) EditText mInputBox;
     @BindView(R.id.workshop_device_list) ListView mDeviceListView;
-    private List<ListItemContent> listItems = new ArrayList<>();
-    private DeviceListAdaptor listAdaptor;
-    StormWorkshop workshop;
+    private StormWorkshop workshop;
+    private ThreeColumsListAdaptor mListAdaptor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +43,8 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(WorkshopDeviceListActivity.this, DeviceActivity.class);
-                intent.putExtra("code", listItems.get(position).code);
+                ThreeColumsListAdaptor.Model model = (ThreeColumsListAdaptor.Model)mListAdaptor.getItem(position);
+                intent.putExtra("code", model.getCode());
                 startActivity(intent);
             }
         });
@@ -72,7 +73,6 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void init(String keyword){
@@ -80,70 +80,10 @@ public class WorkshopDeviceListActivity extends AppCompatActivity {
         List<DCSCabinet> dcsCabinets = StormApp.getDBManager().getStormDB().getDCSCabinetsForWorkshop(workshop.getCode(), keyword);
         List<LocalControlCabinet> localControlCabinets = StormApp.getDBManager().getStormDB().getLocalControlCabinetForWorkshop(workshop, keyword);
 
-        createDeviceListAdaptor(devices, dcsCabinets, localControlCabinets);
+        mListAdaptor = new ThreeColumsListAdaptor(this);
+        mListAdaptor.updateByDevice(devices, dcsCabinets, localControlCabinets);
+        View headerView = mListAdaptor.createHeaderView(R.string.index, R.string.device_code, R.string.device_name);
+        mDeviceListView.addHeaderView(headerView);
+        mDeviceListView.setAdapter(mListAdaptor);
     }
-
-    private void createDeviceListAdaptor(List<StormDevice> devices, List<DCSCabinet> dcsCabinets, List<LocalControlCabinet> localControlCabinets) {
-        listItems.clear();
-        for(StormDevice device: devices) {
-            if(device != null) {
-                listItems.add(new ListItemContent(device.getCode(), device.getName()));
-            }
-        }
-
-        for(DCSCabinet dcsCabinet : dcsCabinets) {
-            listItems.add(new ListItemContent(dcsCabinet.getCode(), dcsCabinet.getUsage()));
-        }
-
-        for(LocalControlCabinet localControlCabinet: localControlCabinets){
-            listItems.add(new ListItemContent(localControlCabinet.getCode(), localControlCabinet.getName()));
-        }
-
-        listAdaptor = new DeviceListAdaptor();
-        mDeviceListView.setAdapter(listAdaptor);
-    }
-
-    private class DeviceListAdaptor extends BaseAdapter{
-        class ViewHolder {
-            TextView codeView;
-            TextView nameView;
-        }
-        @Override
-        public int getCount() {
-            return listItems.size();
-        }
-        @Override
-        public Object getItem(int position) {
-            return listItems.get(position);
-        }
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View  view;
-            ViewHolder viewHolder = null;
-            if(convertView != null) {
-                view = convertView;
-                viewHolder = (ViewHolder)view.getTag();
-            } else {
-                view = getLayoutInflater().inflate(R.layout.list_item_workshop_device, null);
-                viewHolder = new ViewHolder();
-                viewHolder.codeView = (TextView)view.findViewById(R.id.device_code);
-                viewHolder.nameView = (TextView)view.findViewById(R.id.device_name);
-                view.setTag(viewHolder);
-            }
-            viewHolder.codeView.setText(listItems.get(position).code);
-            viewHolder.nameView.setText(listItems.get(position).name);
-            return view;
-        }
-    }
-    private class ListItemContent {
-        ListItemContent(String code, String name) {
-            this.code = code;
-            this.name = name;
-        }
-        String code;
-        String name;
-    }}
+}

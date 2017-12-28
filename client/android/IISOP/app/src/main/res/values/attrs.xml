@@ -4,4 +4,11 @@
         <attr name="name" format="string" />
         <attr name="label" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="ThreeColumsListView">
+        <attr name="title_colum_0" format="string" />
+        <attr name="title_colum_1" format="string" />
+        <attr name="title_colum_2" format="string" />
+    </declare-styleable>
+
 </resources>

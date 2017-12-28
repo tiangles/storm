@@ -36,4 +36,13 @@
     <string name="need_external_storage_permission">应用程序需要读取文件系统来保存数据库</string>
     <string name="quit">退出</string>
     <string name="go_to_settings">去设置</string>
+
+    <string name="device">设备</string>
+    <string name="device_code">设备编码</string>
+    <string name="device_name">设备名称</string>
+
+    <string name="index">序号</string>
+    <string name="channel">通道</string>
+    <string name="signal_code">信号编码</string>
+    <string name="signal_name">信号名称</string>
 </resources>

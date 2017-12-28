@@ -96,6 +96,7 @@ public class DCSCabinetFragment extends Fragment {
     private LinearLayout createFaceText(final DCSCabinet dcsCabinet, final String face){
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         List<DCSConnection> dcsConnections = StormApp.getDBManager().getStormDB().getDCSConnectionsFromCabinetFace(dcsCabinet, face);
         SortedSet<Integer> clamps = new TreeSet<>();
@@ -103,7 +104,7 @@ public class DCSCabinetFragment extends Fragment {
             clamps.add(connection.getClamp());
         }
 
-        layout.addView(newTextView(face + "面:   "));
+        layout.addView(newTextView(face + "面:   "), params);
         for(final int clamp: clamps){
             TextView view = newTextView("" + clamp + ",   ");
             view.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +119,7 @@ public class DCSCabinetFragment extends Fragment {
 
                 }
             });
-            layout.addView(view);
+            layout.addView(view, params);
         }
         return layout;
     }

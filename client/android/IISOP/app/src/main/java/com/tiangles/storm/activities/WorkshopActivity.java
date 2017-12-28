@@ -8,19 +8,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormWorkshop;
+import com.tiangles.storm.views.ThreeColumsListAdaptor;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class WorkshopActivity extends AppCompatActivity{
     @BindView(R.id.find_keyword) EditText mInputBox;
     @BindView(R.id.root_view) View mRootView;
     View mFooterView;
-    private MyAdaptor mListAdaptor;
+    private ThreeColumsListAdaptor mListAdaptor;
     private int mCurrentRecordOffset;
     private static int PAGE_SIZE = 20;
     boolean isLoading;
@@ -56,7 +54,7 @@ public class WorkshopActivity extends AppCompatActivity{
                 if (totalItemCount==lastVisibleItem&&scrollState==SCROLL_STATE_IDLE) {
                     if (!isLoading) {
                         mFooterView.findViewById(R.id.load_layout).setVisibility(View.VISIBLE);
-                        loadMore();
+                        update();
                     }
                 }
             }
@@ -71,8 +69,8 @@ public class WorkshopActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(WorkshopActivity.this, WorkshopDeviceListActivity.class);
-                StormWorkshop workshop = (StormWorkshop)mListAdaptor.getItem(position);
-                intent.putExtra("workshop_code", workshop.getCode());
+                ThreeColumsListAdaptor.Model model= (ThreeColumsListAdaptor.Model)mListAdaptor.getItem(position);
+                intent.putExtra("workshop_code", model.getCode());
                 startActivity(intent);
             }
         });
@@ -88,14 +86,10 @@ public class WorkshopActivity extends AppCompatActivity{
 
             @Override
             public void afterTextChanged(Editable s) {
-                String keyword = s.toString();
-                if(keyword.isEmpty()){
-                    mListAdaptor.workshops.clear();
-                    mCurrentRecordOffset = 0;
-                    updateWorkshopListByKeyword(null);
-                } else {
-                    updateWorkshopListByKeyword("%"+keyword+"%");
+                if(mListAdaptor != null) {
+                    mListAdaptor.clear();
                 }
+                update();
             }
         });
 
@@ -105,58 +99,31 @@ public class WorkshopActivity extends AppCompatActivity{
     public void updateWorkshopListByKeyword(String keyword){
         List<StormWorkshop> workshops = StormApp.getDBManager().getStormDB().getWorkshopList(keyword, mCurrentRecordOffset,  PAGE_SIZE);
         if(mListAdaptor == null) {
-            mListAdaptor = new MyAdaptor(workshops);
+            mListAdaptor = new ThreeColumsListAdaptor(this);
+            mListAdaptor.updateByWorkshop(workshops);
+            View headerView = mListAdaptor.createHeaderView(R.string.index, R.string.device_code, R.string.device_name);
+
+            mDeviceListView.addHeaderView(headerView);
             mDeviceListView.setAdapter(mListAdaptor);
         } else {
-            if(keyword != null) {
-                mListAdaptor.workshops = workshops;
-            } else {
-                mListAdaptor.workshops.addAll(workshops);
-            }
-            mListAdaptor.notifyDataSetChanged();
+            mListAdaptor.appendWorkshop(workshops);
         }
+        mListAdaptor.notifyDataSetChanged();
     }
 
-    private void loadMore(){
+    private void update(){
         isLoading = true;
         mCurrentRecordOffset += PAGE_SIZE;
-        updateWorkshopListByKeyword(null);
+
+        String keyword = mInputBox.getText().toString();
+        if(keyword.isEmpty()){
+            mCurrentRecordOffset = 0;
+            updateWorkshopListByKeyword(null);
+        } else {
+            updateWorkshopListByKeyword("%"+keyword+"%");
+        }
         mFooterView.findViewById(R.id.load_layout).setVisibility(View.GONE);
         isLoading = false;
-    }
-
-    private class MyAdaptor extends BaseAdapter{
-        List<StormWorkshop> workshops;
-        MyAdaptor(List<StormWorkshop> workshops){
-            this.workshops = workshops;
-        }
-        @Override
-        public int getCount() {
-            return workshops.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return workshops.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View  view;
-            if(convertView != null) {
-                view = convertView;
-            } else {
-                view = getLayoutInflater().inflate(R.layout.list_item_workshop_device, null);
-            }
-            ((TextView)view.findViewById(R.id.device_code)).setText(workshops.get(position).getCode());
-            ((TextView)view.findViewById(R.id.device_name)).setText(""+position+". "+workshops.get(position).getName());
-            return view;
-        }
     }
 
     @OnClick(R.id.root_view)

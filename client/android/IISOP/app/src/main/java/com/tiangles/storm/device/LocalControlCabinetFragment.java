@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -94,7 +93,7 @@ public class LocalControlCabinetFragment extends Fragment {
 
     private View createListviewHeader(){
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.list_item_local_control_cabinet_signal, null);
+        View view = inflater.inflate(R.layout.list_item_three_columns, null);
         TextView idView = (TextView)view.findViewById(R.id.id);
         TextView codeView = (TextView)view.findViewById(R.id.code);
         TextView nameView = (TextView)view.findViewById(R.id.name);
@@ -134,7 +133,7 @@ public class LocalControlCabinetFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if(view == null) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-                view = inflater.inflate(R.layout.list_item_local_control_cabinet_signal, null);
+                view = inflater.inflate(R.layout.list_item_three_columns, null);
                 ListViewHolder holder = new ListViewHolder();
                 holder.idView = (TextView)view.findViewById(R.id.id);
                 holder.codeView = (TextView)view.findViewById(R.id.code);
