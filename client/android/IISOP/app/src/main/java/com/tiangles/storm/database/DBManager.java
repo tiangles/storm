@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.activities.MainActivity;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.preference.PreferenceEngine;
@@ -34,7 +35,9 @@ public class DBManager {
     private StormDB stormDB;
     private String currentVersion = "1.0";
     private Dialog waitingDialog;
-    public DBManager(Activity activity){
+    private MainActivity activity;
+    public DBManager(MainActivity activity){
+        this.activity = activity;
         currentVersion = PreferenceEngine.getInstance().getCurrentDatabaseVersion();
         waitingDialog = DialogUtils.createLoadingDialog(activity, "正在更新数据库，请稍候...");
         StormApp.getNetwork().sendRequest(new SyncDatabaseVersionRequest(currentVersion));
@@ -99,6 +102,7 @@ public class DBManager {
     private void createDababaseSession(String path){
         stormDB = new StormDB(StormApp.getContext(), path);
         DialogUtils.closeDialog(waitingDialog);
+        activity.onDababaseReady();
     }
 
 

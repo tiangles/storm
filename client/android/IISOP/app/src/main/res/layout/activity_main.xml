@@ -1,28 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tiangles.storm.activities.MainActivity">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@android:color/white"
-        android:orientation="vertical" >
-        <Button
+    android:orientation="vertical">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="left"
+        android:id="@+id/top_find">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:src="@drawable/find"
+            android:id="@+id/find"/>
+        <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:onClick="showQRCodeActivity"
-            android:text="扫描二维码" />
-        <Button
-            android:id="@+id/main_bluetooth"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="附近的蓝牙设备" />
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:onClick="showWorkshopActivity"
-            android:text="车间列表" />
+            android:layout_weight="1"
+            android:id="@+id/find_keyword"/>
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/record"
+        android:layout_below="@+id/top_find"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_tabel"
+        android:id="@+id/record">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="巡检记录:"/>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确定"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom_tabel">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="showQRCodeActivity"
+            android:text="扫码"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="showWorkshopListFragment"
+            android:text="车间列表"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="我的记录"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="设置"/>
+    </LinearLayout>
+
+</RelativeLayout>
+
+

@@ -2,7 +2,6 @@ package com.tiangles.storm.views;
 
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
-import com.tiangles.storm.activities.DeviceSystemInfoActivity;
 import com.tiangles.storm.database.dao.StormDevice;
 
 import butterknife.BindView;

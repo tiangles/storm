@@ -1,4 +1,4 @@
-package com.tiangles.storm.device;
+package com.tiangles.storm.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,6 @@ import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.StormWorkshop;
-import com.tiangles.storm.panel.PanelActivity;
 import com.tiangles.storm.views.NamedLabelView;
 import com.tiangles.storm.views.NamedLayoutView;
 import com.tiangles.storm.views.TitleView;
@@ -36,8 +35,8 @@ public class DCSCabinetFragment extends Fragment {
     @BindView(R.id.cabinet_controller) NamedLabelView mCabinetControllerView;
     @BindView(R.id.location) NamedLabelView mLocationView;
     @BindView(R.id.cabinet_clamps) NamedLayoutView mCabinetClamps;
+    private DCSCabinet mDCSCabinet;
 
-    DCSCabinet mDCSCabinet;
     public DCSCabinetFragment() {
         // Required empty public constructor
     }
@@ -55,7 +54,9 @@ public class DCSCabinetFragment extends Fragment {
             String code = savedInstanceState.getString("device_code");
             mDCSCabinet = StormApp.getDBManager().getStormDB().getDCSCabinet(code);
         }
-        showCabinet(mDCSCabinet);
+        if(mDCSCabinet != null) {
+            showCabinet(mDCSCabinet);
+        }
         return view;
     }
 
@@ -73,6 +74,12 @@ public class DCSCabinetFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        mTitleView = null;
+        mCabinetNameView = null;
+        mCabinetControllerView = null;
+        mLocationView = null;
+        mCabinetClamps = null;
+        mDCSCabinet = null;
     }
 
     public void setCabinet(DCSCabinet dcsCabinet){
@@ -110,13 +117,7 @@ public class DCSCabinetFragment extends Fragment {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), PanelActivity.class);
-                    intent.putExtra("face", face);
-                    intent.putExtra("clamp", clamp);
-                    intent.putExtra("cabinet", dcsCabinet.getCode());
-                    intent.putExtra("content_type", "dcs_clamp");
-                    startActivity(intent);
-
+                StormApp.getMainActivity().showDcsClampFragment(dcsCabinet.getCode(), face, clamp);
                 }
             });
             layout.addView(view, params);

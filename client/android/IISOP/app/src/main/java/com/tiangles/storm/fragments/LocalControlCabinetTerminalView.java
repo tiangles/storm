@@ -1,11 +1,10 @@
-package com.tiangles.storm.device;
+package com.tiangles.storm.fragments;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -15,7 +14,6 @@ import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.LocalControlCabinetConnection;
-import com.tiangles.storm.panel.PanelActivity;
 
 import java.util.List;
 

@@ -29,22 +29,8 @@
         <activity android:name=".activities.QRCodeActivity" />
         <activity android:name=".activities.ChartActivity" />
         <activity
-            android:name=".activities.WorkshopActivity"
-            android:label="@string/title_activity_workshop" />
-        <activity
-            android:name=".activities.DeviceSystemInfoActivity"
-            android:label="@string/title_activity_device_system_info"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.WorkshopDeviceListActivity" />
-        <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity
-            android:name=".panel.PanelActivity"
-            android:label="接线面板" />
-        <activity
-            android:name=".device.DeviceActivity"
-            android:label="@string/title_activity_device"/>
     </application>
 
 </manifest>

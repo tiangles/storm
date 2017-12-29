@@ -1,4 +1,4 @@
-package com.tiangles.storm.panel;
+package com.tiangles.storm.fragments;
 
 
 import android.app.Fragment;
@@ -36,7 +36,8 @@ public class LocalControlCabinetSignalPanelFragment extends Fragment {
 
     private DeviceAioSignal mAioSignal;
     private DeviceDioSignal mDioSignal;
-    StormDevice mStormDevice;
+    private StormDevice mStormDevice;
+    private String mConnectionCode;
 
     public LocalControlCabinetSignalPanelFragment(){
 
@@ -48,23 +49,11 @@ public class LocalControlCabinetSignalPanelFragment extends Fragment {
         View view = inflater.inflate(R.layout.framgent_local_control_cabinet_connection_panel, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        if(mAioSignal == null && mDioSignal == null) {
-            String code = null;
-            if(savedInstanceState != null) {
-                savedInstanceState.getString("connection_code");
-            } else {
-                Bundle bundle = this.getArguments();
-                if(bundle != null) {
-                    code = bundle.getString("connection_code");
-                }
-            }
-            getSignal(code);
-        }
 
+        getSignal(mConnectionCode);
         if(mAioSignal != null) {
             showAsAioPanal();
-        }
-        if(mDioSignal != null) {
+        } else if(mDioSignal != null) {
             showAsDioPanal();
         }
         return view;
@@ -74,6 +63,10 @@ public class LocalControlCabinetSignalPanelFragment extends Fragment {
     public void onResume(){
         super.onResume();
         this.getActivity().setTitle("信号");
+    }
+
+    public void setConnectionCode(String code){
+        mConnectionCode = code;
     }
 
 

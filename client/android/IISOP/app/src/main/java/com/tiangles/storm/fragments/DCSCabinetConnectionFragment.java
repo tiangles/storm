@@ -1,4 +1,4 @@
-package com.tiangles.storm.panel;
+package com.tiangles.storm.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -28,6 +28,7 @@ public class DCSCabinetConnectionFragment extends Fragment {
     @BindView(R.id.connection_method) TextView mConnectionMethodView;
     @BindView(R.id.cable_summary) TextView mCableSummaryView;
     @BindView(R.id.cabinet_direction) TextView mCableDirectionView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

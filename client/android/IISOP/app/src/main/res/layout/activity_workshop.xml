@@ -32,4 +32,4 @@
         android:layout_height="wrap_content"
         android:divider="@drawable/list_divider_line"
         android:dividerHeight="2dp"/>
-    </LinearLayout>
+</LinearLayout>

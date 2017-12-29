@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 
+import com.tiangles.storm.activities.MainActivity;
 import com.tiangles.storm.database.DBManager;
 import com.tiangles.storm.network.Configuration;
 import com.tiangles.storm.network.Delegate;
@@ -21,7 +22,7 @@ public class StormApp extends ZApplication {
     private static Network network;
     private static User user;
     private static DBManager dbManager;
-    private static Activity mainActivity;
+    private static MainActivity mainActivity;
     private PermissionsHelper permissionsHelper;
 
     @Override
@@ -33,11 +34,14 @@ public class StormApp extends ZApplication {
 
         user = new User();
         handler = new Handler();
-//        network = createNetwork();
     }
 
-    public static void setMainActivity(Activity activity) {
+    public static void setMainActivity(MainActivity activity) {
         mainActivity = activity;
+    }
+
+    public static MainActivity getMainActivity(){
+        return mainActivity;
     }
 
     public static StormApp getInstance() {

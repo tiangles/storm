@@ -10,6 +10,7 @@ import com.tiangles.storm.R;
 import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
+import com.tiangles.storm.database.dao.LocalControlCabinetConnection;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 
@@ -52,6 +53,13 @@ public class ThreeColumsListAdaptor extends BaseAdapter {
 
         ++mHeaderCount;
         return view;
+    }
+
+    public void updateByLocalControlCabinetConnection(List<LocalControlCabinetConnection> connections) {
+        mModels.clear();
+        for(LocalControlCabinetConnection connection: connections){
+            mModels.add(new Model(""+(mModels.size()+1), connection.getCode(), connection.getName()));
+        }
     }
 
     public void updateByDevice(List<StormDevice> devices, List<DCSCabinet> dcsCabinets, List<LocalControlCabinet> localControlCabinets){

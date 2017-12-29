@@ -1,4 +1,4 @@
-package com.tiangles.storm.device;
+package com.tiangles.storm.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,18 +7,14 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.activities.ChartActivity;
-import com.tiangles.storm.activities.DeviceSystemInfoActivity;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.DeviceAioSignal;
 import com.tiangles.storm.database.dao.DeviceDioSignal;
-import com.tiangles.storm.database.dao.PowerDevice;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.preference.PreferenceEngine;
 import com.tiangles.storm.request.GetSignalParameterRecordRequest;
