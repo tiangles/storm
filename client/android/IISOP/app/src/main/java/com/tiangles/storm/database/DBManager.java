@@ -36,6 +36,7 @@ public class DBManager {
     private String currentVersion = "1.0";
     private Dialog waitingDialog;
     private MainActivity activity;
+    private boolean ready = false;
     public DBManager(MainActivity activity){
         this.activity = activity;
         currentVersion = PreferenceEngine.getInstance().getCurrentDatabaseVersion();
@@ -55,6 +56,10 @@ public class DBManager {
         } else {
             createDababaseSession(dbPath);
         }
+    }
+
+    public boolean ready(){
+        return ready;
     }
 
     private String databaseFilePath( ) {
@@ -102,6 +107,7 @@ public class DBManager {
     private void createDababaseSession(String path){
         stormDB = new StormDB(StormApp.getContext(), path);
         DialogUtils.closeDialog(waitingDialog);
+        ready = true;
         activity.onDababaseReady();
     }
 
