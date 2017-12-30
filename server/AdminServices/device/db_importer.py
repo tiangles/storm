@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .models import Workshop as StormWorkshop
-from .models import Device as StormDevice, PowerDevice, DeviceLinkInfo
+from .models import Device as StormDevice, DeviceLinkInfo
 from .models import DCSCabinet, DCSConnection, DeviceDioSignal, DeviceAioSignal
 from .models import LocalControlCabinet, LocalControlCabinetConnection, LocalControlCabinetTerminal, PowerDistributionCabinet
 from staff.models import DatabaseMeta
@@ -56,21 +56,13 @@ def import_device(sheet, row_index):
     model = load_cell(sheet, row_index, column('H'))
     maintenance_record = load_cell(sheet, row_index, column('I'))
 
-    workshop_name = load_cell(sheet, row_index, column('J'))
-    if len(workshop_name) > 0:
-        workshop = StormWorkshop.objects.get(name=workshop_name)
+    workshop_code = load_cell(sheet, row_index, column('J'))
+    if len(workshop_code) > 0:
+        workshop = StormWorkshop.objects.get(code=workshop_code)
     else:
         workshop = None
 
-    system = load_cell(sheet, row_index, column('K'))
-
-    power_device_code = load_cell(sheet, row_index, column('O'))
-    power_device_name = load_cell(sheet, row_index, column('P'))
-    if power_device_code is not None and len(power_device_code) > 0:
-        power_device, created = PowerDevice.objects.update_or_create(code=power_device_code,
-                                                                     name=power_device_name)
-    else:
-        power_device = None
+    system = load_cell(sheet, row_index, column('L'))
 
     StormDevice.objects.update_or_create(code=code,
                                          name=name,
@@ -81,8 +73,7 @@ def import_device(sheet, row_index):
                                          model=model,
                                          maintenance_record=maintenance_record,
                                          workshop=workshop,
-                                         system=system,
-                                         power_device=power_device)
+                                         system=system)
 
 
 def import_cabinet(sheet, row_index):
@@ -118,19 +109,19 @@ def import_workshop(sheet, row_index):
 def import_dio_signal(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('C'))
     figure_number = load_cell(sheet, row_index, column('B'))
-    for_device_code = load_null_blank_cell(sheet, row_index, column('D'))
+    for_device_code = load_cell(sheet, row_index, column('D'))
     for_device = StormDevice.objects.get(code=for_device_code)
-    name = load_cell(sheet, row_index, column('E'))
-    io_type = load_cell(sheet, row_index, column('F'))
-    signal_type = load_cell(sheet, row_index, column('G'))
-    remark = load_cell(sheet, row_index, column('H'))
-    power_supply = load_cell(sheet, row_index, column('I'))
-    connect_to_system = load_cell(sheet, row_index, column('J'))
-    status_when_io_is_1 = load_cell(sheet, row_index, column('K'))
-    status_when_io_is_0 = load_cell(sheet, row_index, column('L'))
-    interface_type = load_cell(sheet, row_index, column('M'))
-    control_signal_type = load_cell(sheet, row_index, column('N'))
-    incident_record = load_cell(sheet, row_index, column('O'))
+    name = load_cell(sheet, row_index, column('F'))
+    io_type = load_cell(sheet, row_index, column('G'))
+    signal_type = load_cell(sheet, row_index, column('H'))
+    remark = load_cell(sheet, row_index, column('I'))
+    power_supply = load_cell(sheet, row_index, column('J'))
+    connect_to_system = load_cell(sheet, row_index, column('K'))
+    status_when_io_is_1 = load_cell(sheet, row_index, column('L'))
+    status_when_io_is_0 = load_cell(sheet, row_index, column('M'))
+    interface_type = load_cell(sheet, row_index, column('N'))
+    control_signal_type = load_cell(sheet, row_index, column('O'))
+    incident_record = load_cell(sheet, row_index, column('P'))
     DeviceDioSignal.objects.update_or_create(code=code,
                                              figure_number=figure_number,
                                              for_device=for_device,
@@ -150,25 +141,25 @@ def import_dio_signal(sheet, row_index):
 def import_aio_signal(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('C'))
     figure_number = load_cell(sheet, row_index, column('B'))
-    for_device_code = load_null_blank_cell(sheet, row_index, column('D'))
+    for_device_code = load_cell(sheet, row_index, column('D'))
     for_device = StormDevice.objects.get(code=for_device_code)
-    name = load_cell(sheet, row_index, column('E'))
-    io_type = load_cell(sheet, row_index, column('F'))
-    signal_type = load_cell(sheet, row_index, column('G'))
-    isolation = load_cell(sheet, row_index, column('H'))
-    unit = load_cell(sheet, row_index, column('I'))
-    min_range = load_cell(sheet, row_index, column('J'))
-    max_range = load_cell(sheet, row_index, column('K'))
-    remark = load_cell(sheet, row_index, column('L'))
-    power_supply = load_cell(sheet, row_index, column('M'))
-    connect_to_system = load_cell(sheet, row_index, column('N'))
-    lll = load_boolean_cell(sheet, row_index, column('O'))
-    ll = load_boolean_cell(sheet, row_index, column('P'))
-    l = load_boolean_cell(sheet, row_index, column('Q'))
-    h = load_boolean_cell(sheet, row_index, column('R'))
-    hh = load_boolean_cell(sheet, row_index, column('S'))
-    hhh = load_boolean_cell(sheet, row_index, column('T'))
-    tendency = load_boolean_cell(sheet, row_index, column('U'))
+    name = load_cell(sheet, row_index, column('F'))
+    io_type = load_cell(sheet, row_index, column('G'))
+    signal_type = load_cell(sheet, row_index, column('H'))
+    isolation = load_cell(sheet, row_index, column('I'))
+    unit = load_cell(sheet, row_index, column('J'))
+    min_range = load_cell(sheet, row_index, column('K'))
+    max_range = load_cell(sheet, row_index, column('L'))
+    remark = load_cell(sheet, row_index, column('M'))
+    power_supply = load_cell(sheet, row_index, column('N'))
+    connect_to_system = load_cell(sheet, row_index, column('O'))
+    lll = load_boolean_cell(sheet, row_index, column('P'))
+    ll = load_boolean_cell(sheet, row_index, column('Q'))
+    l = load_boolean_cell(sheet, row_index, column('R'))
+    h = load_boolean_cell(sheet, row_index, column('S'))
+    hh = load_boolean_cell(sheet, row_index, column('T'))
+    hhh = load_boolean_cell(sheet, row_index, column('U'))
+    tendency = load_boolean_cell(sheet, row_index, column('V'))
     DeviceAioSignal.objects.update_or_create(code=code,
                                              figure_number=figure_number,
                                              for_device=for_device,
@@ -329,7 +320,7 @@ def import_local_control_cabinet_terminal(sheet, row_index):
 
 def import_device_link_info(sheet, row_index):
     left_device_code = load_cell(sheet, row_index, column('B'))
-    right_device_codes = load_cell(sheet, row_index, column('M'))
+    right_device_codes = load_cell(sheet, row_index, column('N'))
     if left_device_code is None \
             or right_device_codes is None \
             or len(left_device_code) == 0 \
@@ -449,15 +440,15 @@ def update_db_meta():
 
 
 sheet_info = [(u'车间列表', u'导入车间信息', 1, import_workshop),
-              (u'设备库', u'导入设备库信息', 2, import_device),
-              (u'设备库', u'导入设备系统信息', 2, import_device_link_info),
-              (u'盘台', u'导入DCS控制柜信息', 1, import_cabinet),
-              (u'接线库', u'导入DCS接线库信息', 2, import_dcs_connection),
-              (u'AIO', u'导入AIO信息', 1, import_aio_signal),
-              (u'DIO', u'导入DIO信息', 1, import_dio_signal),
-              (u'就地柜盒一览表', u'导入就地柜盒信息', 1, import_local_control_cabinet),
-              (u'就地柜盒接线', u'导入就地柜盒接线信息', 2, import_local_control_cabinet_terminal),
-              (u'配电柜', u'导入配电柜信息', 2, import_power_ddistribution_cabinet)]
+              (u'系统设备清册', u'导入设备库信息', 2, import_device),
+              (u'系统设备清册', u'导入设备系统信息', 2, import_device_link_info),
+              (u'监控设备清册', u'导入DCS控制柜信息', 1, import_cabinet),
+              (u'DCS接线清册', u'导入DCS接线库信息', 2, import_dcs_connection),
+              (u'AIO清册', u'导入AIO信息', 2, import_aio_signal),
+              (u'DIO清册', u'导入DIO信息', 2, import_dio_signal),
+              (u'就地柜盒设备清册', u'导入就地柜盒信息', 1, import_local_control_cabinet),
+              (u'就地柜盒接线清册', u'导入就地柜盒接线信息', 2, import_local_control_cabinet_terminal),
+              (u'配电设备清册', u'导入配电柜信息', 1, import_power_ddistribution_cabinet)]
 
 
 def import_data(file_name, file_data):

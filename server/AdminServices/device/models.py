@@ -13,14 +13,6 @@ class Workshop(models.Model):
         db_table = 'storm_workshops'
 
 
-class PowerDevice(models.Model):
-    code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='KKS编码')
-    name = models.CharField(max_length=128, null=True, verbose_name='设备名称')
-
-    class Meta:
-        db_table = 'storm_power_devices'
-
-
 class Device(models.Model):
     code = models.SlugField(max_length=16, primary_key=True, verbose_name='设备编码')
     name = models.CharField(max_length=128, verbose_name='描述')
@@ -32,7 +24,6 @@ class Device(models.Model):
     maintenance_record = models.CharField(max_length=128, verbose_name='维护记录')
     workshop = models.ForeignKey(Workshop, related_name='belong_to_workshop', on_delete=models.SET_NULL, null=True)
     system = models.CharField(max_length=64, verbose_name='所属系统', null=True)
-    power_device = models.ForeignKey(PowerDevice, related_name='power_device', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         db_table = 'storm_devices'
@@ -166,6 +157,7 @@ class LocalControlCabinetConnection(models.Model):
     cable_direction = models.CharField(max_length=128, verbose_name='电缆去向')
     remark = models.CharField(max_length=128, verbose_name='备注')
     cabinet = models.ForeignKey(LocalControlCabinet, on_delete=models.SET_NULL, null=True, verbose_name='接线盒')
+
     class Meta:
         db_table = 'local_control_cabinet_connections'
 
@@ -177,6 +169,7 @@ class LocalControlCabinetTerminal(models.Model):
     instrument_terminal = models.CharField(max_length=2, verbose_name='仪表端子')
     instrument_cable_number = models.CharField(max_length=2, verbose_name='线号')
     for_connection = models.ForeignKey(to=LocalControlCabinetConnection, on_delete=models.SET_NULL, null=True,  verbose_name='测点编号')
+
     class Meta:
         db_table = 'local_control_cabinet_terminals'
 
@@ -199,3 +192,6 @@ class PowerDistributionCabinet(models.Model):
     cable_code = models.CharField(max_length=16, null=True, verbose_name='电缆编号')
     workshop = models.ForeignKey(to=Workshop, null=True, on_delete=models.SET_NULL, verbose_name='所在车间')
     remark = models.CharField(max_length=64, verbose_name='备注')
+
+    class Meta:
+        db_table = 'power_distribution_cabinet'
