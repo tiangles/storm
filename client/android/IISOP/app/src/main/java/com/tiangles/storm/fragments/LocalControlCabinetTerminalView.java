@@ -49,12 +49,12 @@ public class LocalControlCabinetTerminalView extends View implements View.OnTouc
 //        }
 
         List<LocalControlCabinetConnection> connections = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnectionForCabinet(mCabinet);
-        Intent intent = new Intent(StormApp.getContext(), PanelActivity.class);
-        intent.putExtra("connection_code", connections.get(0).getCode());
-        intent.putExtra("connection_type", "local_control_connection");
-        intent.putExtra("cabinet_code", mCabinet.getCode());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        StormApp.getContext().startActivity(intent);
+//        Intent intent = new Intent(StormApp.getContext(), PanelActivity.class);
+//        intent.putExtra("connection_code", connections.get(0).getCode());
+//        intent.putExtra("connection_type", "local_control_connection");
+//        intent.putExtra("cabinet_code", mCabinet.getCode());
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//        StormApp.getContext().startActivity(intent);
 
         return false;
     }

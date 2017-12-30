@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp" >
+    <com.tiangles.storm.views.TitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"/>
+
+    <com.tiangles.storm.views.DeviceLinkView
+        android:id="@+id/device_link_info"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:clickable="true" />
+    <!--<com.tiangles.storm.views.DeviceLinkEditView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|center"-->
+    <!--android:visibility="gone"-->
+    <!--android:id="@+id/device_link_edit_view"/>-->
+</LinearLayout>

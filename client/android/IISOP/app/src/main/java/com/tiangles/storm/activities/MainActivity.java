@@ -13,11 +13,15 @@ import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
+import com.tiangles.storm.database.dao.PowerDistributionCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.fragments.DCSCabinetClampFragment;
+import com.tiangles.storm.fragments.ConnectionDetailFragment;
 import com.tiangles.storm.fragments.DCSCabinetFragment;
 import com.tiangles.storm.fragments.DeviceInfoFragment;
+import com.tiangles.storm.fragments.DeviceSystemInfoFragment;
 import com.tiangles.storm.fragments.LocalControlCabinetFragment;
+import com.tiangles.storm.fragments.PowerDistributionCabinetFragment;
 import com.tiangles.storm.fragments.WorkshopDeviceListFragment;
 import com.tiangles.storm.fragments.WorkshopListFragment;
 import com.tiangles.storm.fragments.LocalControlCabinetSignalPanelFragment;
@@ -35,14 +39,20 @@ public class MainActivity extends AppCompatActivity {
     private LocalControlCabinetFragment mLocalControlCabinetFragment;
     private LocalControlCabinetSignalPanelFragment mLocalControlCabinetSignalPanelFragment;
     private DCSCabinetClampFragment mDCSCabinetClampFragment;
+    private ConnectionDetailFragment mConnectionDetailFragment;
+    private DeviceSystemInfoFragment mDeviceSystemInfoFragment;
+    private PowerDistributionCabinetFragment mPowerDistributionCabinetFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StormApp.setMainActivity(this);
         setContentView(R.layout.activity_main);
-        StormApp.getDBManager();
         fragmentManager = getFragmentManager();
+
+        if(StormApp.getDBManager().ready()) {
+            switchToWorkshopListFragment();
+        }
     }
 
     @Override
@@ -58,12 +68,38 @@ public class MainActivity extends AppCompatActivity {
         Log.e("MainActivity", "onPause()");
     }
 
+    @Override
+    public void onBackPressed() {
+        Log.e("MainActivity", "fragmentManager.getBackStackEntryCount: " + fragmentManager.getBackStackEntryCount());
+        if(fragmentManager.getBackStackEntryCount() <= 1) {
+            finish();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public void onDababaseReady(){
         switchToWorkshopListFragment();
     }
 
     public void showWorkshopListFragment(View v){
         switchToWorkshopListFragment();
+    }
+
+    public void showDeviceSystemInfoFragment(String code){
+        if(mDeviceSystemInfoFragment == null) {
+            mDeviceSystemInfoFragment = new DeviceSystemInfoFragment();
+        }
+        mDeviceSystemInfoFragment.setDeviceCode(code);
+        showFragment(mDeviceSystemInfoFragment);
+
+    }
+    public void showDCSCabinetConnectionFragment(String code){
+        if(mConnectionDetailFragment == null) {
+            mConnectionDetailFragment = new ConnectionDetailFragment();
+        }
+        mConnectionDetailFragment.setConnectionCode(code);
+        showFragment(mConnectionDetailFragment);
     }
 
     public void showConnectionPanel(String code) {
@@ -80,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             mDCSCabinetClampFragment = new DCSCabinetClampFragment();
         }
         mDCSCabinetClampFragment.setClamp(dcsCabinetCode, face, clamp);
+        showFragment(mDCSCabinetClampFragment);
     }
 
     public void switchToWorkshopListFragment(){
@@ -115,6 +152,12 @@ public class MainActivity extends AppCompatActivity {
             showLocalControlCabinet(localControlCabinet);
             return;
         }
+
+        PowerDistributionCabinet powerDistributionCabinet = StormApp.getDBManager().getStormDB().getPowerDistributionCabinet(deviceCode);
+        if(powerDistributionCabinet != null) {
+            showPowerDistributionCabinet(powerDistributionCabinet);
+            return;
+        }
     }
 
     private void showStormDevice(StormDevice device){
@@ -140,6 +183,14 @@ public class MainActivity extends AppCompatActivity {
         mLocalControlCabinetFragment.setCabinet(cabinet);
 
         showFragment(mLocalControlCabinetFragment);
+    }
+
+    private void showPowerDistributionCabinet(PowerDistributionCabinet cabinet){
+        if(mPowerDistributionCabinetFragment == null) {
+            mPowerDistributionCabinetFragment = new PowerDistributionCabinetFragment();
+        }
+        mPowerDistributionCabinetFragment.setCabinet(cabinet);
+        showFragment(mPowerDistributionCabinetFragment);
     }
 
     public void showQRCodeActivity(View v){
@@ -170,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showFragment(Fragment fragment){
-        if(fragment == null) {
+        if(fragment == null || (fragment == currentFragment && mWorkshopListFragment == currentFragment)) {
             return;
         }
         FragmentTransaction transaction = fragmentManager.beginTransaction();

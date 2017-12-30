@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:iisop="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.tiangles.storm.views.TitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"/>
+
+    <com.tiangles.storm.views.NamedLabelView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/device_model"
+        iisop:name = "设备型号"
+        iisop:label = "型号" />
+
+    <com.tiangles.storm.views.NamedLabelView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/local_control_cabinet"
+        iisop:name = "就地柜/接线盒"/>
+
+    <com.tiangles.storm.views.NamedLabelView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dcs_connection"
+        iisop:name = "DCS机柜接线"/>
+
+    <com.tiangles.storm.views.NamedLabelView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cable"
+        iisop:name = "电缆"/>
+
+    <com.tiangles.storm.views.NamedLabelView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cable_connection_method"
+        iisop:name = "接线方式"/>
+
+</LinearLayout>

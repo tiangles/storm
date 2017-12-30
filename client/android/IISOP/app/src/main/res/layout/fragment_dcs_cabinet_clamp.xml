@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:iisop="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:scrollbars="vertical"
-    android:fadingEdge="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/activity_vertical_margin"
-        android:orientation="vertical" >
         <com.tiangles.storm.views.TitleView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/title" />
+
         <ListView
+            android:id="@+id/signal_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/signal_list"/>
-    </LinearLayout>
-</ScrollView>
+            android:layout_height="wrap_content" />
+</LinearLayout>

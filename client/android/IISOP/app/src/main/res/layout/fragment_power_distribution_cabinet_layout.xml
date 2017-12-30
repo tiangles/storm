@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:iisop="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/connection_manner"
+        android:clipToPadding="true"
+        android:fadingEdge="vertical"
+        android:fillViewport="true"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+            <com.tiangles.storm.views.TitleView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/circuit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="回路" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/circuit_electric_current"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="回路工作电流" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/vacuum_breaker_fc_circuit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="真空断路器/F-C回路规范" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/current_transformer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="电流互感器" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/voltage_transformer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="电压互感器" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/earthing_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="接地开关" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/earrester"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="避雷器" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/zero_sequence_current_transformer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="零序电流互感器" />
+
+            <com.tiangles.storm.views.NamedLabelView
+                android:id="@+id/cable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                iisop:name="电缆" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/connection_manner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/connection_manner" />
+</RelativeLayout>

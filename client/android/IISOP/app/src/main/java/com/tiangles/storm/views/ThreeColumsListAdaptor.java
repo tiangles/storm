@@ -11,6 +11,7 @@ import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.DCSConnection;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.LocalControlCabinetConnection;
+import com.tiangles.storm.database.dao.PowerDistributionCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 
@@ -62,7 +63,7 @@ public class ThreeColumsListAdaptor extends BaseAdapter {
         }
     }
 
-    public void updateByDevice(List<StormDevice> devices, List<DCSCabinet> dcsCabinets, List<LocalControlCabinet> localControlCabinets){
+    public void updateByDevice(List<StormDevice> devices, List<DCSCabinet> dcsCabinets, List<LocalControlCabinet> localControlCabinets, List<PowerDistributionCabinet> powerDistributionCabinets){
         mModels.clear();
         for(StormDevice device: devices) {
             mModels.add(new Model(""+(mModels.size()+1), device.getCode(), device.getName()));
@@ -75,9 +76,13 @@ public class ThreeColumsListAdaptor extends BaseAdapter {
         for(LocalControlCabinet localControlCabinet: localControlCabinets){
             mModels.add(new Model(""+(mModels.size()+1), localControlCabinet.getCode(), localControlCabinet.getName()));
         }
+        for(PowerDistributionCabinet cabinet: powerDistributionCabinets) {
+            mModels.add(new Model(""+(mModels.size()+1), cabinet.getCode(), cabinet.getName()));
+        }
     }
 
     public void updateByDCSConnection(List<DCSConnection> connections){
+        mModels.clear();
         for(DCSConnection connection: connections) {
             mModels.add(new Model(connection.getChannel(), connection.getCode(), connection.getDescription()));
         }

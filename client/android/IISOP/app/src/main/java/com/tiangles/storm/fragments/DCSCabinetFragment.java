@@ -50,10 +50,6 @@ public class DCSCabinetFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dcs_cabinet, container, false);
         unbinder = ButterKnife.bind(this, view);
-        if(mDCSCabinet == null) {
-            String code = savedInstanceState.getString("device_code");
-            mDCSCabinet = StormApp.getDBManager().getStormDB().getDCSCabinet(code);
-        }
         if(mDCSCabinet != null) {
             showCabinet(mDCSCabinet);
         }
@@ -79,7 +75,6 @@ public class DCSCabinetFragment extends Fragment {
         mCabinetControllerView = null;
         mLocationView = null;
         mCabinetClamps = null;
-        mDCSCabinet = null;
     }
 
     public void setCabinet(DCSCabinet dcsCabinet){

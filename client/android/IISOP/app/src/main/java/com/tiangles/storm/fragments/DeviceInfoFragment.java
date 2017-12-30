@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.tiangles.storm.R;
@@ -30,7 +33,6 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
@@ -41,12 +43,14 @@ public class DeviceInfoFragment extends Fragment {
     @BindView(R.id.device_system) NamedLabelView mDeviceSystemView;
     @BindView(R.id.device_status) NamedLayoutView mDeviceStatusView;
     @BindView(R.id.device_parameter) NamedLayoutView mDeviceParameterLayout;
-    StormDevice mDevice;
-    Map<String, DeviceDioSignal> mDioSignals;
-    Map<String, DeviceAioSignal> mAioSignals;
-    Map<String, DCSConnection> mDCSConnections;
+    private StormDevice mDevice;
+    private Map<String, DeviceDioSignal> mDioSignals;
+    private Map<String, DeviceAioSignal> mAioSignals;
+    private Map<String, DCSConnection> mDCSConnections;
     private Timer mTimer;
-    boolean mFragmentPaused;
+    private boolean mFragmentPaused;
+    private Map<String, DeviceStatusViewHolder> mDioSignalViews;
+    private Map<String, DeviceParameterViewHolder> mAioSignalViews;
 
     public DeviceInfoFragment() {
     }
@@ -63,10 +67,6 @@ public class DeviceInfoFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, view);
 
-        if(mDevice == null) {
-            Bundle bundle = this.getArguments();
-            mDevice = StormApp.getDBManager().getStormDB().getDevice(bundle.getString("device_code"));
-        }
         showDevice(mDevice);
         return view;
     }
@@ -85,6 +85,18 @@ public class DeviceInfoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        mTitleView = null;
+        mDeviceModelView = null;
+        mDeviceSystemView = null;
+        mDeviceModelView = null;
+        mDeviceStatusView = null;
+        mDeviceParameterLayout = null;
+        mDioSignals = null;
+        mAioSignals = null;
+        mDCSConnections = null;
+        mTimer = null;
+        mDioSignalViews = null;
+        mAioSignalViews = null;
     }
 
     @Override
@@ -120,7 +132,6 @@ public class DeviceInfoFragment extends Fragment {
         mDevice = device;
     }
 
-
     private void showDevice(StormDevice device) {
         List<DeviceDioSignal> dioSignals = StormApp.getDBManager().getStormDB().getDioSignalsForDevice(device.getCode());
         mDioSignals = new HashMap<>(dioSignals.size());
@@ -141,8 +152,16 @@ public class DeviceInfoFragment extends Fragment {
         }
 
         mTitleView.setTitle(device.getCode(), device.getName());
+        this.registerForContextMenu(mTitleView);
         mDeviceModelView.setLabel(device.getModel());
         mDeviceSystemView.setLabel(device.getSystem());
+
+        mDeviceSystemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StormApp.getMainActivity().showDeviceSystemInfoFragment(mDevice.getCode());
+            }
+        });
     }
 
     private void updateParameters(Map<String, Double> parameters){
@@ -163,13 +182,16 @@ public class DeviceInfoFragment extends Fragment {
         }
     }
 
-    Map<String, DeviceStatusViewHolder> mDioSignalViews = new HashMap<>();
     class DeviceStatusViewHolder {
         TextView statusView;
         TextView descriptionView;
     }
     void updateTextViewForDioSignal(final DeviceDioSignal dioSignal, double vaule){
         DeviceStatusViewHolder viewHolder;
+
+        if(mDioSignalViews == null) {
+            mDioSignalViews  = new HashMap<>();
+        }
         if(mDioSignalViews.containsKey(dioSignal.getCode())) {
             viewHolder = mDioSignalViews.get(dioSignal.getCode());
         } else {
@@ -188,7 +210,6 @@ public class DeviceInfoFragment extends Fragment {
         }
 
     }
-    Map<String, DeviceParameterViewHolder> mAioSignalViews = new HashMap<>();
     class DeviceParameterViewHolder {
         TextView valueView;
         TextView unitView;
@@ -196,18 +217,44 @@ public class DeviceInfoFragment extends Fragment {
     }
     void updateTextViewForAioSignal(final DeviceAioSignal aioSignal, double val){
         DeviceParameterViewHolder viewHolder;
+        if(mAioSignalViews == null) {
+            mAioSignalViews = new HashMap<>();
+        }
         if(mAioSignalViews.containsKey(aioSignal.getCode())) {
             viewHolder = mAioSignalViews.get(aioSignal.getCode());
         } else {
             View view = getActivity().getLayoutInflater().inflate(R.layout.view_device_parameter, null);
+            view.setTag(aioSignal.getCode());
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ChartActivity.class);
-                    intent.putExtra("signal_code", aioSignal.getCode());
-                    startActivity(intent);
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(StormApp.getContext(), view);
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.device_signal_context_menu, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch(menuItem.getItemId()) {
+                                case R.id.tendency: {
+                                    Intent intent = new Intent(getActivity(), ChartActivity.class);
+                                    intent.putExtra("signal_code", aioSignal.getCode());
+                                    startActivity(intent);
+                                }
+                                break;
+                                case R.id.connection: {
+                                    StormApp.getMainActivity().showDCSCabinetConnectionFragment(aioSignal.getCode());
+                                }
+                                break;
+                                default:
+                                    break;
+                            }
+                            return true;
+                        }
+                    });
+                    popup.show();
                 }
             });
+
             viewHolder = new DeviceParameterViewHolder();
             viewHolder.valueView = (TextView) view.findViewById(R.id.value);
             viewHolder.unitView = (TextView) view.findViewById(R.id.unit);
@@ -221,12 +268,4 @@ public class DeviceInfoFragment extends Fragment {
         viewHolder.unitView.setText(aioSignal.getUnit());
         viewHolder.nameView.setText(aioSignal.getName());
     }
-
-    @OnClick(R.id.device_system)
-    void showSystemInfo(){
-        Intent intent = new Intent(this.getActivity(), DeviceSystemInfoActivity.class);
-        intent.putExtra("device_code", mDevice.getCode());
-        startActivity(intent);
-    }
-
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.fragments.DeviceSystemInfoFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +26,7 @@ public class DeviceLinkEditView extends LinearLayout {
     @BindView(R.id.edit_linked_device) Button mEditLinkedDeviceBtn;
     @BindView(R.id.view_linked_device) Button mViewLinkedDeviceBtn;
 
-    private  DeviceSystemInfoActivity mDeviceSystemInfoActivity;
+    private  DeviceSystemInfoFragment mDeviceSystemInfoFragment;
     private StormDevice mStormDevice;
     private boolean mEditing;
 
@@ -60,18 +61,18 @@ public class DeviceLinkEditView extends LinearLayout {
             public void onClick(View v) {
                 if(mEditing) {
                     mEditing = false;
-                    mDeviceSystemInfoActivity.onLinkedDeviceChanged(mStormDevice.getCode(), mDeviceCode.getText().toString());
+//                    mDeviceSystemInfoFragment.onLinkedDeviceChanged(mStormDevice.getCode(), mDeviceCode.getText().toString());
                 } else {
-                    mDeviceSystemInfoActivity.switchToDevice(mStormDevice.getCode());
+//                    mDeviceSystemInfoFragment.switchToDevice(mStormDevice.getCode());
                 }
                 updateButtonState();
             }
         });
     }
 
-    public void setDevice(String deviceCode, DeviceSystemInfoActivity activity) {
+    public void setDevice(String deviceCode, DeviceSystemInfoFragment fragment) {
         mStormDevice = StormApp.getDBManager().getStormDB().getDevice(deviceCode);
-        mDeviceSystemInfoActivity = activity;
+        mDeviceSystemInfoFragment = fragment;
         if(mStormDevice != null) {
             mDeviceCode.setText(mStormDevice.getCode());
             mDeviceName.setText(mStormDevice.getName());

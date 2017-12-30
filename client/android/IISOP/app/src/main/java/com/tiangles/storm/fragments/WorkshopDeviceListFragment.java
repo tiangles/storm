@@ -15,6 +15,7 @@ import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
 import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
+import com.tiangles.storm.database.dao.PowerDistributionCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.views.ThreeColumsListAdaptor;
@@ -81,10 +82,7 @@ public class WorkshopDeviceListFragment extends Fragment {
         mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(WorkshopDeviceListActivity.this, DeviceActivity.class);
                 ThreeColumsListAdaptor.Model model = (ThreeColumsListAdaptor.Model)mListAdaptor.getItem(position);
-//                intent.putExtra("code", model.getCode());
-//                startActivity(intent);
                 StormApp.getMainActivity().switchToDeviceDetailFragment(model.getCode());
             }
         });
@@ -93,11 +91,12 @@ public class WorkshopDeviceListFragment extends Fragment {
         List<StormDevice> devices = StormApp.getDBManager().getStormDB().getDeviceFromWorkshop(workshop.getCode(), null);
         List<DCSCabinet> dcsCabinets = StormApp.getDBManager().getStormDB().getDCSCabinetsForWorkshop(workshop.getCode(), null);
         List<LocalControlCabinet> localControlCabinets = StormApp.getDBManager().getStormDB().getLocalControlCabinetForWorkshop(workshop, null);
+        List<PowerDistributionCabinet> powerDistributionCabinets = StormApp.getDBManager().getStormDB().getPowerDistributionCabinetForWorkshop(workshop, null);
 
         mTitleView.setTitle(workshop.getCode(), workshop.getName());
 
         mListAdaptor = new ThreeColumsListAdaptor(getActivity());
-        mListAdaptor.updateByDevice(devices, dcsCabinets, localControlCabinets);
+        mListAdaptor.updateByDevice(devices, dcsCabinets, localControlCabinets, powerDistributionCabinets);
         View headerView = mListAdaptor.createHeaderView(R.string.index, R.string.device_code, R.string.device_name);
         mDeviceListView.addHeaderView(headerView);
         mDeviceListView.setAdapter(mListAdaptor);

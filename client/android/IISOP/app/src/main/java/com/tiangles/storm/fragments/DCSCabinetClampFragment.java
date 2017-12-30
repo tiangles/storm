@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +28,7 @@ import butterknife.Unbinder;
 public class DCSCabinetClampFragment extends Fragment {
     private Unbinder unbinder;
     @BindView(R.id.title) TitleView mTitleView;
-    @BindView(R.id.signal_list) ListView mContentLayout;
+    @BindView(R.id.signal_list) ListView mSignalListView;
     private String cabinetCode;
     private String face;
     private int clamp;
@@ -46,7 +47,7 @@ public class DCSCabinetClampFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dcs_cabinet_clamp, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        setClamp(cabinetCode, face, clamp);
+        showClamp(cabinetCode, face, clamp);
 
         return view;
     }
@@ -66,7 +67,7 @@ public class DCSCabinetClampFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
         mTitleView = null;
-        mContentLayout = null;
+        mSignalListView = null;
     }
 
     public void setClamp(String cabinetCode, String face, int clamp){
@@ -86,10 +87,10 @@ public class DCSCabinetClampFragment extends Fragment {
         mTitleView.setTitle(sb.toString(), cabinetCode);
 
         final List<DCSConnection> connections = StormApp.getDBManager().getStormDB().getDCSConnectionFromClamp(cabinetCode, face, clamp);
-        ThreeColumsListAdaptor adaptor = new ThreeColumsListAdaptor(getActivity());
+        final ThreeColumsListAdaptor adaptor = new ThreeColumsListAdaptor(getActivity());
         adaptor.updateByDCSConnection(connections);
         View header = adaptor.createHeaderView(R.string.channel, R.string.signal_code, R.string.signal_name);
-        mContentLayout.addHeaderView(header);
-        mContentLayout.setAdapter(adaptor);
+        mSignalListView.addHeaderView(header);
+        mSignalListView.setAdapter(adaptor);
     }
 }
