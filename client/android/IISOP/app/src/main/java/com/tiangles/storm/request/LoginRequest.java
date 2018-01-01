@@ -19,16 +19,26 @@ public class LoginRequest extends Request {
     }
 
     private void handleLoginResult(JSONObject jObj) {
-        String message = "";
+        int userID = -1;
         int result = -1;
+        String error = null;
         try {
-             result = jObj.getInt("result");
-            message = jObj.getString("message");
+            result = jObj.getInt("result");
+            JSONObject message = jObj.getJSONObject("message");
+            if(result == 0) {
+                userID = message.getInt("user_id");
+                error = "Succeed";
+            } else {
+                error = message.getString("error");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        user.mAuthSucceeded = (result == 0);
-        listener.onLoginDone(result, message);
+        if(result == 0) {
+            user.mAuthSucceeded = true;
+            user.mID = userID;
+        }
+        listener.onLoginDone(result, error);
     }
 
     @Override

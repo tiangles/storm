@@ -49,8 +49,9 @@ public class SyncDatabaseVersionRequest extends Request {
             StormApp.getDBManager().onSyncDatabaseDone(version, url);
         } catch (JSONException e) {
             e.printStackTrace();
+            StormApp.getDBManager().onSyncDatabaseDone(null, null);
         }
-        return false;
+        return true;
     }
 
     @Override

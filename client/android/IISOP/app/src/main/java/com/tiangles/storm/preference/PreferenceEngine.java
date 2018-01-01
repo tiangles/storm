@@ -11,6 +11,7 @@ public class PreferenceEngine {
     private final String KEY_SERVER_ADDRESS = "key_server_address";
     private final String KEY_SERVER_PORT = "key_server_port";
     private final String KEY_CURRENT_USER_PASSWORD = "key_current_user_password";
+    private final String KEY_CURRENT_USER_ID = "key_current_user_id";
     private final String KEY_AUTO_LOGIN = "key_auto_login";
     private final String KEY_REMEMBER_PASSWORD = "key_remember_password";
     private final String KEY_SIGNAL_PARAMETER_REFRESH_INTERVAL = "key_signal_parameter_refresh_interval";
@@ -65,6 +66,14 @@ public class PreferenceEngine {
         return getDefaultPreference().getString(KEY_CURRENT_USER_PASSWORD, "");
     }
 
+    public void setUserId(int id) {
+        getDefaultPreference().edit().putInt(KEY_CURRENT_USER_ID, id).commit();
+    }
+
+    public int getUserID(){
+        return getDefaultPreference().getInt(KEY_CURRENT_USER_ID, -1);
+    }
+
     public void setAutoLogin(boolean autoLogin) {
         getDefaultPreference().edit().putBoolean(KEY_AUTO_LOGIN, autoLogin).commit();
     }
@@ -92,7 +101,7 @@ public class PreferenceEngine {
 
 
     public User loadUserInfo(User user) {
-        user.set(getUserName(),
+        user.set(getUserID(), getUserName(),
                 getUserPassword(),
                 getRememberPassword(),
                 getAutoLogin());
@@ -108,6 +117,7 @@ public class PreferenceEngine {
         } else {
             setUserPassword("");
         }
+        setUserId(user.mID);
         setUserName(user.mUserName);
     }
 

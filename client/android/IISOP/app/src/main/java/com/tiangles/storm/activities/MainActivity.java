@@ -8,6 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
@@ -15,6 +19,7 @@ import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.PowerDistributionCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.database.dao.UserEvent;
 import com.tiangles.storm.fragments.DCSCabinetClampFragment;
 import com.tiangles.storm.fragments.ConnectionDetailFragment;
 import com.tiangles.storm.fragments.DCSCabinetFragment;
@@ -25,8 +30,15 @@ import com.tiangles.storm.fragments.PowerDistributionCabinetFragment;
 import com.tiangles.storm.fragments.WorkshopDeviceListFragment;
 import com.tiangles.storm.fragments.WorkshopListFragment;
 import com.tiangles.storm.fragments.LocalControlCabinetSignalPanelFragment;
+import com.tiangles.storm.request.UploadUserEventRequest;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
+
+import java.util.Date;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     private final static int SCAN_REQUEST_CODE = 1;
@@ -43,11 +55,18 @@ public class MainActivity extends AppCompatActivity {
     private DeviceSystemInfoFragment mDeviceSystemInfoFragment;
     private PowerDistributionCabinetFragment mPowerDistributionCabinetFragment;
 
+    @BindView(R.id.event_content) EditText mEventContentView;
+    @BindView(R.id.content) FrameLayout mContentLayout;
+
+    private String mCurrentDeviceCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StormApp.setMainActivity(this);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         fragmentManager = getFragmentManager();
 
         if(StormApp.getDBManager().ready()) {
@@ -78,6 +97,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.commit_event)
+    void onCommitEvent(){
+        String event = mEventContentView.getText().toString();
+        if(!event.isEmpty()) {
+            Date date = new Date();
+            long eventId = UserEvent.generateEventID(date);
+
+            UserEvent userEvent = new UserEvent(eventId, date, event, mCurrentDeviceCode, StormApp.getCurrentUser().mID, UserEvent.STATUS_PENDING);
+            StormApp.getDBManager().getUserDB().commitUserEventChanges(userEvent);
+            StormApp.getNetwork().sendRequest(new UploadUserEventRequest(userEvent));
+            mEventContentView.setText("");
+        }
+    }
+
+    @OnClick(R.id.show_user_event_list)
+    void onShowUserEventList() {
+        Intent intent = new Intent(this, UserEventActivity.class);
+        startActivity(intent);
+    }
+
+    public void onDatabaseFailed(){
+        TextView textView = new TextView(this);
+        textView.setText(R.string.sync_database_failed);
+        mContentLayout.addView(textView);
+    }
+
     public void onDababaseReady(){
         switchToWorkshopListFragment();
     }
@@ -92,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mDeviceSystemInfoFragment.setDeviceCode(code);
         showFragment(mDeviceSystemInfoFragment);
-
+        mCurrentDeviceCode = code;
     }
     public void showDCSCabinetConnectionFragment(String code){
         if(mConnectionDetailFragment == null) {
@@ -100,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mConnectionDetailFragment.setConnectionCode(code);
         showFragment(mConnectionDetailFragment);
+        mCurrentDeviceCode = code;
     }
 
     public void showConnectionPanel(String code) {
@@ -109,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mLocalControlCabinetSignalPanelFragment.setConnectionCode(code);
         showFragment(mLocalControlCabinetSignalPanelFragment);
+        mCurrentDeviceCode = code;
     }
 
     public void showDcsClampFragment(String dcsCabinetCode, String face, int clamp){
@@ -117,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mDCSCabinetClampFragment.setClamp(dcsCabinetCode, face, clamp);
         showFragment(mDCSCabinetClampFragment);
+        mCurrentDeviceCode = dcsCabinetCode;
     }
 
     public void switchToWorkshopListFragment(){
@@ -124,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
             mWorkshopListFragment = new WorkshopListFragment();
         }
         showFragment(mWorkshopListFragment);
+        mCurrentDeviceCode = null;
     }
 
     public void switchToWorkshopDeviceListFragment(String workshopCode){
@@ -132,9 +181,11 @@ public class MainActivity extends AppCompatActivity {
         }
         mWorkshopDeviceListFragment.setWorkshopCode(workshopCode);
         showFragment(mWorkshopDeviceListFragment);
+        mCurrentDeviceCode = workshopCode;
     }
 
     public void switchToDeviceDetailFragment(String deviceCode){
+        mCurrentDeviceCode = deviceCode;
         StormDevice device = StormApp.getDBManager().getStormDB().getDevice(deviceCode);
         if(device != null) {
             showStormDevice(device);

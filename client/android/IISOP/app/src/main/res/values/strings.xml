@@ -27,7 +27,7 @@
     <string name="setting">设置</string>
     <string name="server_address">服务器地址</string>
     <string name="server_port">服务器端口</string>
-    <string name="default_server_address">127.0.0.1</string>
+    <string name="default_server_address">192.168.3.11</string>
     <string name="default_server_port">8129</string>
 
     <string name="loading">正在加载...</string>
@@ -45,4 +45,8 @@
     <string name="channel">通道</string>
     <string name="signal_code">信号编码</string>
     <string name="signal_name">信号名称</string>
+
+    <string name="sync_database_failed">与服务器同步数据库失败，请联系管理员</string>
+
+    <string name="user_event">巡检记录</string>
 </resources>

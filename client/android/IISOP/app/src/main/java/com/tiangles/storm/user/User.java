@@ -6,6 +6,7 @@ import com.tiangles.storm.request.LoginRequest;
 public class User {
     private static User mInstance;
 
+    public int mID;
     public String mUserName;
     public String mPassword;
     public boolean mRememberPassword;
@@ -20,10 +21,12 @@ public class User {
 
     }
 
-    public void set(String userName,
-                 String password,
-                 boolean rememberPassword,
-                 boolean autoLogin){
+    public void set(int id,
+                    String userName,
+                    String password,
+                    boolean rememberPassword,
+                    boolean autoLogin){
+        mID = id;
         mUserName = userName;
         mPassword = password;
         mRememberPassword = rememberPassword;

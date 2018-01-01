@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity{
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             final User user = new User();
-            user.set(signInUserName,
+            user.set(-1, signInUserName,
                     password,
                     mRememberPasswordBox.isChecked(),
                     mAutoLoginBox.isChecked()
@@ -144,8 +144,8 @@ public class LoginActivity extends AppCompatActivity{
                 public void onLoginDone(int error, String msg) {
                     showProgress(false);
                     if(user.mAuthSucceeded){
-                        switchToMain();
                         PreferenceEngine.getInstance().saveUserInfo(user);
+                        switchToMain();
                     } else {
                         mPasswordEditor.setError(msg);
                         mPasswordEditor.requestFocus();

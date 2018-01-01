@@ -44,10 +44,6 @@ public class LocalControlCabinetFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_local_control_cabinet, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        if(mLocalControlCabinet == null) {
-            String code = savedInstanceState.getString("device_code");
-            mLocalControlCabinet = StormApp.getDBManager().getStormDB().getLocalControlCabinet(code);
-        }
         showCabinet(mLocalControlCabinet);
         return view;
     }
@@ -69,7 +65,6 @@ public class LocalControlCabinetFragment extends Fragment {
         mTitleView = null;
         mSignalList = null;
         mListAdaptor = null;
-        mLocalControlCabinet = null;
     }
 
     public void setCabinet(LocalControlCabinet cabinet){

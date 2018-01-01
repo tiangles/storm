@@ -14,7 +14,9 @@ import com.tiangles.storm.database.dao.LocalControlCabinetConnection;
 import com.tiangles.storm.database.dao.PowerDistributionCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
+import com.tiangles.storm.database.dao.UserEvent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +56,15 @@ public class ThreeColumsListAdaptor extends BaseAdapter {
 
         ++mHeaderCount;
         return view;
+    }
+
+    public void updateByUserEvents(List<UserEvent> events){
+        mModels.clear();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
+        for(UserEvent event: events){
+            String dateString = formatter.format(event.getDate());
+            mModels.add(new Model(""+(mModels.size()+1), dateString, event.getEvent()));
+        }
     }
 
     public void updateByLocalControlCabinetConnection(List<LocalControlCabinetConnection> connections) {
