@@ -22,6 +22,7 @@ cmd_handlers = [
     (r'sync_workshop', 'handlers.Handler.handle_sync_workshop'),
     (r'get_signal_parameter_record', 'handlers.Handler.handle_get_signal_parameter_record'),
     (r'sync_database', 'handlers.Handler.handle_sync_database'),
+    (r'upload_user_events', 'handlers.Handler.handle_upload_user_events'),
 
 ]
 

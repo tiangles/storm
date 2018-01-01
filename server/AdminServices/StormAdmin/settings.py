@@ -65,7 +65,6 @@ DATABASES = {
 DATABASE_ROUTERS = ['StormAdmin.database_router.DatabaseAppsRouter']
 DATABASE_APPS_MAPPING = {
     'device': 'device_db',
-    'event': 'device_db',
 }
 
 AUTH_PASSWORD_VALIDATORS = [

@@ -9,10 +9,12 @@ from django.contrib.sessions.base_session import (
 )
 
 class UserEvent(models.Model):
-    type = models.CharField(max_length=64, blank=False)
+    id = models.IntegerField(primary_key=True)
     date = models.DateTimeField(auto_now=True, verbose_name='时间')
-    event = models.CharField(max_length=255, blank=False)
+    event = models.CharField(max_length=255)
+    device_code = models.CharField(max_length=32, blank=False, default="0")
     user = models.ForeignKey(User)
+    status = models.IntegerField(verbose_name='状态', default=0)
 
     class Meta:
         db_table = 'user_event'

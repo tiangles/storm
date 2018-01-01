@@ -6,11 +6,13 @@ db = models.database.db
 
 
 class UserEvent(Model):
-    type = CharField(max_length=64)
-    date = DateTimeField()
-    event = CharField(max_length=256)
+    id = IntegerField(primary_key=True)
+    date = DateTimeField(null = True)
+    event = CharField(null = True)
+    device_code = CharField(null = True)
     user = ForeignKeyField(User)
+    status = IntegerField(null = True)
 
     class Meta:
         database = db
-        db_table = 'auth_user_event'
+        db_table = 'user_event'

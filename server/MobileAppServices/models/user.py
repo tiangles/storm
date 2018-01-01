@@ -5,6 +5,7 @@ db = models.database.db
 
 
 class User(Model):
+    id = IntegerField(primary_key=True)
     password = CharField(max_length=128)
     last_login = DateTimeField()
     is_superuser = BooleanField()

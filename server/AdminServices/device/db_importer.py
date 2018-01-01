@@ -285,6 +285,7 @@ def import_local_control_connection(sheet, row_index):
         remark=remark,
         cabinet=cabinet,)
 
+    print "import_local_control_connection:%s"%code
     return obj
 
 
@@ -296,6 +297,7 @@ def import_local_control_cabinet_terminal(sheet, row_index):
     for_connection_code = load_cell(sheet, row_index, column('B'))
     if len(for_connection_code) > 0:
         # current_local_control_connection = LocalControlCabinetConnection.objects.get(code=for_connection_code)
+        print "Try to import_local_control_connection %s" % for_connection_code
         current_local_control_connection = import_local_control_connection(sheet, row_index)
 
     cabinet_code = load_cell(sheet, row_index, column('I'))

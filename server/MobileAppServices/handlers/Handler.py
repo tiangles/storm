@@ -29,9 +29,9 @@ def handle_login(socket, message):
 
     if user is not None and check_password(password, user.password):
         socket.user = user
-        return 0, 'succeed'
+        return 0, {'user_id': user.id}
     else:
-        return -1, 'incorrect user name or password'
+        return -1, {'error':'incorrect user name or password'}
 
 
 def handle_upload_event(socket, message):
@@ -140,3 +140,29 @@ def handle_sync_database(skt, message):
 
 def get_signal_parameter_record(connection):
     return -12 + (0.5 - random.random()) * 2
+
+
+def handle_upload_user_events(socket, message):
+    events = message['events']
+    result=[]
+    for e in events:
+        event_id = e['event_id']
+        date = e['date']
+        event = e['event']
+        device_code = e['device_code']
+        user_id = e['user_id']
+        try:
+            UserEvent.create(id=event_id,
+                             date=date,
+                             event=event,
+                             device_code=device_code,
+                             event_id=event_id,
+                             user_id=user_id,
+                             status=1)
+            result.append({'event_id':event_id,
+                           'event_status':1})
+        except Exception as e:
+            result = str(e)
+
+    return 0, result
+
