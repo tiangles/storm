@@ -178,7 +178,18 @@ public class StormDB {
                 .list();
     }
 
-    public List<DCSCabinet> getDCSCabinetsForWorkshop(String workshopCode, String keyword) {
+    public List<DCSCabinet> findDCSCabinets(String keyword) {
+        List<DCSCabinet> result = null;
+        if(keyword != null && !keyword.isEmpty()){
+            String query = "%"+keyword+"%";
+            QueryBuilder qb = getDCSCabinetDao().queryBuilder();
+            qb = qb.where(qb.or(DCSCabinetDao.Properties.Code.like(query), DCSCabinetDao.Properties.Usage.like(query)));
+            result = qb.build().list();
+        }
+        return result;
+    }
+
+    public List<DCSCabinet> findDCSCabinetsInWorkshop(String workshopCode, String keyword) {
         List<DCSCabinet> result = null;
         if(workshopCode != null && !workshopCode.isEmpty()) {
             if(keyword == null || keyword.isEmpty()){
@@ -222,7 +233,18 @@ public class StormDB {
         return null;
     }
 
-    public List<LocalControlCabinet> getLocalControlCabinetForWorkshop(StormWorkshop workshop, String keyword){
+    public List<LocalControlCabinet> findLocalControlCabinet(String keyword){
+        List<LocalControlCabinet> result = null;
+        if(keyword != null && !keyword.isEmpty()){
+            String query = "%"+keyword+"%";
+            QueryBuilder qb = getLocalControlCabinetDao().queryBuilder();
+            qb = qb.where(qb.or(LocalControlCabinetDao.Properties.Code.like(query), LocalControlCabinetDao.Properties.Name.like(query)));
+            result = qb.build().list();
+        }
+        return result;
+    }
+
+    public List<LocalControlCabinet> findLocalControlCabinetInWorkshop(StormWorkshop workshop, String keyword){
         List<LocalControlCabinet> result = null;
         if(workshop!=null){
             if(keyword == null || keyword.isEmpty()){
@@ -240,7 +262,7 @@ public class StormDB {
         return result;
     }
 
-    public List<PowerDistributionCabinet> getPowerDistributionCabinetForWorkshop(StormWorkshop workshop, String keyword){
+    public List<PowerDistributionCabinet> findPowerDistributionCabinetInWorkshop(StormWorkshop workshop, String keyword){
         List<PowerDistributionCabinet> result = null;
         if(workshop!=null){
             if(keyword == null || keyword.isEmpty()){
@@ -257,6 +279,18 @@ public class StormDB {
         }
         return result;
     }
+
+    public List<PowerDistributionCabinet> findPowerDistributionCabinet(String keyword){
+        List<PowerDistributionCabinet> result = null;
+        if(keyword != null && !keyword.isEmpty()){
+            String query = "%" + keyword + "%";
+            QueryBuilder qb = getPowerDistributionCabinetDao().queryBuilder();
+            qb = qb.where(qb.or(PowerDistributionCabinetDao.Properties.Code.like(query), PowerDistributionCabinetDao.Properties.Name.like(query)));
+            result = qb.build().list();
+        }
+        return result;
+    }
+
 
     public LocalControlCabinetConnection getLocalControlCabinetConnection(String code){
         List<LocalControlCabinetConnection> connections = getLocalControlCabinetConnectionDao().queryBuilder()

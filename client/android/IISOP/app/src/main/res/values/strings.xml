@@ -44,5 +44,5 @@
     <string name="sync_database_failed">与服务器同步数据库失败，请联系管理员</string>
 
     <string name="user_event">巡检记录</string>
-    <string name="input_device_code">输入KKS编码</string>
+    <string name="input_device_code">输入KKS编码或设备名称</string>
 </resources>

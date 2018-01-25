@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.tiangles.storm.R;
 import com.tiangles.storm.StormApp;
+import com.tiangles.storm.database.dao.DCSCabinet;
+import com.tiangles.storm.database.dao.LocalControlCabinet;
+import com.tiangles.storm.database.dao.PowerDistributionCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
 import com.tiangles.storm.database.dao.StormWorkshop;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
@@ -65,7 +68,15 @@ public class DeviceSelectorActivity extends Activity {
                 if(obj instanceof StormWorkshop) {
                     bundle.putString(CodeUtils.RESULT_STRING, ((StormWorkshop)obj).getCode());
                 } else if(obj instanceof  StormDevice) {
-                    bundle.putString(CodeUtils.RESULT_STRING, ((StormDevice)obj).getCode());                }
+                    bundle.putString(CodeUtils.RESULT_STRING, ((StormDevice)obj).getCode());
+                } else if(obj instanceof  DCSCabinet) {
+                    bundle.putString(CodeUtils.RESULT_STRING, ((DCSCabinet)obj).getCode());
+                } else if(obj instanceof  LocalControlCabinet) {
+                    bundle.putString(CodeUtils.RESULT_STRING, ((LocalControlCabinet)obj).getCode());
+                } else if(obj instanceof  PowerDistributionCabinet) {
+                    bundle.putString(CodeUtils.RESULT_STRING, ((PowerDistributionCabinet)obj).getCode());
+                }
+
                 resultIntent.putExtras(bundle);
                 DeviceSelectorActivity.this.setResult(RESULT_OK, resultIntent);
                 DeviceSelectorActivity.this.finish();
@@ -76,20 +87,26 @@ public class DeviceSelectorActivity extends Activity {
     private void updateData(String keyword){
         List<StormWorkshop> workshops = null;
         List<StormDevice> devices = null;
+        List<DCSCabinet> dcsCabinets = null;
+        List<LocalControlCabinet> localControlCabinets = null;
+        List<PowerDistributionCabinet> powerDistributionCabinets = null;
         if(keyword != null && !keyword.isEmpty()) {
             workshops = StormApp.getDBManager().getStormDB().findWorkshop(keyword);
             devices = StormApp.getDBManager().getStormDB().findDevice(keyword);
-        }
+            dcsCabinets =  StormApp.getDBManager().getStormDB().findDCSCabinets(keyword);
+            localControlCabinets = StormApp.getDBManager().getStormDB().findLocalControlCabinet(keyword);
+            powerDistributionCabinets = StormApp.getDBManager().getStormDB().findPowerDistributionCabinet(keyword);
+            }
         if(mDataAdaptor == null) {
             mDataAdaptor = new DataAdaptor();
         }
-        mDataAdaptor.setData(workshops, devices);
+        mDataAdaptor.setData(workshops, devices, dcsCabinets, localControlCabinets, powerDistributionCabinets);
         mDataAdaptor.notifyDataSetChanged();
     }
 
     class DataAdaptor extends BaseAdapter {
         private List<Object> data = new ArrayList<>();
-        public void setData(List<StormWorkshop> workshops, List<StormDevice> devices){
+        public void setData(List<StormWorkshop> workshops, List<StormDevice> devices, List<DCSCabinet> dcsCabinets, List<LocalControlCabinet> localControlCabinets, List<PowerDistributionCabinet> powerDistributionCabinets){
             data.clear();
             if(workshops != null) {
                 for(StormWorkshop workshop: workshops) {
@@ -99,6 +116,21 @@ public class DeviceSelectorActivity extends Activity {
             if(devices != null) {
                 for(StormDevice device: devices) {
                     data.add(device);
+                }
+            }
+            if(dcsCabinets != null) {
+                for(DCSCabinet cabinet: dcsCabinets) {
+                    data.add(cabinet);
+                }
+            }
+            if(localControlCabinets != null) {
+                for(LocalControlCabinet cabinet: localControlCabinets) {
+                    data.add(cabinet);
+                }
+            }
+            if(powerDistributionCabinets != null) {
+                for(PowerDistributionCabinet cabinet: powerDistributionCabinets) {
+                    data.add(cabinet);
                 }
             }
         }
@@ -137,6 +169,18 @@ public class DeviceSelectorActivity extends Activity {
                 StormDevice device = (StormDevice)obj;
                 viewHoder.codeView.setText(device.getCode());
                 viewHoder.nameView.setText(device.getName());
+            } else if(obj instanceof DCSCabinet) {
+                DCSCabinet cabinet = (DCSCabinet)obj;
+                viewHoder.codeView.setText(cabinet.getCode());
+                viewHoder.nameView.setText(cabinet.getUsage());
+            } else if(obj instanceof LocalControlCabinet) {
+                LocalControlCabinet cabinet = (LocalControlCabinet)obj;
+                viewHoder.codeView.setText(cabinet.getCode());
+                viewHoder.nameView.setText(cabinet.getName());
+            } else if(obj instanceof PowerDistributionCabinet) {
+                PowerDistributionCabinet cabinet = (PowerDistributionCabinet)obj;
+                viewHoder.codeView.setText(cabinet.getCode());
+                viewHoder.nameView.setText(cabinet.getName());
             }
             return view;
         }

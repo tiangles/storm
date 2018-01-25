@@ -1,10 +1,7 @@
 package com.tiangles.storm.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,9 +87,9 @@ public class WorkshopDeviceListFragment extends FragmentBase {
 
         StormWorkshop workshop = StormApp.getDBManager().getStormDB().getWorkshop(mWorkshopCode);
         List<StormDevice> devices = StormApp.getDBManager().getStormDB().findDeviceInWorkshop(workshop.getCode(), null);
-        List<DCSCabinet> dcsCabinets = StormApp.getDBManager().getStormDB().getDCSCabinetsForWorkshop(workshop.getCode(), null);
-        List<LocalControlCabinet> localControlCabinets = StormApp.getDBManager().getStormDB().getLocalControlCabinetForWorkshop(workshop, null);
-        List<PowerDistributionCabinet> powerDistributionCabinets = StormApp.getDBManager().getStormDB().getPowerDistributionCabinetForWorkshop(workshop, null);
+        List<DCSCabinet> dcsCabinets = StormApp.getDBManager().getStormDB().findDCSCabinetsInWorkshop(workshop.getCode(), null);
+        List<LocalControlCabinet> localControlCabinets = StormApp.getDBManager().getStormDB().findLocalControlCabinetInWorkshop(workshop, null);
+        List<PowerDistributionCabinet> powerDistributionCabinets = StormApp.getDBManager().getStormDB().findPowerDistributionCabinetInWorkshop(workshop, null);
 
         mTitleView.setTitle(workshop.getCode(), workshop.getName());
 
