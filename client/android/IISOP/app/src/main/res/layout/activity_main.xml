@@ -52,40 +52,83 @@
             android:text="确定"/>
 
     </LinearLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:id="@+id/bottom_tabel">
-        <TextView
+        android:id="@+id/bottom_tabel"
+        android:padding="5dp"
+        android:background="@drawable/bg_bottombar_white">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mx_icon_sns_topic_normal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:onClick="showQRCodeActivity"
+                android:text="扫码"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="showQRCodeActivity"
-            android:text="扫码"/>
-        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="center">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mx_icon_bottombar_sns_normal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:onClick="showWorkshopListFragment"
+                android:text="车间列表"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="showWorkshopListFragment"
-            android:text="车间列表"/>
-        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mx_icon_bottombar_app_center_normal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/show_user_event_list"
+                android:text="我的记录"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center"
-            android:id="@+id/show_user_event_list"
-            android:text="我的记录"/>
-        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="设置"/>
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mx_icon_setting_normal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="设置"/>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
