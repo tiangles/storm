@@ -151,6 +151,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.show_setting)
+    void onShowSetting(){
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
     public void onDatabaseFailed(){
         TextView textView = new TextView(this);
         textView.setText(R.string.sync_database_failed);

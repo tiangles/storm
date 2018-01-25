@@ -66,7 +66,8 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:onClick="showQRCodeActivity" >
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +76,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:onClick="showQRCodeActivity"
                 android:text="扫码"/>
         </LinearLayout>
 
@@ -84,7 +84,8 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:onClick="showWorkshopListFragment">
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -93,7 +94,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:onClick="showWorkshopListFragment"
                 android:text="车间列表"/>
         </LinearLayout>
         <LinearLayout
@@ -101,7 +101,8 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:id="@+id/show_user_event_list">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,7 +111,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:id="@+id/show_user_event_list"
                 android:text="我的记录"/>
         </LinearLayout>
         <LinearLayout
@@ -118,7 +118,8 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:id="@+id/show_setting">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

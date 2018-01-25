@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity{
         serverAddr =  PreferenceEngine.getInstance().getServerAddress();
         serverPort = PreferenceEngine.getInstance().getServerPort();
         Intent intent = new Intent(LoginActivity.this, SettingsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
     @Override
