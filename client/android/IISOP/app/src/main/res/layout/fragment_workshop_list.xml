@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="@drawable/border_list"
     android:gravity="left|center_vertical"
-    android:id="@+id/root_view"
     android:clickable="true">
     <ListView
         android:id="@+id/workshop_device_list"

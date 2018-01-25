@@ -6,7 +6,6 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/bt_bigin_scan"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="scanQRCode"
