@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class WorkshopDeviceListFragment extends Fragment {
+public class WorkshopDeviceListFragment extends FragmentBase {
     private Unbinder unbinder;
     private String mWorkshopCode;
     @BindView(R.id.workshop_device_list) ListView mDeviceListView;
@@ -51,7 +51,7 @@ public class WorkshopDeviceListFragment extends Fragment {
             mWorkshopCode = bundle.getString("workshop_code");
         }
 
-        initializeViews();
+        update();
         return view;
     }
 
@@ -78,7 +78,8 @@ public class WorkshopDeviceListFragment extends Fragment {
         mWorkshopCode = code;
     }
 
-    private void initializeViews(){
+    @Override
+    public void update() {
         mDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,7 +89,7 @@ public class WorkshopDeviceListFragment extends Fragment {
         });
 
         StormWorkshop workshop = StormApp.getDBManager().getStormDB().getWorkshop(mWorkshopCode);
-        List<StormDevice> devices = StormApp.getDBManager().getStormDB().getDeviceFromWorkshop(workshop.getCode(), null);
+        List<StormDevice> devices = StormApp.getDBManager().getStormDB().findDeviceInWorkshop(workshop.getCode(), null);
         List<DCSCabinet> dcsCabinets = StormApp.getDBManager().getStormDB().getDCSCabinetsForWorkshop(workshop.getCode(), null);
         List<LocalControlCabinet> localControlCabinets = StormApp.getDBManager().getStormDB().getLocalControlCabinetForWorkshop(workshop, null);
         List<PowerDistributionCabinet> powerDistributionCabinets = StormApp.getDBManager().getStormDB().getPowerDistributionCabinetForWorkshop(workshop, null);
@@ -97,8 +98,11 @@ public class WorkshopDeviceListFragment extends Fragment {
 
         mListAdaptor = new ThreeColumsListAdaptor(getActivity());
         mListAdaptor.updateByDevice(devices, dcsCabinets, localControlCabinets, powerDistributionCabinets);
-        View headerView = mListAdaptor.createHeaderView(R.string.index, R.string.device_code, R.string.device_name);
-        mDeviceListView.addHeaderView(headerView);
+        if(mDeviceListView.getHeaderViewsCount() == 0) {
+            View headerView = mListAdaptor.createHeaderView(R.string.index, R.string.device_code, R.string.device_name);
+            mDeviceListView.addHeaderView(headerView);
+        }
         mDeviceListView.setAdapter(mListAdaptor);
     }
+
 }

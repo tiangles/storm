@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class PowerDistributionCabinetFragment extends Fragment{
+public class PowerDistributionCabinetFragment extends FragmentBase{
     private Unbinder unbinder;
     private String mCabinetCode;
     private PowerDistributionCabinet mCabinet;
@@ -46,7 +46,7 @@ public class PowerDistributionCabinetFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_power_distribution_cabinet_layout, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        initializeView();
+        update();
         return view;
     }
 
@@ -70,7 +70,8 @@ public class PowerDistributionCabinetFragment extends Fragment{
         mCabinet = cabinet;
     }
 
-    private void initializeView(){
+    @Override
+    public void update() {
         if(mCabinet != null) {
             mTitleView.setTitle(mCabinet.getCode(), mCabinet.getName());
             mcircuitView.setLabel(mCabinet.getCircuit_name());
@@ -84,4 +85,5 @@ public class PowerDistributionCabinetFragment extends Fragment{
             mcableView.setLabel("电缆编号: " + mCabinet.getCable_code() + "\n电缆型号: " + mCabinet.getCable_mode());
         }
     }
+
 }

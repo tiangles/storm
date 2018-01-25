@@ -22,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class WorkshopListFragment extends Fragment {
+public class WorkshopListFragment extends FragmentBase {
     private Unbinder unbinder;
     @BindView(R.id.workshop_device_list) ListView mDeviceListView;
     private View mListFooterView;
@@ -117,7 +117,8 @@ public class WorkshopListFragment extends Fragment {
         update();
     }
 
-    private void update(){
+    @Override
+    public void update(){
         isLoading = true;
         updateWorkshopListByKeyword(null);
         mListFooterView.findViewById(R.id.load_layout).setVisibility(View.GONE);

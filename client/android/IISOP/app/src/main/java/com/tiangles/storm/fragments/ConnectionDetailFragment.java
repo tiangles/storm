@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class ConnectionDetailFragment extends Fragment {
+public class ConnectionDetailFragment extends FragmentBase {
     private Unbinder unbinder;
     @BindView(R.id.title) TitleView mTitleView;
     @BindView(R.id.device_model) NamedLabelView mDeviceModelView;
@@ -122,5 +122,10 @@ public class ConnectionDetailFragment extends Fragment {
                 mLocalControlCabinetView.setLabel(sb.toString());
             }
         }
+    }
+
+    @Override
+    public void update() {
+        showConnection(mConnectionCode);
     }
 }

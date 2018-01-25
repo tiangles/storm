@@ -74,7 +74,6 @@ public class StormDB {
                 .where(DeviceLinkInfoDao.Properties.Right_device_id.eq(device.getCode()))
                 .build()
                 .list();
-
     }
 
     public List<DeviceLinkInfo> getRightLinkInfoForDevice(StormDevice device){
@@ -82,10 +81,20 @@ public class StormDB {
                 .where(DeviceLinkInfoDao.Properties.Left_device_id.eq(device.getCode()))
                 .build()
                 .list();
-
     }
 
-    public List<StormDevice> getDeviceFromWorkshop(String workshopCode, String keyword){
+    public List<StormDevice> findDevice(String keyword){
+        List<StormDevice> devices = null;
+        if(keyword != null && !keyword.isEmpty()){
+            String query = "%" + keyword+"%";
+            QueryBuilder qb = getStormDeviceDao().queryBuilder();
+            qb = qb.where(StormDeviceDao.Properties.Code.like(query), StormDeviceDao.Properties.Name.like(query));
+            devices = qb.build().list();
+        }
+        return devices;
+    }
+
+    public List<StormDevice> findDeviceInWorkshop(String workshopCode, String keyword){
         List<StormDevice> devices = null;
         if(workshopCode != null) {
             if(keyword == null || keyword.isEmpty()){
@@ -303,6 +312,17 @@ public class StormDB {
         return null;
     }
 
+
+    public List<StormWorkshop> findWorkshop(String keyword) {
+        if(keyword != null && !keyword.isEmpty()) {
+            String query = "%" + keyword + "%";
+            QueryBuilder qb = getStormWorkshopDao().queryBuilder();
+            qb = qb.where(qb.or(StormWorkshopDao.Properties.Code.like(query),
+                    StormWorkshopDao.Properties.Name.like(query)));
+            return qb.build().list();
+        }
+        return null;
+    }
 
     public List<StormWorkshop> getWorkshopList(String keyword, int offset, int limit){
         List<StormWorkshop> workshops;

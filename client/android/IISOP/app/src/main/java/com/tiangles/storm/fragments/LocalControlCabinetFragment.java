@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class LocalControlCabinetFragment extends Fragment {
+public class LocalControlCabinetFragment extends FragmentBase {
     private Unbinder unbinder;
     @BindView(R.id.title) TitleView mTitleView;
     @BindView(R.id.cabinet_signal_list) ListView mSignalList;
@@ -83,10 +83,17 @@ public class LocalControlCabinetFragment extends Fragment {
         });
 
         mListAdaptor = new ThreeColumsListAdaptor(getActivity());
-        mSignalList.addHeaderView(mListAdaptor.createHeaderView(R.string.index, R.string.signal_code, R.string.signal_name));
+        if(mSignalList.getHeaderViewsCount() == 0) {
+            mSignalList.addHeaderView(mListAdaptor.createHeaderView(R.string.index, R.string.signal_code, R.string.signal_name));
+        }
 
         List<LocalControlCabinetConnection> connections = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnectionForCabinet(cabinet);
         mListAdaptor.updateByLocalControlCabinetConnection(connections);
         mSignalList.setAdapter(mListAdaptor);
+    }
+
+    @Override
+    public void update() {
+        showCabinet(mLocalControlCabinet);
     }
 }

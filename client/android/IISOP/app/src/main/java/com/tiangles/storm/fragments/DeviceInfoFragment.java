@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class DeviceInfoFragment extends Fragment {
+public class DeviceInfoFragment extends FragmentBase {
     private Unbinder unbinder;
     @BindView(R.id.title) TitleView mTitleView;
     @BindView(R.id.device_model) NamedLabelView mDeviceModelView;
@@ -180,6 +180,11 @@ public class DeviceInfoFragment extends Fragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void update() {
+        showDevice(mDevice);
     }
 
     class DeviceStatusViewHolder {

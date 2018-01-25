@@ -2,6 +2,7 @@ package com.tiangles.storm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 
 import com.tiangles.storm.activities.MainActivity;
@@ -87,6 +88,15 @@ public class StormApp extends ZApplication {
 
     public static void setCurrentUser(User user) {
         StormApp.user = user;
+    }
+
+
+    public static boolean hasKitKat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
+    public static boolean hasLollipop() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     private static Network createNetwork(){

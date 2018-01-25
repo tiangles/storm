@@ -32,7 +32,8 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".activities.UserEventActivity"></activity>
+        <activity android:name=".activities.UserEventActivity" />
+        <activity android:name=".activities.DeviceSelectorActivity"></activity>
     </application>
 
 </manifest>

@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DeviceSystemInfoFragment extends Fragment implements DeviceLinkView.OnLinkedDeviceClickedListener{
+public class DeviceSystemInfoFragment extends FragmentBase implements DeviceLinkView.OnLinkedDeviceClickedListener{
     private Unbinder unbinder;
     @BindView(R.id.title) TitleView mTitleView;
     @BindView(R.id.device_link_info) DeviceLinkView mDeviceLinkView;
@@ -41,7 +41,7 @@ public class DeviceSystemInfoFragment extends Fragment implements DeviceLinkView
         View view = inflater.inflate(R.layout.fragment_device_system_info, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        init();
+        update();
         return view;
     }
 
@@ -65,7 +65,8 @@ public class DeviceSystemInfoFragment extends Fragment implements DeviceLinkView
         mDeviceCode = code;
     }
 
-    private void init(){
+    @Override
+    public void update() {
         StormDevice device = StormApp.getDBManager().getStormDB().getDevice(mDeviceCode);
         if(device != null) {
             mTitleView.setTitle(device.getCode(), device.getName());
@@ -84,6 +85,6 @@ public class DeviceSystemInfoFragment extends Fragment implements DeviceLinkView
 
     private void showDevice(String deviceCode){
         setDeviceCode(deviceCode);
-        init();
     }
+
 }

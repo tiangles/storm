@@ -4,10 +4,17 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -19,18 +26,21 @@ import com.tiangles.storm.database.dao.DCSCabinet;
 import com.tiangles.storm.database.dao.LocalControlCabinet;
 import com.tiangles.storm.database.dao.PowerDistributionCabinet;
 import com.tiangles.storm.database.dao.StormDevice;
+import com.tiangles.storm.database.dao.StormWorkshop;
 import com.tiangles.storm.database.dao.UserEvent;
 import com.tiangles.storm.fragments.DCSCabinetClampFragment;
 import com.tiangles.storm.fragments.ConnectionDetailFragment;
 import com.tiangles.storm.fragments.DCSCabinetFragment;
 import com.tiangles.storm.fragments.DeviceInfoFragment;
 import com.tiangles.storm.fragments.DeviceSystemInfoFragment;
+import com.tiangles.storm.fragments.FragmentBase;
 import com.tiangles.storm.fragments.LocalControlCabinetFragment;
 import com.tiangles.storm.fragments.PowerDistributionCabinetFragment;
 import com.tiangles.storm.fragments.WorkshopDeviceListFragment;
 import com.tiangles.storm.fragments.WorkshopListFragment;
 import com.tiangles.storm.fragments.LocalControlCabinetSignalPanelFragment;
 import com.tiangles.storm.request.UploadUserEventRequest;
+import com.tiangles.storm.views.TitleBar;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -42,8 +52,10 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     private final static int SCAN_REQUEST_CODE = 1;
+    private final static int FIND_DEVICE_BY_KEYWORD = 2;
+
     private FragmentManager fragmentManager;
-    private Fragment currentFragment;
+    private FragmentBase currentFragment;
     private WorkshopListFragment mWorkshopListFragment;
     private WorkshopDeviceListFragment mWorkshopDeviceListFragment;
     private DeviceInfoFragment mDeviceFragment;
@@ -75,6 +87,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_action, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                Intent intent = new Intent(MainActivity.this, DeviceSelectorActivity.class);
+                startActivityForResult(intent, FIND_DEVICE_BY_KEYWORD);
+                return true;
+            default:
+                break;
+        }
+
+        return false;
+    }
+
+    @Override
     protected void onResume(){
         super.onResume();
         showFragment(currentFragment);
@@ -94,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             super.onBackPressed();
+            currentFragment = (FragmentBase) fragmentManager.findFragmentById(R.id.content);
         }
     }
 
@@ -209,6 +243,11 @@ public class MainActivity extends AppCompatActivity {
             showPowerDistributionCabinet(powerDistributionCabinet);
             return;
         }
+
+        StormWorkshop workshop = StormApp.getDBManager().getStormDB().getWorkshop(deviceCode);
+        if(workshop != null) {
+            switchToWorkshopDeviceListFragment(workshop.getCode());
+        }
     }
 
     private void showStormDevice(StormDevice device){
@@ -260,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case SCAN_REQUEST_CODE:
+            case FIND_DEVICE_BY_KEYWORD:
                 if(resultCode == RESULT_OK){
                     Bundle bundle = data.getExtras();
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
@@ -271,9 +311,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showFragment(Fragment fragment){
+    private void showFragment(FragmentBase fragment){
         if(fragment == null || (fragment == currentFragment && mWorkshopListFragment == currentFragment)) {
             return;
+        }
+        if(fragment == currentFragment) {
+            fragment.update();
         }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
@@ -289,5 +332,4 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
         currentFragment = fragment;
     }
-
 }

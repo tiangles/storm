@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class DCSCabinetFragment extends Fragment {
+public class DCSCabinetFragment extends FragmentBase {
     private Unbinder unbinder;
     @BindView(R.id.title)TitleView mTitleView;
     @BindView(R.id.cabinet_name) NamedLabelView mCabinetNameView;
@@ -124,5 +124,10 @@ public class DCSCabinetFragment extends Fragment {
         TextView view = new TextView(getActivity());
         view.setText(str);
         return view;
+    }
+
+    @Override
+    public void update() {
+        showCabinet(mDCSCabinet);
     }
 }

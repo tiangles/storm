@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class DCSCabinetClampFragment extends Fragment {
+public class DCSCabinetClampFragment extends FragmentBase {
     private Unbinder unbinder;
     @BindView(R.id.title) TitleView mTitleView;
     @BindView(R.id.signal_list) ListView mSignalListView;
@@ -89,8 +89,15 @@ public class DCSCabinetClampFragment extends Fragment {
         final List<DCSConnection> connections = StormApp.getDBManager().getStormDB().getDCSConnectionFromClamp(cabinetCode, face, clamp);
         final ThreeColumsListAdaptor adaptor = new ThreeColumsListAdaptor(getActivity());
         adaptor.updateByDCSConnection(connections);
-        View header = adaptor.createHeaderView(R.string.channel, R.string.signal_code, R.string.signal_name);
-        mSignalListView.addHeaderView(header);
+        if(mSignalListView.getHeaderViewsCount() == 0) {
+            View header = adaptor.createHeaderView(R.string.channel, R.string.signal_code, R.string.signal_name);
+            mSignalListView.addHeaderView(header);
+        }
         mSignalListView.setAdapter(adaptor);
+    }
+
+    @Override
+    public void update() {
+        showClamp(cabinetCode, face, clamp);
     }
 }

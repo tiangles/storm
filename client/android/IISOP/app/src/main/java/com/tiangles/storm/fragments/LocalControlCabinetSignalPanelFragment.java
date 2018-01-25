@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class LocalControlCabinetSignalPanelFragment extends Fragment {
+public class LocalControlCabinetSignalPanelFragment extends FragmentBase {
     private Unbinder unbinder;
     @BindView(R.id.signal_code)TextView mCodeView;
     @BindView(R.id.signal_name) TextView mNameView;
@@ -49,13 +49,8 @@ public class LocalControlCabinetSignalPanelFragment extends Fragment {
         View view = inflater.inflate(R.layout.framgent_local_control_cabinet_connection_panel, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        update();
 
-        getSignal(mConnectionCode);
-        if(mAioSignal != null) {
-            showAsAioPanal();
-        } else if(mDioSignal != null) {
-            showAsDioPanal();
-        }
         return view;
     }
 
@@ -143,5 +138,15 @@ public class LocalControlCabinetSignalPanelFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void update() {
+        getSignal(mConnectionCode);
+        if(mAioSignal != null) {
+            showAsAioPanal();
+        } else if(mDioSignal != null) {
+            showAsDioPanal();
+        }
     }
 }

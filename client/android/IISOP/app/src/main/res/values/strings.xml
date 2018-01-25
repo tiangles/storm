@@ -40,6 +40,8 @@
     <string name="device">设备</string>
     <string name="device_code">设备编码</string>
     <string name="device_name">设备名称</string>
+    <string name="workshop_code">车间编码</string>
+    <string name="workshop_name">车间名称</string>
 
     <string name="index">序号</string>
     <string name="channel">通道</string>
@@ -49,4 +51,5 @@
     <string name="sync_database_failed">与服务器同步数据库失败，请联系管理员</string>
 
     <string name="user_event">巡检记录</string>
+    <string name="input_device_code">输入KKS编码</string>
 </resources>
