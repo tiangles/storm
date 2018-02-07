@@ -82,7 +82,7 @@ class DeviceDioSignal(models.Model):
 class DeviceAioSignal(models.Model):
     code = models.SlugField(max_length=16, unique=True, primary_key=True, verbose_name='测点编码')
     figure_number = models.SlugField(max_length=16, verbose_name='图号')
-    for_device = models.ForeignKey(to=Device, related_name='aio_belong_to_device', verbose_name='所属设备')
+    for_device = models.ForeignKey(to=Device, null=True, related_name='aio_belong_to_device', verbose_name='所属设备')
     name = models.CharField(max_length=128, verbose_name='测点名称')
     io_type = models.SlugField(max_length=16, verbose_name='I/O 类型')
     signal_type = models.CharField(max_length=16, verbose_name='信号类型')

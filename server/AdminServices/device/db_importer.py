@@ -142,7 +142,10 @@ def import_aio_signal(sheet, row_index):
     code = load_null_blank_cell(sheet, row_index, column('C'))
     figure_number = load_cell(sheet, row_index, column('B'))
     for_device_code = load_cell(sheet, row_index, column('D'))
-    for_device = StormDevice.objects.get(code=for_device_code)
+    if for_device_code is not None and len(for_device_code) > 0:
+        for_device = StormDevice.objects.get(code=for_device_code)
+    else:
+        for_device = None
     name = load_cell(sheet, row_index, column('F'))
     io_type = load_cell(sheet, row_index, column('G'))
     signal_type = load_cell(sheet, row_index, column('H'))
@@ -160,26 +163,48 @@ def import_aio_signal(sheet, row_index):
     hh = load_boolean_cell(sheet, row_index, column('T'))
     hhh = load_boolean_cell(sheet, row_index, column('U'))
     tendency = load_boolean_cell(sheet, row_index, column('V'))
-    DeviceAioSignal.objects.update_or_create(code=code,
-                                             figure_number=figure_number,
-                                             for_device=for_device,
-                                             name=name,
-                                             io_type=io_type,
-                                             signal_type=signal_type,
-                                             isolation=isolation,
-                                             unit=unit,
-                                             min_range=min_range,
-                                             max_range=max_range,
-                                             remark=remark,
-                                             power_supply=power_supply,
-                                             connect_to_system=connect_to_system,
-                                             lll=lll,
-                                             ll=ll,
-                                             l=l,
-                                             h=h,
-                                             hh=hh,
-                                             hhh=hhh,
-                                             tendency=tendency)
+    if for_device is not None:
+        DeviceAioSignal.objects.update_or_create(code=code,
+                                                 figure_number=figure_number,
+                                                 for_device=for_device,
+                                                 name=name,
+                                                 io_type=io_type,
+                                                 signal_type=signal_type,
+                                                 isolation=isolation,
+                                                 unit=unit,
+                                                 min_range=min_range,
+                                                 max_range=max_range,
+                                                 remark=remark,
+                                                 power_supply=power_supply,
+                                                 connect_to_system=connect_to_system,
+                                                 lll=lll,
+                                                 ll=ll,
+                                                 l=l,
+                                                 h=h,
+                                                 hh=hh,
+                                                 hhh=hhh,
+                                                 tendency=tendency)
+    else:
+        DeviceAioSignal.objects.update_or_create(code=code,
+                                                 figure_number=figure_number,
+                                                 name=name,
+                                                 io_type=io_type,
+                                                 signal_type=signal_type,
+                                                 isolation=isolation,
+                                                 unit=unit,
+                                                 min_range=min_range,
+                                                 max_range=max_range,
+                                                 remark=remark,
+                                                 power_supply=power_supply,
+                                                 connect_to_system=connect_to_system,
+                                                 lll=lll,
+                                                 ll=ll,
+                                                 l=l,
+                                                 h=h,
+                                                 hh=hh,
+                                                 hhh=hhh,
+                                                 tendency=tendency)
+
 
 
 def import_dcs_connection(sheet, row_index):

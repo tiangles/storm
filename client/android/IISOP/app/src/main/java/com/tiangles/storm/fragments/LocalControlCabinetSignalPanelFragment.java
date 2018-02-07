@@ -76,7 +76,11 @@ public class LocalControlCabinetSignalPanelFragment extends FragmentBase {
         mStormDevice = StormApp.getDBManager().getStormDB().getDevice(mDioSignal.getFor_device_id());
         mCodeView.setText(mDioSignal.getCode());
         mNameView.setText(mDioSignal.getName());
-        mDeviceSummaryView.setText(mStormDevice.getCode() + " " + mStormDevice.getName());
+        if(mStormDevice != null) {
+            mDeviceSummaryView.setText(mStormDevice.getCode() + " " + mStormDevice.getName());
+        } else {
+            mDeviceSummaryView.setText("--");
+        }
 
         mCabinetSummaryView.setText("CabinetSummary");
         mDCSCabinetSummaryView.setText("mDCSCabinetSummaryView");
@@ -89,7 +93,11 @@ public class LocalControlCabinetSignalPanelFragment extends FragmentBase {
         mCodeView.setText(mAioSignal.getCode());
         mNameView.setText(mAioSignal.getName());
 
-        mDeviceSummaryView.setText(mStormDevice.getType());
+        if(mStormDevice != null) {
+            mDeviceSummaryView.setText(mStormDevice.getType());
+        } else {
+            mDeviceSummaryView.setText("--");
+        }
 
         LocalControlCabinetConnection localControlCabinetConnection = StormApp.getDBManager().getStormDB().getLocalControlCabinetConnection(mAioSignal.getCode());
         LocalControlCabinet  cabinet = StormApp.getDBManager().getStormDB().getLocalControlCabinet(localControlCabinetConnection.getCabinet_id());
